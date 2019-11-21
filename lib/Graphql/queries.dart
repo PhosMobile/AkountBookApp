@@ -1,0 +1,88 @@
+class Queries {
+  String getOTP = r"""
+                    query GetOtp($otp : String!){
+                      get_otp(otp:$otp){
+                        email
+                      }
+                    }
+                  """;
+  String getLoggedInUser = r"""
+                        query{
+  me{
+    id
+    name
+    email
+    phone
+    businesses{
+      id
+      name
+      email
+      description
+      address
+      address
+      currency
+      image_url
+     	user_id
+    }
+  }
+}
+                  """;
+
+  String getCurrentBusinessData = r"""
+                    query GetOtp($id : ID!){
+                      get_business(id:$id){
+                       id
+            name
+            email
+            description
+            address
+            currency
+            image_url
+            user_id
+            customers{
+              id
+              name
+              email
+              phone
+              address
+              image_url
+              business_id
+              user_id
+            }
+            items{
+              id
+              name
+              description
+              business_id
+              quantity
+              price
+              user_id
+            }
+            invoices{
+             id
+            title
+            number
+            po_so_number
+            summary
+            issue_date
+            due_date
+            sub_total_amount
+            total_amount
+            notes
+            status
+            footer
+            customer_id
+            business_id
+            user_id
+            }
+            expenses{
+              name
+              description
+              quantity
+              price
+              date
+            }
+                              }
+                            }
+                          """;
+}

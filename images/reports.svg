@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="14.699" height="18.997" viewBox="0 0 14.699 18.997">
+  <g id="Reports" transform="translate(-52.65 -626.996)">
+    <g id="report_icon" data-name="report icon" transform="translate(-37.23 7.996)">
+      <g id="filled_doc" data-name="filled doc" transform="translate(89.879 620.81)">
+        <g id="Group_74" data-name="Group 74" transform="translate(0)">
+          <g id="Group_73" data-name="Group 73">
+            <path id="Path_93" data-name="Path 93" d="M76.785,3.685,73.2.1a.358.358,0,0,0-.253-.1H65.432A1.434,1.434,0,0,0,64,1.432V15.754a1.434,1.434,0,0,0,1.432,1.432H75.458a1.434,1.434,0,0,0,1.432-1.432V3.939A.358.358,0,0,0,76.785,3.685ZM73.309,1.222l2.358,2.358H74.026a.717.717,0,0,1-.716-.716Zm2.864,14.532a.717.717,0,0,1-.716.716H65.432a.717.717,0,0,1-.716-.716V1.432a.717.717,0,0,1,.716-.716h7.161V2.864A1.434,1.434,0,0,0,74.026,4.3h2.148Z" transform="translate(-64 0)" fill="#0464b7"/>
+            <path id="Path_94" data-name="Path 94" d="M156.136,213.333h-6.445a.358.358,0,0,0,0,.716h6.445a.358.358,0,1,0,0-.716Z" transform="translate(-146.469 -206.172)" fill="#0464b7"/>
+            <path id="Path_95" data-name="Path 95" d="M156.136,277.333h-6.445a.358.358,0,0,0,0,.716h6.445a.358.358,0,1,0,0-.716Z" transform="translate(-146.469 -268.024)" fill="#0464b7"/>
+            <path id="Path_96" data-name="Path 96" d="M156.136,341.333h-6.445a.358.358,0,0,0,0,.716h6.445a.358.358,0,1,0,0-.716Z" transform="translate(-146.469 -329.875)" fill="#0464b7"/>
+            <path id="Path_97" data-name="Path 97" d="M153.272,405.333h-3.581a.358.358,0,0,0,0,.716h3.581a.358.358,0,1,0,0-.716Z" transform="translate(-146.469 -391.727)" fill="#0464b7"/>
+          </g>
+        </g>
+      </g>
+      <g id="empty_doc" data-name="empty doc" transform="translate(104.579 636.187) rotate(180)">
+        <g id="Group_74-2" data-name="Group 74" transform="translate(0 0)">
+          <g id="Group_73-2" data-name="Group 73" transform="translate(0)">
+            <path id="Subtraction_1" data-name="Subtraction 1" d="M11.458,17.186H1.432A1.433,1.433,0,0,1,0,15.755V1.432A1.433,1.433,0,0,1,1.432,0h.939V.716H1.432a.717.717,0,0,0-.716.715V15.755a.717.717,0,0,0,.716.716H11.458a.717.717,0,0,0,.716-.716v-.831h.715v.831A1.433,1.433,0,0,1,11.458,17.186Z" fill="#0464b7"/>
+          </g>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>

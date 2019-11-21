@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="132" height="132" viewBox="0 0 132 132">
+  <g id="profile_pic_n_attach" data-name="profile pic n attach" transform="translate(-122 -68)">
+    <g id="PROFILE_PIC" data-name="PROFILE PIC" transform="translate(122 68)" fill="#fff" stroke="#363c41" stroke-width="1">
+      <circle cx="66" cy="66" r="66" stroke="none"/>
+      <circle cx="66" cy="66" r="65.5" fill="none"/>
+    </g>
+    <text id="ATTACH_PICTURE" data-name="ATTACH PICTURE" transform="translate(187.7 158.999)" fill="#363c41" font-size="12" font-family="Roboto-Regular, Roboto"><tspan x="-47.906" y="0">ATTACH PICTURE</tspan></text>
+    <g id="picture" transform="translate(171.321 101.772)">
+      <path id="Path_52" data-name="Path 52" d="M32.783,6H.575A.575.575,0,0,0,0,6.575V31.882a.575.575,0,0,0,.575.575H32.783a.575.575,0,0,0,.575-.575V6.575A.575.575,0,0,0,32.783,6Zm-.575,25.306H1.15V7.15H32.208Z" fill="#363c41"/>
+      <path id="Path_53" data-name="Path 53" d="M13.634,23.406a3.2,3.2,0,1,0-3.2-3.2A3.206,3.206,0,0,0,13.634,23.406Zm0-5.256A2.053,2.053,0,1,1,11.581,20.2,2.055,2.055,0,0,1,13.634,18.15Z" transform="translate(-4.432 -4.673)" fill="#363c41"/>
+      <path id="Path_54" data-name="Path 54" d="M6.575,36.229a.574.574,0,0,0,.38-.143l9.382-8.26,5.925,5.925a.575.575,0,1,0,.813-.813l-2.765-2.765,5.28-5.783,6.477,5.937a.575.575,0,1,0,.777-.848l-6.9-6.327A.593.593,0,0,0,25.529,23a.576.576,0,0,0-.4.187L19.5,29.357l-2.728-2.728a.576.576,0,0,0-.787-.025L6.195,35.222a.575.575,0,0,0,.38,1.007Z" transform="translate(-2.549 -7.223)" fill="#363c41"/>
+    </g>
+  </g>
+</svg>
