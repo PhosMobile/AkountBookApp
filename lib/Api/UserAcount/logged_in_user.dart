@@ -1,3 +1,4 @@
+import 'package:akount_books/Api/BusinessPage/current_business_data.dart';
 import 'package:akount_books/AppState/actions/business_actions.dart';
 import 'package:akount_books/AppState/actions/user_actions.dart';
 import 'package:akount_books/AppState/app_state.dart';
@@ -15,15 +16,17 @@ class LoggedInUser {
   User user;
   List<Business> businesses = [];
 
-  Future fetchLoggedInUser(context) async {
+  Future fetchLoggedInUser(context, from) async {
     final LocalStorage storage = new LocalStorage('some_key');
+    final business = StoreProvider.of<AppState>(context);
+
     GqlConfig graphQLConfiguration = GqlConfig();
     Queries queries = Queries();
     QueryResult result = await graphQLConfiguration.getGraphql().query(
-          QueryOptions(
-            document: queries.getLoggedInUser,
-          ),
-        );
+      QueryOptions(
+        document: queries.getLoggedInUser,
+      ),
+    );
     if (!result.hasErrors) {
       var data = result.data["me"];
       var userBusiness = result.data["me"]["businesses"];
@@ -44,12 +47,17 @@ class LoggedInUser {
       final saveUserBusiness = StoreProvider.of<AppState>(context);
       saveUser.dispatch(AddUser(payload: user));
       saveUserBusiness.dispatch(SaveUserBusinesses(payload: businesses));
-      if (storage.getItem("fromRegistration") != null) {
+      if (from == "registeration") {
+        business.dispatch(UserCurrentBusiness(payload: businesses[0]));
+        CurrentBusinessData().getBusinessData(context, businesses[0].id);
+//                              Navigator.pushNamed(context, "/user_dashboard");
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => BusinessCreated()),
         );
       } else {
+        business.dispatch(UserCurrentBusiness(payload: businesses[0]));
+        await CurrentBusinessData().getBusinessData(context, businesses[0].id);
         Navigator.pushNamed(context, "/user_dashboard");
       }
     } else {

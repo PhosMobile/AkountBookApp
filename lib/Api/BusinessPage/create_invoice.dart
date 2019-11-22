@@ -7,13 +7,14 @@ import 'package:akount_books/Screens/business_created.dart';
 import 'package:akount_books/Widgets/HeaderTitle.dart';
 import 'package:akount_books/Widgets/error.dart';
 import 'package:akount_books/Widgets/loader_widget.dart';
-import 'package:akount_books/Widgets/logo_avatar.dart';
 import 'package:akount_books/Widgets/buttons.dart';
+import 'package:akount_books/utilities/svg_files.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:akount_books/Widgets/Input_styles.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -25,24 +26,34 @@ class AddInvoice extends StatefulWidget {
 class _AddInvoiceState extends State<AddInvoice> {
   final GlobalKey<FormBuilderState> _fbKey = GlobalKey<FormBuilderState>();
   InputStyles inputStyles = new InputStyles();
-  ImageAvatars logo = new ImageAvatars();
   String requestErrors;
   bool _isLoading = false;
   bool _hasErrors = false;
-  String phone;
-  String email;
-  TextEditingController _businessName = new TextEditingController();
   TextEditingController _businessEmail = new TextEditingController();
   TextEditingController _businessDescription = new TextEditingController();
   TextEditingController _businessAddress = new TextEditingController();
   String currency = "NGN";
 
-  validate(value, errorText) {
-    if (value.isEmpty) {
-      return '';
-    }
-    return null;
-  }
+  final Widget pickDate = new SvgPicture.asset(
+    SVGFiles.pick_date,
+    semanticsLabel: 'Akount-book',
+    allowDrawingOutsideViewBox: true,
+  );
+
+  final Widget addCustomer = new SvgPicture.asset(
+    SVGFiles.add_customer,
+    semanticsLabel: 'Akount-book',
+    allowDrawingOutsideViewBox: true,
+  );
+
+  final Widget addItem = new SvgPicture.asset(
+    SVGFiles.add_item,
+    semanticsLabel: 'Akount-book',
+    allowDrawingOutsideViewBox: true,
+  );
+
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -52,13 +63,11 @@ class _AddInvoiceState extends State<AddInvoice> {
             iconTheme: IconThemeData(color: Theme.of(context).primaryColor),
             title: HeaderTitle(headerText: "Create Invoice")),
         body: SingleChildScrollView(
-          padding: EdgeInsets.only(top: 0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              SizedBox(height: 20),
               Container(
-                padding: EdgeInsets.all(30),
+                padding: EdgeInsets.only(top: 0, left: 20, right: 20),
                 child: Center(
                     child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -69,7 +78,7 @@ class _AddInvoiceState extends State<AddInvoice> {
                         'date': DateTime.now(),
                         'accept_terms': false,
                       },
-                      autovalidate: true,
+                      autovalidate: false,
                       child: Column(
                         children: <Widget>[
                           _hasErrors
@@ -81,7 +90,9 @@ class _AddInvoiceState extends State<AddInvoice> {
                           InkWell(
                             child: Container(
                                 decoration: BoxDecoration(
-                                    border: Border.all(color: Colors.blueGrey)),
+                                    border: Border.all(color: Theme
+                                        .of(context)
+                                        .accentColor)),
                                 child: Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: Row(
@@ -98,19 +109,22 @@ class _AddInvoiceState extends State<AddInvoice> {
                                               child: Text(
                                                 "INVOICE NAME",
                                                 style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
+                                                    fontWeight: FontWeight.w100,
                                                     color: Theme.of(context)
                                                         .primaryColor),
                                               ),
                                             ),
                                             elevation: 0.0,
                                           )),
-                                          Divider(),
                                           Container(
                                               child: Card(
                                             child: Container(
                                               child: Text(
-                                                  "Project Name / Description"),
+                                                  "Project Name / Description",
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight
+                                                        .w100,)),
+
                                             ),
                                             elevation: 0.0,
                                           ))
@@ -126,14 +140,15 @@ class _AddInvoiceState extends State<AddInvoice> {
                                               child: Text(
                                                 "DRAFT",
                                                 style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
+                                                  fontWeight: FontWeight.w100,
                                                     color: Theme.of(context)
-                                                        .primaryColor),
+                                                        .primaryColor,
+
+                                                ),
                                               ),
                                             ),
                                             elevation: 0.0,
                                           )),
-                                          Divider(),
                                           Container(
                                               child: Card(
                                             child: Container(
@@ -168,8 +183,8 @@ class _AddInvoiceState extends State<AddInvoice> {
                                       style: TextStyle(
                                           color:
                                               Theme.of(context).primaryColor)),
-                                  icon: Icon(Icons.date_range,
-                                      color: Theme.of(context).primaryColor)),
+                                  icon: pickDate
+                              ),
                               DatePickerButton(
                                   onPressed: () {
                                     _pickDueDate();
@@ -178,8 +193,8 @@ class _AddInvoiceState extends State<AddInvoice> {
                                       style: TextStyle(
                                           color:
                                               Theme.of(context).primaryColor)),
-                                  icon: Icon(Icons.date_range,
-                                      color: Theme.of(context).primaryColor))
+                                  icon: pickDate
+                              )
                             ],
                           ),
                           SizedBox(
@@ -197,10 +212,7 @@ class _AddInvoiceState extends State<AddInvoice> {
                                     style: TextStyle(
                                         color: Theme.of(context).primaryColor),
                                   ),
-                                  icon: Icon(
-                                    Icons.account_box,
-                                    color: Theme.of(context).primaryColor,
-                                  ),
+                                  icon: addCustomer,
                                   onPressed: () {
                                     Navigator.push(
                                       context,
@@ -210,6 +222,7 @@ class _AddInvoiceState extends State<AddInvoice> {
                                   },
                                 )),
                           ),
+                          SizedBox(height: 10),
                           Padding(
                             padding: const EdgeInsets.only(bottom: 10),
                             child: Container(
@@ -222,10 +235,7 @@ class _AddInvoiceState extends State<AddInvoice> {
                                     style: TextStyle(
                                         color: Theme.of(context).primaryColor),
                                   ),
-                                  icon: Icon(
-                                    Icons.add_shopping_cart,
-                                    color: Theme.of(context).primaryColor,
-                                  ),
+                                  icon: addItem,
                                   onPressed: () {
                                     Navigator.push(
                                       context,
@@ -235,6 +245,7 @@ class _AddInvoiceState extends State<AddInvoice> {
                                   },
                                 )),
                           ),
+                          SizedBox(height: 10),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
@@ -272,6 +283,9 @@ class _AddInvoiceState extends State<AddInvoice> {
                                 ),
                               ),
                             ],
+                          ),
+                          SizedBox(
+                            height: 20,
                           ),
                           Padding(
                             padding: const EdgeInsets.only(bottom: 10),
@@ -319,7 +333,8 @@ class _AddInvoiceState extends State<AddInvoice> {
                               ? LoaderLight()
                               : Text("SEND",
                                   style: TextStyle(
-                                      fontSize: 16, color: Colors.white)),
+                                      fontWeight: FontWeight.w100,
+                                      fontSize: 14, color: Colors.white)),
                           onPressed: () {
                             if (_fbKey.currentState.saveAndValidate()) {
                               _registerUser();
@@ -331,7 +346,8 @@ class _AddInvoiceState extends State<AddInvoice> {
                               ? LoaderLight()
                               : Text("SAVE DRAFT",
                                   style: TextStyle(
-                                      fontSize: 16,
+                                      fontWeight: FontWeight.w100,
+                                      fontSize: 14,
                                       color: Theme.of(context).primaryColor)),
                           onPressed: () {
                             if (_fbKey.currentState.saveAndValidate()) {
@@ -351,7 +367,6 @@ class _AddInvoiceState extends State<AddInvoice> {
           ),
         ));
   }
-
   _pickInvoiceDate() {
     DatePicker.showDatePicker(context,
         showTitleActions: true,

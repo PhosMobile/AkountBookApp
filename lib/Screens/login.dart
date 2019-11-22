@@ -1,4 +1,5 @@
 import 'package:akount_books/Api/UserAcount/logged_in_user.dart';
+import 'package:akount_books/AppState/app_state.dart';
 import 'package:akount_books/Graphql/graphql_config.dart';
 import 'package:akount_books/Graphql/mutations.dart';
 import 'package:akount_books/Widgets/Input_styles.dart';
@@ -9,6 +10,7 @@ import 'package:akount_books/Widgets/logo_avatar.dart';
 import 'package:akount_books/Widgets/social_sign_up.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:localstorage/localstorage.dart';
 
@@ -35,153 +37,160 @@ class _loginState extends State<Login> {
 
     return new Scaffold(
         body: SingleChildScrollView(
-          padding: EdgeInsets.only(top: 120),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              logo.miniLogoAvatar(),
-              SizedBox(height: 20),
-              Text("Sign In",
-                  style: TextStyle(
-                      color: Theme
-                          .of(context)
-                          .primaryColor,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold)),
-              SizedBox(height: 20),
-              Container(
-                padding: EdgeInsets.all(30),
-                child: Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        FormBuilder(
-                          key: _fbKey,
-                          initialValue: {
-                            'date': DateTime.now(),
-                            'accept_terms': false,
-                          },
-                          autovalidate: true,
-                          child: Column(
-                            children: <Widget>[
-                              _hasErrors
-                                  ? RequestError(errorText: requestErrors)
-                                  : Container(),
-                              Padding(
-                                padding: const EdgeInsets.only(bottom: 10),
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                      boxShadow: [
+            padding: EdgeInsets.only(top: 120),
+            child: StoreConnector<AppState, AppState>(
+                converter: (store) => store.state,
+                builder: (context, state) {
+                  return Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      logo.miniLogoAvatar(),
+                      SizedBox(height: 20),
+                      Text("Sign In",
+                          style: TextStyle(
+                              color: Theme
+                                  .of(context)
+                                  .primaryColor,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold)),
+                      SizedBox(height: 20),
+                      Container(
+                        padding: EdgeInsets.all(30),
+                        child: Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                FormBuilder(
+                                  key: _fbKey,
+                                  initialValue: {
+                                    'date': DateTime.now(),
+                                    'accept_terms': false,
+                                  },
+                                  autovalidate: false,
+                                  child: Column(
+                                    children: <Widget>[
+                                      _hasErrors
+                                          ? RequestError(
+                                          errorText: requestErrors)
+                                          : Container(),
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            bottom: 10),
+                                        child: Container(
+                                          decoration: BoxDecoration(boxShadow: [
                                         inputStyles.boxShadowMain(context)
                                       ]),
-                                  child: FormBuilderTextField(
-                                    attribute: "email",
-                                    decoration: inputStyles.inputMain(
-                                        "Email / Phone"),
-                                    validators: [
-                                      FormBuilderValidators.email(
-                                          errorText: "Invalid Email"),
-                                      FormBuilderValidators.minLength(10,
-                                          errorText: "Email/Phone to short")
-                                    ],
-                                    controller: _email,
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(bottom: 10),
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                      boxShadow: [
+                                          child: FormBuilderTextField(
+                                            attribute: "email",
+                                            decoration: inputStyles
+                                                .inputMain("Email / Phone"),
+                                            validators: [
+                                              FormBuilderValidators.email(
+                                                  errorText: "Invalid Email"),
+                                              FormBuilderValidators.minLength(
+                                                  10,
+                                                  errorText: "Email/Phone to short")
+                                            ],
+                                            controller: _email,
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            bottom: 10),
+                                        child: Container(
+                                          decoration: BoxDecoration(boxShadow: [
                                         inputStyles.boxShadowMain(context)
                                       ]),
-                                  child: FormBuilderTextField(
-                                    obscureText: true,
-                                    attribute: "password",
-                                    decoration: inputStyles.inputMain(
-                                        "Password"),
-                                    validators: [
-                                      FormBuilderValidators.minLength(8,
-                                          errorText: "Wrong password"),
-                                      FormBuilderValidators.required()
+                                          child: FormBuilderTextField(
+                                            obscureText: true,
+                                            attribute: "password",
+                                            decoration:
+                                            inputStyles.inputMain("Password"),
+                                            validators: [
+                                              FormBuilderValidators.minLength(8,
+                                                  errorText: "Wrong password"),
+                                              FormBuilderValidators.required()
+                                            ],
+                                            controller: _password,
+                                          ),
+                                        ),
+                                      ),
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment
+                                            .end,
+                                        children: <Widget>[
+                                          InkWell(
+                                            child: Text("Forgot password",
+                                                style: TextStyle(
+                                                    color: Theme
+                                                        .of(context)
+                                                        .primaryColor)),
+                                            onTap: () {
+                                              Navigator.pushNamed(
+                                                  context, "/forgot_password");
+                                            },
+                                          )
+                                        ],
+                                      ),
+                                      SizedBox(
+                                        height: 30,
+                                      )
                                     ],
-                                    controller: _password,
                                   ),
                                 ),
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: <Widget>[
-                                  InkWell(
-                                    child: Text("Forgot password",
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                PrimaryButton(
+                                  buttonText: _isLoading
+                                      ? LoaderLight()
+                                      : Text("SIGN IN",
+                                      style: TextStyle(
+                                          fontSize: 16, color: Colors.white)),
+                                  onPressed: () {
+                                    if (_fbKey.currentState.saveAndValidate()) {
+                                      _loginUser();
+                                    }
+                                  },
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: <Widget>[
+                                    Text(
+                                      "Already ave an account?",
+                                      style: TextStyle(fontSize: 16),
+                                    ),
+                                    SizedBox(
+                                      width: 20,
+                                    ),
+                                    InkWell(
+                                      child: Text(
+                                        "Sign Up",
                                         style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 16,
                                             color: Theme
                                                 .of(context)
-                                                .primaryColor)),
-                                    onTap: () {
-                                      Navigator.pushNamed(
-                                          context, "/forgot_password");
-                                    },
-                                  )
-                                ],
-                              ),
-                              SizedBox(
-                                height: 30,
-                              )
-                            ],
-                          ),
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        PrimaryButton(
-                          buttonText: _isLoading
-                              ? LoaderLight()
-                              : Text("SIGN IN",
-                              style: TextStyle(
-                                  fontSize: 16, color: Colors.white)),
-                          onPressed: () {
-                            if (_fbKey.currentState.saveAndValidate()) {
-                              _loginUser();
-                            }
-                          },
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Text(
-                              "Already ave an account?",
-                              style: TextStyle(fontSize: 16),
-                            ),
-                            SizedBox(
-                              width: 20,
-                            ),
-                            InkWell(
-                              child: Text(
-                                "Sign Up",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16,
-                                    color: Theme
-                                        .of(context)
-                                        .primaryColor),
-                              ),
-                              onTap: () {
-                                Navigator.pushNamed(context, "/register");
-                              },
-                            )
-                          ],
-                        ),
-                        SocialSignUp(),
-                      ],
-                    )),
-              ),
-            ],
-          ),
-        ));
+                                                .primaryColor),
+                                      ),
+                                      onTap: () {
+                                        Navigator.pushNamed(
+                                            context, "/register");
+                                      },
+                                    )
+                                  ],
+                                ),
+                                SocialSignUp(),
+                              ],
+                            )),
+                      ),
+                    ],
+                  );
+                })));
   }
 
   void _loginUser() async {
@@ -202,7 +211,7 @@ class _loginState extends State<Login> {
       storage.deleteItem("access_token");
       var access_token = result.data["login"];
       storage.setItem("access_token", access_token);
-      LoggedInUser().fetchLoggedInUser(context);
+      LoggedInUser().fetchLoggedInUser(context, "login");
     } else {
       setState(() {
         requestErrors = result.errors.toString().substring(10, 36);

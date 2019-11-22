@@ -57,11 +57,15 @@ class PrimaryMiniButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: MediaQuery.of(context).size.width / 2 - 50,
+      width: MediaQuery
+          .of(context)
+          .size
+          .width / 2 - 30,
       child: RaisedButton(
         color: Theme.of(context).primaryColor,
         splashColor: Theme.of(context).accentColor,
-        child: Padding(padding: EdgeInsets.all(20.0), child: buttonText),
+        child: Padding(padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
+            child: buttonText),
         onPressed: onPressed,
       ),
     );
@@ -78,11 +82,15 @@ class SecondaryMiniButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: MediaQuery.of(context).size.width / 2 - 50,
+      width: MediaQuery
+          .of(context)
+          .size
+          .width / 2 - 30,
       child: RaisedButton(
         color: Theme.of(context).accentColor,
         splashColor: Theme.of(context).primaryColor,
-        child: Padding(padding: EdgeInsets.all(20.0), child: buttonText),
+        child: Padding(padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
+            child: buttonText),
         onPressed: onPressed,
       ),
     );
@@ -136,7 +144,7 @@ class DeleteMiniButton extends StatelessWidget {
 
 class DatePickerButton extends StatelessWidget {
   final Widget buttonText;
-  final Icon icon;
+  final dynamic icon;
 
   DatePickerButton(
       {@required this.onPressed,
@@ -148,9 +156,12 @@ class DatePickerButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: MediaQuery.of(context).size.width / 2 - 50,
+      width: MediaQuery
+          .of(context)
+          .size
+          .width / 2 - 30,
       child: RaisedButton(
-        color: Theme.of(context).accentColor,
+        color: Colors.white,
         splashColor: Theme.of(context).accentColor,
         child: Padding(
             padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
@@ -174,11 +185,13 @@ class DatePickerButtonFull extends StatelessWidget {
       @required this.icon});
 
   final GestureTapCallback onPressed;
-
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: MediaQuery.of(context).size.width - 50,
+      width: MediaQuery
+          .of(context)
+          .size
+          .width - 30,
       child: RaisedButton(
         color: Theme.of(context).accentColor,
         splashColor: Theme.of(context).accentColor,
@@ -196,7 +209,7 @@ class DatePickerButtonFull extends StatelessWidget {
 
 class ChooseButton extends StatelessWidget {
   final Widget buttonText;
-  final Icon icon;
+  final dynamic icon;
 
   ChooseButton(
       {@required this.onPressed,
@@ -208,7 +221,10 @@ class ChooseButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: MediaQuery.of(context).size.width - 50,
+      width: MediaQuery
+          .of(context)
+          .size
+          .width - 30,
       child: RaisedButton(
         color: Colors.white,
         splashColor: Theme.of(context).accentColor,

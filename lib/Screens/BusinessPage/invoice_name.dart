@@ -42,13 +42,11 @@ class _AddInvoiceNameState extends State<AddInvoiceName> {
             iconTheme: IconThemeData(color: Theme.of(context).primaryColor),
             title: HeaderTitle(headerText: "Invoice Name")),
         body: SingleChildScrollView(
-          padding: EdgeInsets.only(top: 0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              SizedBox(height: 20),
               Container(
-                padding: EdgeInsets.all(30),
+                padding: EdgeInsets.only(top: 0, left: 20, right: 20),
                 child: Center(
                     child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -59,7 +57,7 @@ class _AddInvoiceNameState extends State<AddInvoiceName> {
                         'date': DateTime.now(),
                         'accept_terms': false,
                       },
-                      autovalidate: true,
+                      autovalidate: false,
                       child: Column(
                         children: <Widget>[
                           _hasErrors

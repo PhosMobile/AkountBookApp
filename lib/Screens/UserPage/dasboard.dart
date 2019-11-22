@@ -1,12 +1,13 @@
-import 'package:akount_books/Api/UserAcount/logged_in_user.dart';
-import 'package:akount_books/Graphql/graphql_config.dart';
 import 'package:akount_books/Models/menu_item.dart';
 import 'package:akount_books/Screens/BusinessPage/Expenses.dart';
 import 'package:akount_books/Screens/BusinessPage/Invoices.dart';
 import 'package:akount_books/Screens/BusinessPage/Reports.dart';
 import 'package:akount_books/Screens/BusinessPage/customers.dart';
 import 'package:akount_books/Widgets/logo_avatar.dart';
+import 'package:akount_books/utilities/svg_files.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 class Dashboard extends StatefulWidget {
   @override
@@ -22,6 +23,12 @@ class _DashboardState extends State<Dashboard> {
     Reports()
   ];
 
+  final Widget svg = new SvgPicture.asset(
+    SVGFiles.success_icon,
+    semanticsLabel: 'Akount-book',
+    allowDrawingOutsideViewBox: true,
+  );
+
   final List<String> _title = ["Invoices", "Customers", "Expenses", "Reports"];
 
   void _onItemTapped(int index) {
@@ -36,7 +43,16 @@ class _DashboardState extends State<Dashboard> {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
         appBar: AppBar(
-          title: Text(_title[_selectedIndex]),
+          backgroundColor: Colors.white,
+          title: Text(_title[_selectedIndex], style: TextStyle(color: Theme
+              .of(context)
+              .primaryColor),),
+          elevation: 0.0,
+          iconTheme: IconThemeData(
+              color: Theme
+                  .of(context)
+                  .primaryColor
+          ),
         ),
         body: _children[_selectedIndex],
         drawer: SizedBox(
@@ -66,7 +82,7 @@ class _DashboardState extends State<Dashboard> {
                           ],
                         ),
                         Expanded(
-                          child: MenuView(menu.menuList),
+                          child: menuView(menu.menuList),
                         )
                       ],
                     ),
@@ -75,46 +91,54 @@ class _DashboardState extends State<Dashboard> {
           ),
         ),
         bottomNavigationBar: BottomNavigationBar(
-          items: const <BottomNavigationBarItem>[
+          showUnselectedLabels: true,
+          items: [
             BottomNavigationBarItem(
-              icon: Icon(
-                Icons.description,
-              ),
-              title: Text('Invoices'),
-            ),
+                backgroundColor: Color.fromRGBO(233, 237, 240, 1),
+                icon: Icon(
+                  MdiIcons.fileDocumentOutline,
+                ),
+                title: Text(
+                    "Invoices"
+                )),
             BottomNavigationBarItem(
-              icon: Icon(
-                Icons.account_circle,
-              ),
-              title: Text(
-                'Customers',
-              ),
-            ),
+                icon:
+                Icon(MdiIcons.accountCircleOutline),
+                title: Text(
+                    "Customers"
+                )),
             BottomNavigationBarItem(
-              icon: Icon(
-                Icons.exposure,
-              ),
-              title: Text(
-                'Expenses',
-              ),
-            ),
+                icon: Icon(MdiIcons.calculator),
+                title: Text(
+                    "Expenses"
+                )),
             BottomNavigationBarItem(
-              icon: Icon(
-                Icons.add_photo_alternate,
-              ),
-              title: Text('Reports'),
-            ),
+                icon:
+                Icon(MdiIcons.fileMultipleOutline,),
+                title: Text(
+                    "Report"
+                )),
           ],
           currentIndex: _selectedIndex,
           selectedIconTheme:
-              IconThemeData(color: Theme.of(context).primaryColor, size: 30),
-          fixedColor: Theme.of(context).primaryColor,
+          IconThemeData(
+              color: Theme
+                  .of(context)
+                  .primaryColor
+          ),
+          unselectedIconTheme:
+          IconThemeData(
+              color: Color.fromRGBO(114, 139, 161, 1)
+          ),
+          selectedItemColor: Theme
+              .of(context)
+              .primaryColor,
+          unselectedItemColor: Color.fromRGBO(114, 139, 161, 1),
           onTap: _onItemTapped,
-          unselectedItemColor: Colors.blueGrey,
         ));
   }
 
-  Widget MenuView(List<MenuItem> menuList) {
+  Widget menuView(List<MenuItem> menuList) {
     return Container(
       child: Padding(
         padding: const EdgeInsets.only(top: 30.0),

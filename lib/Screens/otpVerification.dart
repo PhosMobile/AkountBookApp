@@ -49,6 +49,7 @@ class _OTPVerificationState extends State<OTPVerification> {
                   'date': DateTime.now(),
                   'accept_terms': false,
                 },
+                autovalidate: false,
                 child: Padding(
                   padding: const EdgeInsets.all(20.0),
                   child: Column(

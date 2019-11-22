@@ -19,4 +19,7 @@ class SVGFiles {
   static const reports = "images/reports.svg";
   static const user = "images/user.svg";
   static const user_edit = "images/user_edit.svg";
+  static const pick_date = "images/pickdate.svg";
+  static const add_customer = "images/add_customer.svg";
+  static const add_item = "images/add_item.svg";
 }

@@ -2,7 +2,6 @@ import 'dart:io';
 import 'package:akount_books/Api/UserAcount/logged_in_user.dart';
 import 'package:akount_books/Graphql/graphql_config.dart';
 import 'package:akount_books/Graphql/mutations.dart';
-import 'package:akount_books/Screens/business_created.dart';
 import 'package:akount_books/Widgets/HeaderTitle.dart';
 import 'package:akount_books/Widgets/error.dart';
 import 'package:akount_books/Widgets/loader_widget.dart';
@@ -69,7 +68,7 @@ class _AddBusinessState extends State<AddBusiness> {
                         'date': DateTime.now(),
                         'accept_terms': false,
                       },
-                      autovalidate: true,
+                      autovalidate: false,
                       child: Column(
                         children: <Widget>[
                           _hasErrors
@@ -264,8 +263,7 @@ class _AddBusinessState extends State<AddBusiness> {
         storage.deleteItem("access_token");
         var access_token = result.data["login"];
         storage.setItem("access_token", access_token);
-        storage.setItem("fromRegistration", "true");
-        LoggedInUser().fetchLoggedInUser(context);
+        LoggedInUser().fetchLoggedInUser(context, "registeration");
       } else {
         setState(() {
           requestErrors = result.errors.toString().substring(10, 36);

@@ -18,9 +18,7 @@ class CurrentBusinessData extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container();
   }
-
   dynamic getBusinessData(context, id) async {
-    print(id);
     GqlConfig graphQLConfiguration = GqlConfig();
     Queries queries = Queries();
     QueryResult result = await graphQLConfiguration.getGraphql().query(

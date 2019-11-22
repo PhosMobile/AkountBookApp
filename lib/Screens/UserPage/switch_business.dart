@@ -6,12 +6,10 @@ import 'package:akount_books/Widgets/HeaderTitle.dart';
 import 'package:akount_books/Widgets/buttons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-
 class SwitchBusiness extends StatefulWidget {
   @override
   _SwitchBusinessState createState() => _SwitchBusinessState();
 }
-
 class _SwitchBusinessState extends State<SwitchBusiness> {
   Business currentBusiness;
 

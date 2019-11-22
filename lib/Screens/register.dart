@@ -69,7 +69,7 @@ class _RegisterState extends State<Register> {
                         'date': DateTime.now(),
                         'accept_terms': false,
                       },
-                      autovalidate: true,
+                      autovalidate: false,
                       child: Column(
                         children: <Widget>[
                           _hasErrors
