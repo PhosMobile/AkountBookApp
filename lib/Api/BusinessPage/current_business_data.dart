@@ -27,7 +27,7 @@ class CurrentBusinessData extends StatelessWidget {
         );
     if (!result.hasErrors) {
       var customers = result.data["get_business"]["customers"];
-      var items = result.data["get_business"]["customers"];
+      var items = result.data["get_business"]["items"];
       var invoices = result.data["get_business"]["invoices"];
       var expenses = result.data["get_business"]["expenses"];
       saveInvoices(context, invoices);
@@ -64,7 +64,7 @@ saveInvoices(context, data) {
     invoices.add(invoice);
   }
   final saveInvoice = StoreProvider.of<AppState>(context);
-  saveInvoice.dispatch(AddInvoice(payload: invoices));
+  saveInvoice.dispatch(FetchUserInvoice(payload: invoices));
 }
 
 saveCustomers(context, data) {
@@ -103,7 +103,6 @@ saveExpenses(context, data) {
   final saveExpense = StoreProvider.of<AppState>(context);
   saveExpense.dispatch(AddExpense(payload: expenses));
 }
-
 saveItems(context, data) {
   List<Item> businessItems = [];
   for (var item in data) {

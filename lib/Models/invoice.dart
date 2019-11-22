@@ -1,3 +1,7 @@
+import 'customer.dart';
+import 'invoice_name.dart';
+import 'item.dart';
+
 class Invoice {
   String id,
       title,
@@ -13,6 +17,10 @@ class Invoice {
       business_id,
       user_id;
   int number, po_so_number;
+
+  InvoiceName invoiceName;
+  List<Item> invoiceItem = [];
+  Customer invoiceCustomer;
 
   Invoice(
       this.id,

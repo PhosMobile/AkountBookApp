@@ -3,20 +3,53 @@ import 'package:akount_books/AppState/app_state.dart';
 import 'package:akount_books/Models/item.dart';
 import 'package:akount_books/Widgets/HeaderTitle.dart';
 import 'package:akount_books/Widgets/buttons.dart';
+import 'package:akount_books/Widgets/item_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import '../../utilities/svg_files.dart';
 
-class ItemList extends StatelessWidget {
+class ItemList extends StatefulWidget {
+  @override
+  _ItemListState createState() => _ItemListState();
+}
+
+class _ItemListState extends State<ItemList> {
+  final Widget addItem = new SvgPicture.asset(
+    SVGFiles.add_item,
+    semanticsLabel: 'Akount-book',
+    allowDrawingOutsideViewBox: true,
+  );
+  List<bool> inputs = new List<bool>();
+  List<Item> businessItems = [];
+
+    @override
+    void initState() {
+    // TODO: implement initState
+    setState(() {
+      for (int i = 0; i < 2000; i++) {
+        inputs.add(false);
+      }
+    });
+  }
+
+  void ItemChange(bool val, int index) {
+    setState(() {
+      inputs[index] = val;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
         appBar: AppBar(
             backgroundColor: Colors.white,
             iconTheme: IconThemeData(color: Theme.of(context).primaryColor),
-            title: HeaderTitle(headerText: "Select Customer")),
+            title: HeaderTitle(headerText: "Select Items")),
         body: StoreConnector<AppState, AppState>(
             converter: (store) => store.state,
             builder: (context, state) {
+
               List<Item> businessItems = state.businessItems;
               if (businessItems.length == 0) {
                 return Container(
@@ -67,10 +100,7 @@ class ItemList extends StatelessWidget {
                                 style: TextStyle(
                                     color: Theme.of(context).primaryColor),
                               ),
-                              icon: Icon(
-                                Icons.account_box,
-                                color: Theme.of(context).primaryColor,
-                              ),
+                              icon: addItem,
                               onPressed: () {
                                 Navigator.push(
                                   context,
@@ -88,39 +118,29 @@ class ItemList extends StatelessWidget {
                             child: ListView.builder(
                                 itemCount: businessItems.length,
                                 itemBuilder: (BuildContext context, int index) {
-                                  return Padding(
-                                    padding: const EdgeInsets.all(8.0),
+                                  return GestureDetector(
                                     child: Container(
-                                      padding: EdgeInsets.all(10.0),
-                                      decoration: BoxDecoration(
-                                          border: Border.all(
-                                              width: 3,
-                                              color: Theme.of(context)
-                                                  .primaryColorLight,
-                                              style: BorderStyle.solid)),
-                                      child: Row(
-                                        children: <Widget>[
-                                          Padding(
-                                              padding: const EdgeInsets.only(
-                                                  right: 15.0),
-                                              child: CircleAvatar(
-                                                  backgroundColor:
-                                                      Color.fromRGBO(
-                                                          200, 228, 253, 0.4),
-                                                  child: Icon(
-                                                    Icons.business,
-                                                    color: Colors.blueGrey,
-                                                    size: 25,
-                                                  ))),
-                                          Expanded(
-                                              child: Text(
-                                            businessItems[index].name,
-                                            style: TextStyle(
-                                                color: Colors.blueGrey[20]),
+                                      child: Padding(
+                                          padding: const EdgeInsets.only(
+                                              top: 4.0, bottom: 4.0),
+                                          child: Row(
+                                            children: <Widget>[
+                                              Expanded(
+                                                  child: ItemCard(
+                                                      item: businessItems[
+                                                          index])),
+                                              Checkbox(
+                                                  value: inputs[index],
+                                                  onChanged: (bool val) {
+                                                    ItemChange(val, index);
+                                                  })
+                                            ],
                                           )),
-                                        ],
-                                      ),
                                     ),
+                                    onTap: () {
+                                      addItemsToInvoice(
+                                          businessItems[index], context);
+                                    },
                                   );
                                 }),
                           ),
@@ -129,5 +149,11 @@ class ItemList extends StatelessWidget {
                     ));
               }
             }));
+  }
+
+  addItemsToInvoice(Item item, context) {
+    final invoiceCustomerProvider = StoreProvider.of<AppState>(context);
+//    invoiceCustomerProvider.dispatch(AddInvoiceItems(payload: item));
+    Navigator.pop(context);
   }
 }

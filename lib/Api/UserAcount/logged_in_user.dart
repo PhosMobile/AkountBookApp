@@ -50,7 +50,6 @@ class LoggedInUser {
       if (from == "registeration") {
         business.dispatch(UserCurrentBusiness(payload: businesses[0]));
         CurrentBusinessData().getBusinessData(context, businesses[0].id);
-//                              Navigator.pushNamed(context, "/user_dashboard");
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => BusinessCreated()),

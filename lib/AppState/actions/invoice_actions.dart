@@ -1,9 +1,15 @@
 import 'package:akount_books/Models/invoice.dart';
+import 'package:akount_books/Models/invoice_name.dart';
 import 'package:flutter/material.dart';
 
-class AddInvoice {
+class FetchUserInvoice {
   final List<Invoice> payload;
 
+  FetchUserInvoice({@required this.payload});
+}
+
+class AddInvoice {
+  final InvoiceName payload;
   AddInvoice({@required this.payload});
 }
 

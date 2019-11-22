@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 
 class AddBusinessItem {
   final List<Item> payload;
-
   AddBusinessItem({@required this.payload});
 }
 

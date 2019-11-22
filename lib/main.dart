@@ -14,7 +14,6 @@ import 'AppState/reducers/app_reducer.dart';
 import 'AppState/app_state.dart';
 import 'Screens/UserPage/switch_business.dart';
 import 'Screens/forgot_password.dart';
-
 void main() {
   final Store<AppState> store = Store<AppState>(
     appReducer,
@@ -23,17 +22,12 @@ void main() {
   );
   runApp(MyApp(store: store));
 }
-
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   final Store<AppState> store;
-
   MyApp({this.store});
-
-  //
   // Store is just a class that holds your apps State tree.
   // AppState is something that we will (but haven't yet) established
-
   @override
   Widget build(BuildContext context) {
     return StoreProvider<AppState>(
