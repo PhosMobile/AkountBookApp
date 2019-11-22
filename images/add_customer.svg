@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30">
+  <g id="add_customer" transform="translate(-38.476 -235.573)">
+    <g id="Group_172" data-name="Group 172" transform="translate(30 6)">
+      <g id="add_cstm_icon" data-name="add cstm icon" transform="translate(8.476 229.573)">
+        <circle id="Ellipse_43" data-name="Ellipse 43" cx="15" cy="15" r="15" fill="#e9edf0"/>
+        <g id="user_1_" data-name="user (1)" transform="translate(9.514 8.987)">
+          <path id="Path_87" data-name="Path 87" d="M87.756,6.762a3.381,3.381,0,1,0-3.381-3.381A3.385,3.385,0,0,0,87.756,6.762Zm0-5.41a2.029,2.029,0,1,1-2.029,2.029A2.031,2.031,0,0,1,87.756,1.352Z" transform="translate(-82.177)" fill="#0464b7"/>
+          <path id="Path_88" data-name="Path 88" d="M41.2,180a5.585,5.585,0,0,0-5.579,5.579v.676H46.782v-.676A5.585,5.585,0,0,0,41.2,180Zm-4.172,4.9a4.227,4.227,0,0,1,8.344,0Z" transform="translate(-35.625 -171.885)" fill="#0464b7"/>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>
