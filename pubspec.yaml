@@ -36,6 +36,7 @@ dependencies:
   flutter_redux: ^0.5.4
   flutter_datetime_picker: ^1.2.8
   date_format: ^1.0.8
+  flushbar: ^1.9.1
 
 
 dev_dependencies:

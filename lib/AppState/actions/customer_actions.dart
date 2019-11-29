@@ -8,11 +8,11 @@ class AddCustomer {
 }
 
 
-class UpdateCustomer {
+class UpdateBusinessCustomers {
   final Customer payload;
-
-  UpdateCustomer({@required this.payload});
+  UpdateBusinessCustomers({@required this.payload});
 }
+
 class DeleteCustomer {
   final Customer payload;
 

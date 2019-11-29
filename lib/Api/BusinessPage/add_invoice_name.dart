@@ -41,7 +41,7 @@ class _AddInvoiceNameState extends State<AddInvoiceName> {
               InvoiceName invoiceNameFromState = state.invoiceName;
               if(invoiceNameFromState != null){
                 _invoiceTitle.text = invoiceNameFromState.title;
-                _invoiceNumber.text = invoiceNameFromState.invoice_number;
+                _invoiceNumber.text = invoiceNameFromState.invoice_number.toString();
                 _poSoNumber.text = invoiceNameFromState.po_so_number;
                 _summary.text = invoiceNameFromState.summary;
               }
@@ -96,9 +96,10 @@ class _AddInvoiceNameState extends State<AddInvoiceName> {
                                         decoration:
                                         inputStyles.inputMain("Invoice Number"),
                                         validators: [
-                                          FormBuilderValidators.minLength(7,
-                                              errorText: "Email too short"),
-                                          FormBuilderValidators.required()
+                                          FormBuilderValidators.minLength(3,
+                                              errorText: "Invoice Number too short"),
+                                          FormBuilderValidators.required(),
+                                          FormBuilderValidators.numeric()
                                         ],
                                         controller: _invoiceNumber,
                                       ),
@@ -131,7 +132,6 @@ class _AddInvoiceNameState extends State<AddInvoiceName> {
                                         validators: [
                                           FormBuilderValidators.max(70,
                                               errorText: "Summary"),
-                                          FormBuilderValidators.required()
                                         ],
                                         controller: _summary,
                                       ),
@@ -169,7 +169,7 @@ class _AddInvoiceNameState extends State<AddInvoiceName> {
   }
   void _saveInvoiceName(context){
     final invoiceNameProvider = StoreProvider.of<AppState>(context);
-    InvoiceName _invoiceName = new InvoiceName(_invoiceTitle.text, _invoiceNumber.text, _poSoNumber.text, _summary.text);
+    InvoiceName _invoiceName = new InvoiceName(_invoiceTitle.text, int.parse(_invoiceNumber.text), _poSoNumber.text, _summary.text);
     invoiceNameProvider.dispatch(AddInvoice(payload: _invoiceName));
 
     Navigator.pop(context);

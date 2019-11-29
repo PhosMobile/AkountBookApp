@@ -22,12 +22,20 @@ AppState appReducer(AppState prevState, dynamic action) {
     newAppState.businessExpenses = action.payload;
   } else if (action is AddBusinessItem) {
     newAppState.businessItems = action.payload;
-  }else if(action is AddInvoiceCustomer){
+  } else if (action is AddInvoiceCustomer) {
     newAppState.invoiceCustomer = action.payload;
-  }
-  else if (action is AddInvoice) {
+  } else if (action is AddInvoice) {
     newAppState.invoiceName = action.payload;
+  } else if (action is AddInvoiceItems) {
+    newAppState.invoiceItems = action.payload;
+  }else if (action is UpdateBusinessCustomers) {
+    newAppState.businessCustomers.insert(0, action.payload);
+  }else if (action is UpdateBusinessItems) {
+    newAppState.businessItems.insert(0, action.payload);
+  } else if (action is CreateInvoice) {
+    newAppState.readyInvoice = action.payload;
+  }else if (action is AddBusinessInvoice) {
+    newAppState.businessInvoices.insert(0, action.payload);
   }
-
   return newAppState;
 }

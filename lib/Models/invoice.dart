@@ -8,17 +8,17 @@ class Invoice {
       summary,
       issue_date,
       due_date,
-      sub_total_amount,
-      total_amount,
       notes,
       status,
       footer,
       customer_id,
       business_id,
-      user_id;
-  int number, po_so_number;
+      user_id,
+      po_so_number;
 
-  InvoiceName invoiceName;
+  int number;
+  var sub_total_amount,total_amount;
+
   List<Item> invoiceItem = [];
   Customer invoiceCustomer;
 
@@ -37,8 +37,8 @@ class Invoice {
       this.footer,
       this.customer_id,
       this.business_id,
-      this.user_id);
-
+      this.user_id,
+      );
   Invoice.fromJson(Map<String, dynamic> jsonObject) {
     this.id = jsonObject['id'];
     this.title = jsonObject['title'];

@@ -51,7 +51,7 @@ class Mutations {
   }
 
   String createBusiness(String name, String email, String description,
-      String address, String currency, String image_url, String user_id) {
+      String address, String currency, String imageUrl, String userId) {
     return """
       mutation{
           create_business(
@@ -60,8 +60,8 @@ class Mutations {
           description: "$description", 
           address:"$address"
           currency: "$currency" 
-          image_url: "$image_url"
-          user_id:"$user_id"
+          image_url: "$imageUrl"
+          user_id:"$userId"
           ){
           id
           name
@@ -69,4 +69,122 @@ class Mutations {
       }
     """;
   }
+
+
+  String createCustomer(String name, String email, String phone,
+      String address, String businessId, String userId, String image_url) {
+    return """
+      mutation{
+          create_customer(
+          name: "$name", 
+          email: "$email", 
+          phone: "$phone", 
+          address:"$address"
+          business_id: "$businessId" 
+          user_id: "$userId"
+          image_url:"$image_url"
+          ){
+          id
+          name
+          email
+          phone
+          address
+          image_url
+          business_id
+          user_id
+          }
+      }
+    """;
+  }
+
+
+  String createItem(String name, String description, int quantity,
+      int price, String businessId, String userId) {
+    return """
+      mutation{
+          create_item(
+          name: "$name", 
+          description: "$description", 
+          quantity: $quantity, 
+          price:$price,
+          business_id: "$businessId",
+          user_id: "$userId",
+          ){
+          id
+          name
+          description
+          quantity
+          price
+          business_id
+          user_id
+          }
+      }
+    """;
+  }
+
+  String createInvoice(
+      String title,
+      int number,
+      String poSoNumber,
+      String summary,
+      String issueDate,
+      String dueDate,
+      int subTotalAmount,
+      int totalAmount,
+      String notes,
+      String status,
+      String footer,
+      String customerId,
+      String businessId,
+      String userId
+      ) {
+    return """
+      mutation{
+          create_invoice(
+          title: "$title", 
+          number: $number, 
+          po_so_number: "$poSoNumber", 
+          summary:"$summary",
+          issue_date: "$issueDate",
+          due_date: "$dueDate",
+          sub_total_amount: $subTotalAmount, 
+          total_amount: $totalAmount, 
+          notes: "$notes", 
+          status:"$status",
+          footer: "$footer",
+          customer_id: "$customerId",
+          business_id: "$businessId",
+          user_id: "$userId",
+          ){
+id
+title
+number
+po_so_number
+summary
+issue_date
+due_date
+sub_total_amount
+total_amount
+notes
+status
+footer
+customer_id
+business_id
+user_id
+          }
+      }
+    """;
+  }
+
+  String createInvoiceItem(String invoiceId, String itemId) {
+    return """
+      mutation{
+          create_invoice_item( invoice_id: "$invoiceId", item_id: "$itemId", ){
+            invoice_id
+            item_id
+          }
+      }
+    """;
+  }
+
 }

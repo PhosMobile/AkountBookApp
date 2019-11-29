@@ -16,9 +16,9 @@ class CustomerCard extends StatelessWidget{
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-          color:  Color.fromRGBO(233, 237, 240, .2)
+          color:  Color.fromRGBO(248, 248, 248, 1)
       ),
-      padding: EdgeInsets.all(10.0),
+      padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
       child: Padding(
         padding: const EdgeInsets.only(left:20.0),
         child: Row(

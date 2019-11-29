@@ -1,6 +1,6 @@
 class InvoiceName {
-  String  title, invoice_number, po_so_number, summary;
-
+  String  title, po_so_number, summary;
+  int invoice_number;
   InvoiceName(this.title, this.invoice_number, this.po_so_number, this.summary);
 
   InvoiceName.fromJson(Map<String, dynamic> jsonObject) {

@@ -1,5 +1,5 @@
 import 'package:akount_books/Api/BusinessPage/create_customer.dart';
-import 'package:akount_books/AppState/actions/customer_actions.dart' as prefix0;
+import 'package:akount_books/AppState/actions/customer_actions.dart' as customerAction;
 import 'package:akount_books/AppState/app_state.dart';
 import 'package:akount_books/Models/customer.dart';
 import 'package:akount_books/Widgets/HeaderTitle.dart';
@@ -118,7 +118,7 @@ class CustomerList extends StatelessWidget {
   }
   addCustomerToInvoice(Customer customer, context){
     final invoiceCustomerProvider = StoreProvider.of<AppState>(context);
-    invoiceCustomerProvider.dispatch(prefix0.AddInvoiceCustomer(payload: customer));
+    invoiceCustomerProvider.dispatch(customerAction.AddInvoiceCustomer(payload: customer));
     Navigator.pop(context);
   }
   

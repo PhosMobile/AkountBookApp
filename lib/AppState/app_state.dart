@@ -21,6 +21,8 @@ class AppState {
   List<Invoice> businessInvoices = [];
 
   InvoiceName invoiceName;
-  List<Item> invoiceItem = [];
+  List<Item> invoiceItems = [];
   Customer invoiceCustomer;
+  Invoice readyInvoice;
+
 }

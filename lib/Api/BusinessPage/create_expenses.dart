@@ -37,7 +37,7 @@ class _AddExpensesState extends State<AddExpenses> {
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
+    return  Scaffold(
         appBar: AppBar(
             backgroundColor: Colors.white,
             iconTheme: IconThemeData(color: Theme.of(context).primaryColor),

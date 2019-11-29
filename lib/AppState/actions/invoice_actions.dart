@@ -12,6 +12,16 @@ class AddInvoice {
   final InvoiceName payload;
   AddInvoice({@required this.payload});
 }
+class AddBusinessInvoice {
+  final Invoice payload;
+  AddBusinessInvoice({@required this.payload});
+}
+
+
+class CreateInvoice {
+  final Invoice payload;
+  CreateInvoice({@required this.payload});
+}
 
 class UpdateInvoice {
   final Invoice payload;
