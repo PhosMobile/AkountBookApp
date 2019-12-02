@@ -1,4 +1,5 @@
 import 'package:akount_books/AppState/actions/invoice_actions.dart';
+import 'package:akount_books/Models/edit_invoice.dart';
 import 'package:akount_books/Models/invoice_name.dart';
 import 'package:akount_books/Widgets/HeaderTitle.dart';
 import 'package:akount_books/Widgets/error.dart';
@@ -8,13 +9,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:akount_books/Widgets/Input_styles.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+
 import '../../AppState/app_state.dart';
 
-class AddInvoiceName extends StatefulWidget {
+class EditInvoiceName extends StatefulWidget {
   @override
-  _AddInvoiceNameState createState() => _AddInvoiceNameState();
+  _EditInvoiceNameState createState() => _EditInvoiceNameState();
 }
-class _AddInvoiceNameState extends State<AddInvoiceName> {
+class _EditInvoiceNameState extends State<EditInvoiceName> {
   final GlobalKey<FormBuilderState> _fbKey = GlobalKey<FormBuilderState>();
   InputStyles inputStyles = new InputStyles();
   String requestErrors;
@@ -37,8 +39,9 @@ class _AddInvoiceNameState extends State<AddInvoiceName> {
           child: StoreConnector<AppState, AppState>(
             converter: (store) => store.state,
             builder: (context, state){
-              InvoiceName invoiceNameFromState = state.invoiceName;
-              if(invoiceNameFromState != null){
+              EditInvoice editInvoice = state.editInvoice;
+              if(editInvoice != null){
+                InvoiceName invoiceNameFromState = InvoiceName(editInvoice.title, editInvoice.number, editInvoice.po_so_number, editInvoice.summary);
                 _invoiceTitle.text = invoiceNameFromState.title;
                 _invoiceNumber.text = invoiceNameFromState.invoice_number.toString();
                 _poSoNumber.text = invoiceNameFromState.po_so_number;
@@ -174,8 +177,7 @@ class _AddInvoiceNameState extends State<AddInvoiceName> {
   void _saveInvoiceName(context){
     final invoiceNameProvider = StoreProvider.of<AppState>(context);
     InvoiceName _invoiceName = new InvoiceName(_invoiceTitle.text, int.parse(_invoiceNumber.text), _poSoNumber.text, _summary.text);
-    invoiceNameProvider.dispatch(AddNameInvoice(payload: _invoiceName));
-
+    invoiceNameProvider.dispatch(EditNameInvoice(payload: _invoiceName));
     Navigator.pop(context);
   }
 }

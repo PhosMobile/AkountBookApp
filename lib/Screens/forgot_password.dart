@@ -33,88 +33,96 @@ class _ForgotPasswordState extends State<ForgotPassword> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          elevation: 0,
           backgroundColor: Colors.white,
           iconTheme: IconThemeData(color: Theme.of(context).primaryColor),
         ),
         body: SingleChildScrollView(
-          padding: EdgeInsets.only(top: 60),
-          child: new Center(
-              child: FormBuilder(
-            key: _fbKey,
-            initialValue: {
-              'date': DateTime.now(),
-              'accept_terms': false,
-            },
-            child: Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Column(
-                    children: <Widget>[
-                      svg,
-                      SizedBox(
-                        height: 30,
-                      ),
-                      Text(
-                        "Forgot Password",
-                        style: TextStyle(
-                          fontSize: 25,
-                          fontWeight: FontWeight.bold,
+          child: Container(
+            decoration: BoxDecoration(
+                border: Border(
+                    top: BorderSide(
+                        width: 2, color: Theme.of(context).accentColor))),
+            padding: EdgeInsets.only(top: 60),
+            child: new Center(
+                child: FormBuilder(
+              key: _fbKey,
+              initialValue: {
+                'date': DateTime.now(),
+                'accept_terms': false,
+              },
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Column(
+                      children: <Widget>[
+                        svg,
+                        SizedBox(
+                          height: 30,
                         ),
-                      ),
-                      SizedBox(
-                        height: 60,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(18.0),
-                        child: Text(
-                          "Fill in your registered email address to reset password",
-                          textAlign: TextAlign.center,
+                        Text(
+                          "Forgot Password",
+                          style: TextStyle(
+                            fontSize: 25,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 30,
-                  ),
-                  _hasErrors
-                      ? RequestError(errorText: requestErrors)
-                      : Container(),
-                  Container(
-                    decoration: BoxDecoration(
-                        boxShadow: [inputStyles.boxShadowMain(context)]),
-                    child: FormBuilderTextField(
-                      attribute: "email",
-                      decoration: inputStyles.inputMain("Email Address"),
-                      validators: [
-                        FormBuilderValidators.email(errorText: "Invalid Email"),
-                        FormBuilderValidators.required(
-                            errorText: "Cannot be Empty")
+                        SizedBox(
+                          height: 60,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(18.0),
+                          child: Text(
+                            "Fill in your registered email address to reset password",
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
                       ],
-                      controller: _email,
                     ),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  PrimaryButton(
-                    buttonText: _isLoading
-                        ? LoaderLight()
-                        : Text("RESET PASSWORD",
-                            style:
-                                TextStyle(fontSize: 16, color: Colors.white)),
-                    onPressed: () {
-                      if (_fbKey.currentState.saveAndValidate()) {
-                        _getPasswordReset();
-                      }
-                    },
-                  ),
-                ],
+                    SizedBox(
+                      height: 30,
+                    ),
+                    _hasErrors
+                        ? RequestError(errorText: requestErrors)
+                        : Container(),
+                    Container(
+                      decoration: BoxDecoration(
+                          boxShadow: [inputStyles.boxShadowMain(context)]),
+                      child: FormBuilderTextField(
+                        attribute: "email",
+                        decoration: inputStyles.inputMain("Email Address"),
+                        validators: [
+                          FormBuilderValidators.email(
+                              errorText: "Invalid Email"),
+                          FormBuilderValidators.required(
+                              errorText: "Cannot be Empty")
+                        ],
+                        controller: _email,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    PrimaryButton(
+                      buttonText: _isLoading
+                          ? LoaderLight()
+                          : Text("RESET PASSWORD",
+                              style:
+                                  TextStyle(fontSize: 16, color: Colors.white)),
+                      onPressed: () {
+                        if (_fbKey.currentState.saveAndValidate()) {
+                          _getPasswordReset();
+                        }
+                      },
+                    ),
+                  ],
+                ),
               ),
-            ),
-          )),
+            )),
+          ),
         ));
   }
 

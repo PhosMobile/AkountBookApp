@@ -15,9 +15,8 @@ class Invoice {
       business_id,
       user_id,
       po_so_number;
-
   int number;
-  var sub_total_amount,total_amount;
+  int sub_total_amount,total_amount;
 
   List<Item> invoiceItem = [];
   Customer invoiceCustomer;
@@ -56,4 +55,36 @@ class Invoice {
     this.business_id = jsonObject['business_id'];
     this.status = jsonObject['user_id'];
   }
+
+  static List<Invoice> draftInvoices(List<Invoice> invoices){
+    List<Invoice> draftInvoices = [];
+    invoices.forEach((invoice){
+        if(invoice.status.toLowerCase() == "draft"){
+          draftInvoices.add(invoice);
+        }
+    });
+    return draftInvoices;
+  }
+
+ static List<Invoice> sentInvoices(List<Invoice> invoices){
+    List<Invoice> draftInvoices = [];
+    invoices.forEach((invoice){
+      if(invoice.status.toLowerCase() == "sent"){
+        draftInvoices.add(invoice);
+      }
+    });
+    return draftInvoices;
+  }
+
+  static Customer getInvoiceCustomer(String id, List<Customer> customers){
+    Customer iCustomer;
+    customers.forEach((customer){
+      if(customer.id == id){
+        iCustomer =customer;
+      }
+    });
+    return iCustomer;
+  }
+
+
 }

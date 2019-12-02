@@ -1,4 +1,5 @@
 import 'package:akount_books/Models/Expense.dart';
+import 'package:akount_books/Models/edit_invoice.dart';
 import 'package:akount_books/Models/invoice_name.dart';
 import 'package:akount_books/Models/user.dart';
 import 'package:akount_books/Models/business.dart';
@@ -9,7 +10,6 @@ import 'package:akount_books/Models/payment.dart';
 import 'package:akount_books/Models/receipt.dart';
 
 class AppState {
-
   User loggedInUser;
   List<Business> userBusinesses = [];
   Business currentBusiness;
@@ -24,5 +24,7 @@ class AppState {
   List<Item> invoiceItems = [];
   Customer invoiceCustomer;
   Invoice readyInvoice;
+
+  EditInvoice editInvoice;
 
 }

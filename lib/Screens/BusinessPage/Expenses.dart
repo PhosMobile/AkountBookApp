@@ -1,6 +1,9 @@
 import 'package:akount_books/Api/BusinessPage/create_expenses.dart';
 import 'package:akount_books/AppState/app_state.dart';
 import 'package:akount_books/Models/Expense.dart';
+import 'package:akount_books/Screens/BusinessPage/view_expense.dart';
+import 'package:akount_books/Widgets/empty.dart';
+import 'package:akount_books/utilities/currency_convert.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
@@ -19,108 +22,70 @@ class _ExpensesState extends State<Expenses> {
             if (businessExpenses.length == 0) {
               return Container(
                 child: Center(
-                  child: Text("No Expenses"),
+                  child: Empty(text: "No Expenses"),
                 ),
               );
             } else {
               return Container(
                 child: Column(
                   children: <Widget>[
+                    InkWell(
+                      child: Padding(
+                        padding: const EdgeInsets.all(30.0),
+                        child: Text(
+                          "FILTER DATE",
+                          style:
+                              TextStyle(color: Theme.of(context).primaryColor),
+                        ),
+                      ),
+                    ),
+                    Container(
+                        width: MediaQuery.of(context).size.width,
+                        child: Padding(
+                          padding: const EdgeInsets.all(15.0),
+                          child: Text("All Expenses"),
+                        )),
                     Expanded(
                       child: Container(
                         child: ListView.builder(
                             itemCount: businessExpenses.length,
                             itemBuilder: (BuildContext context, int index) {
-                              return Padding(
-                                padding: const EdgeInsets.all(8.0),
+                              Expense expense = businessExpenses[index];
+                              return InkWell(
                                 child: Container(
-                                  padding: EdgeInsets.all(10.0),
-                                  decoration: BoxDecoration(
-                                      border: Border.all(
-                                          width: 3,
-                                          color: Theme.of(context)
-                                              .primaryColorLight,
-                                          style: BorderStyle.solid)),
+                                  padding: EdgeInsets.only(left: 15, top: 20, bottom: 20),
+                                  color: Color.fromRGBO(248, 248, 248, 1),
                                   child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: <Widget>[
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: <Widget>[
-                                          Container(
-                                              child: Card(
-                                            child: Container(
-                                              width: MediaQuery.of(context)
-                                                          .size
-                                                          .width /
-                                                      2 +
-                                                  50,
-                                              child: Text(
-                                                businessExpenses[index].name,
-                                                softWrap: true,
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Theme.of(context)
-                                                        .primaryColor),
-                                              ),
-                                            ),
-                                            elevation: 0.0,
+                                      Container(child: Text(expense.name),width: MediaQuery.of(context).size.width/5,),
+                                      Container(
+                                          width:
+                                              MediaQuery.of(context).size.width /
+                                                  3,
+                                          child: Text(
+                                            expense.description,
+                                            overflow: TextOverflow.ellipsis,
                                           )),
-                                          Container(
-                                              child: Card(
-                                            child: Container(
-                                              child: RaisedButton(
-                                                  color: Colors.lightGreen,
-                                                  child: Text(
-                                                      businessExpenses[index]
-                                                          .price),
-                                                  onPressed: () {}),
-                                            ),
-                                            elevation: 0.0,
-                                          ))
-                                        ],
-                                      ),
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.end,
-                                        children: <Widget>[
-                                          Container(
-                                              child: Card(
-                                            child: Container(
-                                              child: Text(
-                                                businessExpenses[index]
-                                                    .date
-                                                    .toString(),
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Theme.of(context)
-                                                        .primaryColor),
-                                              ),
-                                            ),
-                                            elevation: 0.0,
-                                          )),
-                                          Container(
-                                              child: Card(
-                                            child: Container(
-                                              child: Text(
-                                                  businessExpenses[index]
-                                                      .quantity
-                                                      .toString()),
-                                            ),
-                                            elevation: 0.0,
-                                          )),
-                                        ],
+                                      Container(
+                                width: MediaQuery.of(context).size.width/4,
+                                        child: Text(CurrencyConverter().formatPrice(
+                                            int.parse(expense.price),
+                                            state.currentBusiness.currency)),
                                       )
                                     ],
                                   ),
                                 ),
+                                onTap: (){
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => ViewExpense(expense: expense, currency: state.currentBusiness.currency)),
+                                  );
+                                },
                               );
                             }),
                       ),
                     ),
-                    SizedBox(height: 20),
                   ],
                 ),
               );

@@ -1,23 +1,22 @@
 import 'package:akount_books/Api/BusinessPage/InvoiceItems.dart';
+import 'package:akount_books/Api/BusinessPage/edit_invoice_name.dart';
 import 'package:akount_books/Api/BusinessPage/send_invoice.dart';
 import 'package:akount_books/AppState/actions/invoice_actions.dart';
 import 'package:akount_books/Graphql/graphql_config.dart';
 import 'package:akount_books/Graphql/mutations.dart';
 import 'package:akount_books/Models/customer.dart';
+import 'package:akount_books/Models/edit_invoice.dart';
 import 'package:akount_books/Models/invoice.dart';
 import 'package:akount_books/Models/invoice_name.dart';
 import 'package:akount_books/Models/item.dart';
-import 'package:akount_books/Screens/BusinessPage/add_customers_list.dart';
-import 'package:akount_books/Api/BusinessPage/add_invoice_name.dart';
-import 'package:akount_books/Screens/BusinessPage/draft_saved.dart';
-import 'package:akount_books/Screens/BusinessPage/add_item_list.dart';
-import 'package:akount_books/Widgets/AlertSnackBar.dart';
+import 'package:akount_books/Screens/BusinessPage/edit_customer_list.dart';
+import 'package:akount_books/Screens/BusinessPage/edit_item_list.dart';
 import 'package:akount_books/Widgets/HeaderTitle.dart';
 import 'package:akount_books/Widgets/error.dart';
 import 'package:akount_books/Widgets/invoice_item_card.dart';
 import 'package:akount_books/Widgets/loader_widget.dart';
 import 'package:akount_books/Widgets/buttons.dart';
-import 'package:akount_books/utilities/current_date.dart';
+import 'package:akount_books/Widgets/loading_snack_bar.dart';
 import 'package:akount_books/utilities/svg_files.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -27,13 +26,14 @@ import 'package:akount_books/Widgets/Input_styles.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
-import '../../AppState/app_state.dart';
-class AddInvoice extends StatefulWidget {
-  @override
-  _AddInvoiceState createState() => _AddInvoiceState();
-}
 
-class _AddInvoiceState extends State<AddInvoice> {
+import '../../AppState/app_state.dart';
+
+class UpdateInvoiceData extends StatefulWidget {
+  @override
+  _UpdateInvoiceDataState createState() => _UpdateInvoiceDataState();
+}
+class _UpdateInvoiceDataState extends State<UpdateInvoiceData> {
   final GlobalKey<FormBuilderState> _fbKey = GlobalKey<FormBuilderState>();
   GlobalKey<ScaffoldState> scaffoldState = new GlobalKey<ScaffoldState>();
   InputStyles inputStyles = new InputStyles();
@@ -46,9 +46,9 @@ class _AddInvoiceState extends State<AddInvoice> {
   TextEditingController _total = new TextEditingController();
   TextEditingController _notes = new TextEditingController();
   TextEditingController _footer = new TextEditingController();
+  String _invoiceName = "INVOICE NAME";
   String invoiceDate = "";
   String dueDate = "";
-  String _invoiceName = "INVOICE NAME";
   String _invoiceType = "DRAFT";
   String _invoiceDescription = "Project Name / Description";
   String _invoiceNumber = "P.S/S.O Number";
@@ -60,16 +60,26 @@ class _AddInvoiceState extends State<AddInvoice> {
         appBar: AppBar(
             backgroundColor: Colors.white,
             iconTheme: IconThemeData(color: Theme.of(context).primaryColor),
-            title: HeaderTitle(headerText: "Create Invoice")),
+            title: HeaderTitle(headerText: "Update Invoice")),
         body: SingleChildScrollView(
           child: StoreConnector<AppState, AppState>(
               converter: (store) => store.state,
               builder: (context, state) {
-                InvoiceName invoiceNameData = state.invoiceName;
+                EditInvoice invoiceData = state.editInvoice;
+                InvoiceName invoiceNameData = InvoiceName(
+                    invoiceData.title,
+                    invoiceData.number,
+                    invoiceData.po_so_number,
+                    invoiceData.summary);
                 String businessId = state.currentBusiness.id;
                 String userId = state.loggedInUser.user_id;
 
-                if (state.invoiceName != null) {
+                _subTotal.text  = invoiceData.sub_total_amount.toString();
+                _total.text = invoiceData.total_amount.toString();
+                _notes.text = invoiceData.notes;
+                _footer.text = invoiceData.footer;
+
+                if (state.editInvoice != null) {
                   _invoiceName = invoiceNameData.title;
                   _invoiceDescription = invoiceNameData.summary;
                   _invoiceNumber = invoiceNameData.po_so_number;
@@ -192,7 +202,7 @@ class _AddInvoiceState extends State<AddInvoice> {
                                         context,
                                         MaterialPageRoute(
                                             builder: (context) =>
-                                                AddInvoiceName()),
+                                                EditInvoiceName()),
                                       );
                                     },
                                   ),
@@ -209,7 +219,7 @@ class _AddInvoiceState extends State<AddInvoice> {
                                           },
                                           buttonText: Text(
                                               invoiceDate == ""
-                                                  ? "Invoice Date"
+                                                  ? invoiceData.issue_date
                                                   : invoiceDate,
                                               style: TextStyle(
                                                   color: Theme.of(context)
@@ -221,7 +231,7 @@ class _AddInvoiceState extends State<AddInvoice> {
                                           },
                                           buttonText: Text(
                                               dueDate == ""
-                                                  ? "Due Date"
+                                                  ? invoiceData.due_date
                                                   : dueDate,
                                               style: TextStyle(
                                                   color: Theme.of(context)
@@ -240,9 +250,9 @@ class _AddInvoiceState extends State<AddInvoice> {
                                         ]),
                                         child: ChooseButton(
                                           buttonText: Text(
-                                            state.invoiceCustomer == null
-                                                ? "Add Customer"
-                                                : state.invoiceCustomer.name,
+                                            invoiceData.invoiceCustomer == null
+                                                ? "Edit Customer"
+                                                : invoiceData.invoiceCustomer.name,
                                             style: TextStyle(
                                                 color: Theme.of(context)
                                                     .primaryColor),
@@ -253,12 +263,12 @@ class _AddInvoiceState extends State<AddInvoice> {
                                               context,
                                               MaterialPageRoute(
                                                   builder: (context) =>
-                                                      AddCustomerList()),
+                                                      EditCustomerList()),
                                             );
                                           },
                                         )),
                                   ),
-                                  state.invoiceItems.length != 0
+                                  invoiceData.invoiceItem.length != 0
                                       ? Column(
                                           mainAxisAlignment:
                                               MainAxisAlignment.center,
@@ -269,7 +279,7 @@ class _AddInvoiceState extends State<AddInvoice> {
                                               child: Row(
                                                 children: <Widget>[
                                                   Text(
-                                                      state.invoiceItems.length
+                                                      invoiceData.invoiceItem.length
                                                           .toString(),
                                                       style: TextStyle(
                                                           color: Theme.of(
@@ -288,7 +298,7 @@ class _AddInvoiceState extends State<AddInvoice> {
                                               height: 3.0,
                                             ),
                                             // ignore: sdk_version_ui_as_code
-                                            for (var item in state.invoiceItems)
+                                            for (var item in invoiceData.invoiceItem)
                                               Column(
                                                 children: <Widget>[
                                                   InvoiceItemCard(
@@ -314,7 +324,7 @@ class _AddInvoiceState extends State<AddInvoice> {
                                       ]),
                                       child: ChooseButton(
                                         buttonText: Text(
-                                          "Add Items",
+                                          "Edit Items",
                                           style: TextStyle(
                                               color: Theme.of(context)
                                                   .primaryColor),
@@ -325,7 +335,7 @@ class _AddInvoiceState extends State<AddInvoice> {
                                             context,
                                             MaterialPageRoute(
                                                 builder: (context) =>
-                                                    AddItemList()),
+                                                    EditItemList()),
                                           );
                                         },
                                       ),
@@ -345,6 +355,7 @@ class _AddInvoiceState extends State<AddInvoice> {
                                           inputStyles.boxShadowMain(context)
                                         ]),
                                         child: FormBuilderTextField(
+
                                           keyboardType: TextInputType.number,
                                           attribute: "sub_total",
                                           decoration: inputStyles
@@ -421,40 +432,31 @@ class _AddInvoiceState extends State<AddInvoice> {
                                 PrimaryMiniButton(
                                   buttonText: _isSendLoading
                                       ? LoaderLight()
-                                      : Text("SEND",
+                                      : Text("UPDATE INFO",
                                           style: TextStyle(
                                               fontWeight: FontWeight.w100,
                                               fontSize: 14,
                                               color: Colors.white)),
                                   onPressed: () {
                                     if (_fbKey.currentState.saveAndValidate()) {
-                                      _saveInvoice(
-                                          invoiceNameData,
-                                          false,
-                                          businessId,
-                                          userId,
-                                          state.invoiceCustomer);
+                                      _updateInvoice(
+                                          state.editInvoice,
+                                        state.currentBusiness.id,
+                                        state.loggedInUser.user_id
+                                      );
                                     }
                                   },
                                 ),
-                                SecondaryMiniButton(
+                                DeleteMiniButton(
                                   buttonText: _isDraftLoading
                                       ? LoaderLight()
-                                      : Text("SAVE DRAFT",
+                                      : Text("DELETE INVOICE",
                                           style: TextStyle(
                                               fontWeight: FontWeight.w100,
                                               fontSize: 14,
-                                              color: Theme.of(context)
-                                                  .primaryColor)),
+                                              color: Colors.redAccent)),
                                   onPressed: () {
-                                    if (_fbKey.currentState.saveAndValidate()) {
-                                      _saveInvoice(
-                                          invoiceNameData,
-                                          true,
-                                          businessId,
-                                          userId,
-                                          state.invoiceCustomer);
-                                    }
+
                                   },
                                 ),
                               ],
@@ -521,147 +523,58 @@ class _AddInvoiceState extends State<AddInvoice> {
     allowDrawingOutsideViewBox: true,
   );
 
-  void _saveInvoice(InvoiceName invoiceNameData, bool isDraft, businessId,
-      userId, Customer customer) async {
-    AlertSnackBar alert = AlertSnackBar();
-    String title, poSoNumber, summary, customerId, _iDate, _dDate;
-    int invoice_number;
-    if (invoiceDate == "") {
-      _iDate = CurrentDate().getCurrentDate();
-    } else {
-      _iDate = invoiceDate;
-    }
-    if (dueDate == "") {
-      _dDate = CurrentDate().getCurrentDate();
-    } else {
-      _dDate = dueDate;
-    }
-
+  void _updateInvoice(EditInvoice invoiceData, businessId, userId) async {
     final addInvoice = StoreProvider.of<AppState>(context);
-    List<Item> invoiceItems = addInvoice.state.invoiceItems;
-    Customer invoiceCustomer = addInvoice.state.invoiceCustomer;
-    InvoiceName invoiceName = addInvoice.state.invoiceName;
+    scaffoldState.currentState.showSnackBar(
+        LoadingSnackBar().loader("  Updating Invoice...", context));
 
-    String _status;
-    if (customer == null) {
-      customerId = null;
-    } else {
-      customerId = customer.id;
+    List<Item> invoiceItems = invoiceData.invoiceItem;
+    GqlConfig graphQLConfiguration = GqlConfig();
+    Mutations _updateInvoice = new Mutations();
+    QueryResult result = await graphQLConfiguration.getGraphql().mutate(
+        MutationOptions(
+            document: _updateInvoice.updateInvoice(
+                invoiceData.id,
+                invoiceData.title,
+                invoiceData.number,
+                invoiceData.po_so_number,
+                invoiceData.summary,
+                invoiceData.issue_date,
+                invoiceData.due_date,
+                invoiceData.sub_total_amount,
+                invoiceData.total_amount,
+                invoiceData.notes,
+                invoiceData.status,
+                invoiceData.footer,
+                invoiceData.invoiceCustomer.id)));
+
+    if (!result.hasErrors) {
+      String  itemUpdated = await InvoiceItems().updateInvoiceItems(
+          invoiceItems, invoiceData.id);
+      if(itemUpdated == "Done"){
+        Invoice _invoice = new Invoice(
+            invoiceData.id,
+            invoiceData.title,
+            invoiceData.number,
+            invoiceData.po_so_number,
+            invoiceData.summary,
+            invoiceData.issue_date,
+            invoiceData.due_date,
+            invoiceData.sub_total_amount,
+            invoiceData.total_amount,
+            invoiceData.notes,
+            invoiceData.status,
+            invoiceData.footer,
+            invoiceData.invoiceCustomer.id,
+            businessId,
+            userId);
+        addInvoice.dispatch(UpdateBusinessInvoice(payload: _invoice));
+        Navigator.pushNamed(context, "/user_dashboard");
+      }
+    }else{
+      print(result.errors);
     }
 
-    if (isDraft) {
-      setState(() {
-        _isDraftLoading = true;
-      });
-      _status = "DRAFT";
-      if (invoiceNameData == null) {
-        title = "null";
-        poSoNumber = "null";
-        summary = "null";
-        invoice_number = 0;
-      } else {
-        title = invoiceNameData.title;
-        poSoNumber = invoiceNameData.po_so_number;
-        summary = invoiceNameData.summary;
-        invoice_number = invoiceNameData.invoice_number;
-      }
-      GqlConfig graphQLConfiguration = GqlConfig();
-      Mutations createInvoice = new Mutations();
-      QueryResult result = await graphQLConfiguration.getGraphql().mutate(
-          MutationOptions(
-              document: createInvoice.createInvoice(
-                  title,
-                  invoice_number,
-                  poSoNumber,
-                  summary,
-                  _iDate,
-                  _dDate,
-                  int.parse(_subTotal.text),
-                  int.parse(_total.text),
-                  _notes.text,
-                  _status,
-                  _footer.text,
-                  customerId,
-                  businessId,
-                  userId)));
-      if (!result.hasErrors) {
-        InvoiceItems().saveInvoiceItems(
-            addInvoice.state.invoiceItems, result.data["create_invoice"]["id"]);
-        setState(() {
-          _isDraftLoading = false;
-          _isSendLoading = false;
-        });
-        Invoice _invoice = new Invoice(
-            result.data["create_invoice"]["id"],
-            invoiceName.title,
-            invoiceName.invoice_number,
-            invoiceName.po_so_number,
-            invoiceName.summary,
-            _iDate,
-            _dDate,
-            int.parse(_subTotal.text),
-           int.parse( _total.text),
-            _notes.text,
-            _status,
-            _footer.text,
-            customerId,
-            addInvoice.state.currentBusiness.id,
-            userId);
-        addInvoice.dispatch(AddBusinessInvoice(payload: _invoice));
-
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => DraftSaved()),
-        );
-      } else {
-        print(result.errors);
-
-        setState(() {
-          _isDraftLoading = false;
-          _isSendLoading = false;
-        });
-      }
-    } else {
-      _status = "SENT";
-      if (invoiceCustomer == null) {
-        scaffoldState.currentState
-            .showSnackBar(alert.showSnackBar("Invoice must contain customer"));
-        return;
-      } else if (invoiceItems.length == 0) {
-        scaffoldState.currentState.showSnackBar(
-            alert.showSnackBar("No item sellected for this invoice."));
-        return;
-      } else if (_subTotal.text.length == 0) {
-        scaffoldState.currentState.showSnackBar(
-            alert.showSnackBar("Invoice Sub total cannot be empty"));
-        return;
-      } else if (_total.text.length == 0) {
-        scaffoldState.currentState
-            .showSnackBar(alert.showSnackBar("Invoice Total cannot be empty"));
-        return;
-      }
-      Invoice _invoice = new Invoice(
-          "0",
-          invoiceName.title,
-          invoiceName.invoice_number,
-          invoiceName.po_so_number,
-          invoiceName.summary,
-          _iDate,
-          _dDate,
-          int.parse(_subTotal.text),
-          int.parse(_total.text),
-          _notes.text,
-          _status,
-          _footer.text,
-          customerId,
-          addInvoice.state.currentBusiness.id,
-          userId);
-      addInvoice.dispatch(CreateInvoice(payload: _invoice));
-
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => SendInvoice()),
-      );
     }
   }
-}
+

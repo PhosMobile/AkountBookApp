@@ -49,173 +49,180 @@ class _AddBusinessState extends State<AddBusiness> {
         appBar: AppBar(
             backgroundColor: Colors.white,
             iconTheme: IconThemeData(color: Theme.of(context).primaryColor),
-            title: HeaderTitle(headerText: "Set Up a Business Page")),
+            title: HeaderTitle(headerText: "Set Up a Business Page"),
+          elevation: 0,
+        ),
         body: SingleChildScrollView(
           padding: EdgeInsets.only(top: 0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              SizedBox(height: 20),
-              Container(
-                padding: EdgeInsets.all(30),
-                child: Center(
-                    child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    FormBuilder(
-                      key: _fbKey,
-                      initialValue: {
-                        'date': DateTime.now(),
-                        'accept_terms': false,
-                      },
-                      autovalidate: false,
+          child: Container(
+            decoration: BoxDecoration(
+                border: Border(top: BorderSide(width: 2, color: Theme.of(context).accentColor))
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                SizedBox(height: 20),
+                Container(
+                  padding: EdgeInsets.all(30),
+                  child: Center(
                       child: Column(
-                        children: <Widget>[
-                          _hasErrors
-                              ? RequestError(errorText: requestErrors)
-                              : Container(),
-                          InkWell(
-                            child: ImageAvatars().attachImage(),
-                            onTap: () async {
-                              var image = await ImagePicker.pickImage(
-                                  source: ImageSource.camera);
-                              setState(() {
-                                _image = image;
-                              });
-                            },
-                          ),
-                          SizedBox(
-                            height: 30,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 10),
-                            child: Container(
-                              decoration: BoxDecoration(boxShadow: [
-                                inputStyles.boxShadowMain(context)
-                              ]),
-                              child: FormBuilderTextField(
-                                attribute: "Business Name",
-                                decoration:
-                                    inputStyles.inputMain("Business Name"),
-                                validators: [
-                                  FormBuilderValidators.max(70,
-                                      errorText:
-                                          "Business can not be longer than 70 character"),
-                                  FormBuilderValidators.required()
-                                ],
-                                controller: _businessName,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      FormBuilder(
+                        key: _fbKey,
+                        initialValue: {
+                          'date': DateTime.now(),
+                          'accept_terms': false,
+                        },
+                        autovalidate: false,
+                        child: Column(
+                          children: <Widget>[
+                            _hasErrors
+                                ? RequestError(errorText: requestErrors)
+                                : Container(),
+                            InkWell(
+                              child: ImageAvatars().attachImage(),
+                              onTap: () async {
+                                var image = await ImagePicker.pickImage(
+                                    source: ImageSource.camera);
+                                setState(() {
+                                  _image = image;
+                                });
+                              },
+                            ),
+                            SizedBox(
+                              height: 30,
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 10),
+                              child: Container(
+                                decoration: BoxDecoration(boxShadow: [
+                                  inputStyles.boxShadowMain(context)
+                                ]),
+                                child: FormBuilderTextField(
+                                  attribute: "Business Name",
+                                  decoration:
+                                      inputStyles.inputMain("Business Name"),
+                                  validators: [
+                                    FormBuilderValidators.max(70,
+                                        errorText:
+                                            "Business can not be longer than 70 character"),
+                                    FormBuilderValidators.required()
+                                  ],
+                                  controller: _businessName,
+                                ),
                               ),
                             ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 10),
-                            child: Container(
-                              decoration: BoxDecoration(boxShadow: [
-                                inputStyles.boxShadowMain(context)
-                              ]),
-                              child: FormBuilderTextField(
-                                attribute: "email",
-                                decoration:
-                                    inputStyles.inputMain("Email Address"),
-                                validators: [
-                                  FormBuilderValidators.minLength(10,
-                                      errorText: "Email too short")
-                                ],
-                                controller: _businessEmail,
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 10),
+                              child: Container(
+                                decoration: BoxDecoration(boxShadow: [
+                                  inputStyles.boxShadowMain(context)
+                                ]),
+                                child: FormBuilderTextField(
+                                  attribute: "email",
+                                  decoration:
+                                      inputStyles.inputMain("Email Address"),
+                                  validators: [
+                                    FormBuilderValidators.minLength(10,
+                                        errorText: "Email too short")
+                                  ],
+                                  controller: _businessEmail,
+                                ),
                               ),
                             ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 10),
-                            child: Container(
-                              decoration: BoxDecoration(boxShadow: [
-                                inputStyles.boxShadowMain(context)
-                              ]),
-                              child: FormBuilderTextField(
-                                attribute: "Description",
-                                decoration:
-                                    inputStyles.inputMain("Description"),
-                                validators: [
-                                  FormBuilderValidators.min(30,
-                                      errorText:
-                                          "Business can not be short than 30 character"),
-                                  FormBuilderValidators.required()
-                                ],
-                                controller: _businessDescription,
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 10),
+                              child: Container(
+                                decoration: BoxDecoration(boxShadow: [
+                                  inputStyles.boxShadowMain(context)
+                                ]),
+                                child: FormBuilderTextField(
+                                  attribute: "Description",
+                                  decoration:
+                                      inputStyles.inputMain("Description"),
+                                  validators: [
+                                    FormBuilderValidators.min(30,
+                                        errorText:
+                                            "Business can not be short than 30 character"),
+                                    FormBuilderValidators.required()
+                                  ],
+                                  controller: _businessDescription,
+                                ),
                               ),
                             ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 10),
-                            child: Container(
-                              decoration: BoxDecoration(boxShadow: [
-                                inputStyles.boxShadowMain(context)
-                              ]),
-                              child: FormBuilderTextField(
-                                attribute: "office_address",
-                                decoration:
-                                    inputStyles.inputMain("Office Address"),
-                                validators: [
-                                  FormBuilderValidators.max(70,
-                                      errorText:
-                                          "Address can not be longer than 70 character"),
-                                  FormBuilderValidators.required()
-                                ],
-                                controller: _businessAddress,
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 10),
+                              child: Container(
+                                decoration: BoxDecoration(boxShadow: [
+                                  inputStyles.boxShadowMain(context)
+                                ]),
+                                child: FormBuilderTextField(
+                                  attribute: "office_address",
+                                  decoration:
+                                      inputStyles.inputMain("Office Address"),
+                                  validators: [
+                                    FormBuilderValidators.max(70,
+                                        errorText:
+                                            "Address can not be longer than 70 character"),
+                                    FormBuilderValidators.required()
+                                  ],
+                                  controller: _businessAddress,
+                                ),
                               ),
                             ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 10),
-                            child: Container(
-                              decoration: BoxDecoration(boxShadow: [
-                                inputStyles.boxShadowMain(context)
-                              ]),
-                              child: FormBuilderDropdown(
-                                onChanged: (value) {
-                                  setState(() {
-                                    currency = value;
-                                  });
-                                },
-                                attribute: "currency",
-                                decoration:
-                                    InputDecoration(labelText: "Currency"),
-                                // initialValue: 'Male',
-                                hint: Text('Select Business Currency'),
-                                validators: [FormBuilderValidators.required()],
-                                items: ['NGN', 'USD', 'EUR']
-                                    .map((currency) => DropdownMenuItem(
-                                        value: currency,
-                                        child: Text("$currency")))
-                                    .toList(),
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 10),
+                              child: Container(
+                                decoration: BoxDecoration(boxShadow: [
+                                  inputStyles.boxShadowMain(context)
+                                ]),
+                                child: FormBuilderDropdown(
+                                  onChanged: (value) {
+                                    setState(() {
+                                      currency = value;
+                                    });
+                                  },
+                                  attribute: "currency",
+                                  decoration:
+                                      InputDecoration(labelText: "Currency"),
+                                  // initialValue: 'Male',
+                                  hint: Text('Select Business Currency'),
+                                  validators: [FormBuilderValidators.required()],
+                                  items: ['NGN', 'USD', 'EUR']
+                                      .map((currency) => DropdownMenuItem(
+                                          value: currency,
+                                          child: Text("$currency")))
+                                      .toList(),
+                                ),
                               ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                    SizedBox(
-                      height: 40,
-                    ),
-                    PrimaryButton(
-                      buttonText: _isLoading
-                          ? LoaderLight()
-                          : Text("REGISTER BUSINESS",
-                              style:
-                                  TextStyle(fontSize: 16, color: Colors.white)),
-                      onPressed: () {
-                        if (_fbKey.currentState.saveAndValidate()) {
-                          _registerUser();
-                        }
-                      },
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                  ],
-                )),
-              ),
-            ],
+                      SizedBox(
+                        height: 40,
+                      ),
+                      PrimaryButton(
+                        buttonText: _isLoading
+                            ? LoaderLight()
+                            : Text("REGISTER BUSINESS",
+                                style:
+                                    TextStyle(fontSize: 16, color: Colors.white)),
+                        onPressed: () {
+                          if (_fbKey.currentState.saveAndValidate()) {
+                            _registerUser();
+                          }
+                        },
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                    ],
+                  )),
+                ),
+              ],
+            ),
           ),
         ));
   }

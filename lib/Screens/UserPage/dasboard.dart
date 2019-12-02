@@ -44,9 +44,7 @@ class _DashboardState extends State<Dashboard> {
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.white,
-          title: Text(_title[_selectedIndex], style: TextStyle(color: Theme
-              .of(context)
-              .primaryColor),),
+          title: Text(_title[_selectedIndex], style: TextStyle(color: Colors.black,fontSize: 14),),
           elevation: 0.0,
           iconTheme: IconThemeData(
               color: Theme
@@ -54,7 +52,12 @@ class _DashboardState extends State<Dashboard> {
                   .primaryColor
           ),
         ),
-        body: _children[_selectedIndex],
+        body: Container(
+          decoration: BoxDecoration(
+            border: Border(top: BorderSide(width: 2, color: Theme.of(context).accentColor))
+          ),
+          child: _children[_selectedIndex],
+        ),
         drawer: SizedBox(
           width: size.width,
           child: Drawer(

@@ -85,4 +85,16 @@ class Queries {
                               }
                             }
                           """;
+  String getInvoiceItem = r"""
+                    query GetInvoiceItem($invoice_id : ID!){
+                      get_invoice_item(invoice_id:$invoice_id){
+                        id
+                        item_id
+                        invoice_id
+                      }
+                    }
+                  """;
+
+
+
 }

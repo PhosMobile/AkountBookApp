@@ -1,6 +1,5 @@
 class Item {
   String id, name, description, quantity, price, business_id, user_id;
-
   Item(this.id, this.name, this.description, this.quantity, this.price,
       this.business_id, this.user_id);
 
@@ -13,4 +12,5 @@ class Item {
     this.business_id = jsonObject['currency'];
     this.user_id = jsonObject['image_url'];
   }
+
 }

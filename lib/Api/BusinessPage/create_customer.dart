@@ -56,152 +56,157 @@ class _AddCustomerState extends State<AddCustomer> {
               builder: (context, state) {
                 String businessId = state.currentBusiness.id;
                 String userId = state.loggedInUser.user_id;
-                return Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    SizedBox(height: 0),
-                    Container(
-                      padding: EdgeInsets.all(30),
-                      child: Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              FormBuilder(
-                                key: _fbKey,
-                                initialValue: {
-                                  'date': DateTime.now(),
-                                  'accept_terms': false,
-                                },
-                                autovalidate: false,
-                                child: Column(
-                                  children: <Widget>[
-                                    InkWell(
-                                      child: Text(
-                                        "IMPORT FROM CONTACT",
-                                        style: TextStyle(
-                                            color: Theme
-                                                .of(context)
-                                                .primaryColor,
-                                            fontWeight: FontWeight.bold),
+                return Container(
+                  decoration: BoxDecoration(
+                      border: Border(top: BorderSide(width: 2, color: Theme.of(context).accentColor))
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      SizedBox(height: 0),
+                      Container(
+                        padding: EdgeInsets.all(30),
+                        child: Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                FormBuilder(
+                                  key: _fbKey,
+                                  initialValue: {
+                                    'date': DateTime.now(),
+                                    'accept_terms': false,
+                                  },
+                                  autovalidate: false,
+                                  child: Column(
+                                    children: <Widget>[
+                                      InkWell(
+                                        child: Text(
+                                          "IMPORT FROM CONTACT",
+                                          style: TextStyle(
+                                              color: Theme
+                                                  .of(context)
+                                                  .primaryColor,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        onTap: () {},
                                       ),
-                                      onTap: () {},
-                                    ),
-                                    SizedBox(
-                                      height: 20,
-                                    ),
-                                    _hasErrors
-                                        ? RequestError(errorText: requestErrors)
-                                        : Container(),
-                                    InkWell(
-                                      child: ImageAvatars().attachImage(),
-                                      onTap: () async {
-                                        var image = await ImagePicker.pickImage(
-                                            source: ImageSource.camera);
-                                        setState(() {
-                                          _image = image;
-                                        });
-                                      },
-                                    ),
-                                    SizedBox(
-                                      height: 30,
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(
-                                          bottom: 10),
-                                      child: Container(
-                                        decoration: BoxDecoration(boxShadow: [
-                                          inputStyles.boxShadowMain(context)
-                                        ]),
-                                        child: FormBuilderTextField(
-                                          attribute: "Customer Name",
-                                          decoration: inputStyles
-                                              .inputMain("Customer Name"),
-                                          validators: [
-                                            FormBuilderValidators.required()
-                                          ],
-                                          controller: _customerName,
+                                      SizedBox(
+                                        height: 20,
+                                      ),
+                                      _hasErrors
+                                          ? RequestError(errorText: requestErrors)
+                                          : Container(),
+                                      InkWell(
+                                        child: ImageAvatars().attachImage(),
+                                        onTap: () async {
+                                          var image = await ImagePicker.pickImage(
+                                              source: ImageSource.camera);
+                                          setState(() {
+                                            _image = image;
+                                          });
+                                        },
+                                      ),
+                                      SizedBox(
+                                        height: 30,
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            bottom: 10),
+                                        child: Container(
+                                          decoration: BoxDecoration(boxShadow: [
+                                            inputStyles.boxShadowMain(context)
+                                          ]),
+                                          child: FormBuilderTextField(
+                                            attribute: "Customer Name",
+                                            decoration: inputStyles
+                                                .inputMain("Customer Name"),
+                                            validators: [
+                                              FormBuilderValidators.required()
+                                            ],
+                                            controller: _customerName,
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(
-                                          bottom: 10),
-                                      child: Container(
-                                        decoration: BoxDecoration(boxShadow: [
-                                          inputStyles.boxShadowMain(context)
-                                        ]),
-                                        child: FormBuilderTextField(
-                                          keyboardType: TextInputType.number,
-                                          attribute: "Phone Number",
-                                          decoration:
-                                          inputStyles.inputMain("Phone Number"),
-                                          validators: [
-                                            FormBuilderValidators.required(
-                                                errorText: "Phone field s required")
-                                          ],
-                                          controller: _phone,
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            bottom: 10),
+                                        child: Container(
+                                          decoration: BoxDecoration(boxShadow: [
+                                            inputStyles.boxShadowMain(context)
+                                          ]),
+                                          child: FormBuilderTextField(
+                                            keyboardType: TextInputType.number,
+                                            attribute: "Phone Number",
+                                            decoration:
+                                            inputStyles.inputMain("Phone Number"),
+                                            validators: [
+                                              FormBuilderValidators.required(
+                                                  errorText: "Phone field s required")
+                                            ],
+                                            controller: _phone,
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(
-                                          bottom: 10),
-                                      child: Container(
-                                        decoration: BoxDecoration(boxShadow: [
-                                          inputStyles.boxShadowMain(context)
-                                        ]),
-                                        child: FormBuilderTextField(
-                                          attribute: "email",
-                                          decoration: inputStyles
-                                              .inputMain("Email Address"),
-                                          validators: [
-                                            FormBuilderValidators.email(
-                                                errorText: "Invalid email")
-                                          ],
-                                          controller: _email,
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            bottom: 10),
+                                        child: Container(
+                                          decoration: BoxDecoration(boxShadow: [
+                                            inputStyles.boxShadowMain(context)
+                                          ]),
+                                          child: FormBuilderTextField(
+                                            attribute: "email",
+                                            decoration: inputStyles
+                                                .inputMain("Email Address"),
+                                            validators: [
+                                              FormBuilderValidators.email(
+                                                  errorText: "Invalid email")
+                                            ],
+                                            controller: _email,
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(
-                                          bottom: 10),
-                                      child: Container(
-                                        decoration: BoxDecoration(boxShadow: [
-                                          inputStyles.boxShadowMain(context)
-                                        ]),
-                                        child: FormBuilderTextField(
-                                          attribute: "address",
-                                          decoration:
-                                          inputStyles.inputMain(" Address"),
-                                          controller: _address,
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            bottom: 10),
+                                        child: Container(
+                                          decoration: BoxDecoration(boxShadow: [
+                                            inputStyles.boxShadowMain(context)
+                                          ]),
+                                          child: FormBuilderTextField(
+                                            attribute: "address",
+                                            decoration:
+                                            inputStyles.inputMain(" Address"),
+                                            controller: _address,
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
-                              ),
-                              SizedBox(
-                                height: 40,
-                              ),
-                              PrimaryButton(
-                                buttonText: _isLoading
-                                    ? LoaderLight()
-                                    : Text("ADD CUSTOMER",
-                                    style: TextStyle(
-                                        fontSize: 16, color: Colors.white)),
-                                onPressed: () {
-                                  if (_fbKey.currentState.saveAndValidate()) {
-                                    _addCustomer(businessId, userId);
-                                  }
-                                },
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                            ],
-                          )),
-                    ),
-                  ],
+                                SizedBox(
+                                  height: 40,
+                                ),
+                                PrimaryButton(
+                                  buttonText: _isLoading
+                                      ? LoaderLight()
+                                      : Text("ADD CUSTOMER",
+                                      style: TextStyle(
+                                          fontSize: 16, color: Colors.white)),
+                                  onPressed: () {
+                                    if (_fbKey.currentState.saveAndValidate()) {
+                                      _addCustomer(businessId, userId);
+                                    }
+                                  },
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                              ],
+                            )),
+                      ),
+                    ],
+                  ),
                 );
               },
             )));

@@ -18,7 +18,6 @@ class Register extends StatefulWidget {
   @override
   _RegisterState createState() => _RegisterState();
 }
-
 class _RegisterState extends State<Register> {
   final GlobalKey<FormBuilderState> _fbKey = GlobalKey<FormBuilderState>();
   InputStyles inputStyles = new InputStyles();
@@ -38,7 +37,6 @@ class _RegisterState extends State<Register> {
     }
     return null;
   }
-
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
@@ -256,6 +254,8 @@ class _RegisterState extends State<Register> {
         });
         Navigator.pushNamed(context, "/otp_verifiy");
       } else {
+        print(result.errors);
+        print(result.source);
         setState(() {
           requestErrors =
           "Error registering your Account, please try again later";
@@ -264,6 +264,8 @@ class _RegisterState extends State<Register> {
         });
       }
     } else {
+      print(result.errors);
+      print(result.source);
       setState(() {
         requestErrors = "Error Registering your account...pls try again";
         _isLoading = false;

@@ -23,4 +23,5 @@ class Customer {
     this.business_id = jsonObject['business_id'];
     this.user_id = jsonObject['user_id'];
   }
+
 }

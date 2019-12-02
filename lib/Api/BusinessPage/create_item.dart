@@ -46,145 +46,150 @@ class _AddItemState extends State<AddItem> {
                 builder: (context, state) {
                   String businessId = state.currentBusiness.id;
                   String userId = state.loggedInUser.user_id;
-                  return Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Container(
-                        padding: EdgeInsets.all(20),
-                        child: Center(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                FormBuilder(
-                                  key: _fbKey,
-                                  initialValue: {
-                                    'date': DateTime.now(),
-                                    'accept_terms': false,
-                                  },
-                                  autovalidate: false,
-                                  child: Column(
-                                    children: <Widget>[
-                                      _hasErrors
-                                          ? RequestError(
-                                          errorText: requestErrors)
-                                          : Container(),
-                                      SizedBox(
-                                        height: 30,
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.only(
-                                            bottom: 10),
-                                        child: Container(
-                                          decoration: BoxDecoration(boxShadow: [
-                                            inputStyles.boxShadowMain(context)
-                                          ]),
-                                          child: FormBuilderTextField(
-                                            attribute: "Item Name",
-                                            decoration:
-                                            inputStyles.inputMain("Item Name"),
-                                            validators: [
-                                              FormBuilderValidators.required()
-                                            ],
-                                            controller: _itemName,
-                                          ),
+                  return Container(
+                    decoration: BoxDecoration(
+                        border: Border(top: BorderSide(width: 2, color: Theme.of(context).accentColor))
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Container(
+                          padding: EdgeInsets.all(20),
+                          child: Center(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  FormBuilder(
+                                    key: _fbKey,
+                                    initialValue: {
+                                      'date': DateTime.now(),
+                                      'accept_terms': false,
+                                    },
+                                    autovalidate: false,
+                                    child: Column(
+                                      children: <Widget>[
+                                        _hasErrors
+                                            ? RequestError(
+                                            errorText: requestErrors)
+                                            : Container(),
+                                        SizedBox(
+                                          height: 30,
                                         ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.only(
-                                            bottom: 10),
-                                        child: Container(
-                                          decoration: BoxDecoration(boxShadow: [
-                                            inputStyles.boxShadowMain(context)
-                                          ]),
-                                          child: FormBuilderTextField(
-                                            attribute: "description",
-                                            decoration: inputStyles
-                                                .inputMain("Description"),
-                                            controller: _description,
-                                          ),
-                                        ),
-                                      ),
-                                      Row(
-                                        mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                        children: <Widget>[
-                                          Container(
-                                            width:
-                                            MediaQuery
-                                                .of(context)
-                                                .size
-                                                .width /
-                                                2 -
-                                                50,
-                                            decoration: BoxDecoration(
-                                                boxShadow: [
-                                                  inputStyles.boxShadowMain(
-                                                      context)
-                                                ]),
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                              bottom: 10),
+                                          child: Container(
+                                            decoration: BoxDecoration(boxShadow: [
+                                              inputStyles.boxShadowMain(context)
+                                            ]),
                                             child: FormBuilderTextField(
-                                              keyboardType: TextInputType
-                                                  .number,
-                                              attribute: "quantity",
+                                              attribute: "Item Name",
                                               decoration:
-                                              inputStyles.inputMain("Quantity"),
+                                              inputStyles.inputMain("Item Name"),
                                               validators: [
                                                 FormBuilderValidators.required()
                                               ],
-                                              controller: _quantity,
+                                              controller: _itemName,
                                             ),
                                           ),
-                                          Container(
-                                            width:
-                                            MediaQuery
-                                                .of(context)
-                                                .size
-                                                .width /
-                                                2 -
-                                                50,
-                                            decoration: BoxDecoration(
-                                                boxShadow: [
-                                                  inputStyles.boxShadowMain(
-                                                      context)
-                                                ]),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                              bottom: 10),
+                                          child: Container(
+                                            decoration: BoxDecoration(boxShadow: [
+                                              inputStyles.boxShadowMain(context)
+                                            ]),
                                             child: FormBuilderTextField(
-                                              keyboardType: TextInputType
-                                                  .number,
-                                              attribute: "price",
-                                              decoration:
-                                              inputStyles.inputMain("Price"),
-                                              validators: [
-                                                FormBuilderValidators.required()
-                                              ],
-                                              controller: _price,
+                                              attribute: "description",
+                                              decoration: inputStyles
+                                                  .inputMain("Description"),
+                                              controller: _description,
                                             ),
                                           ),
-                                        ],
-                                      ),
-                                    ],
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                          children: <Widget>[
+                                            Container(
+                                              width:
+                                              MediaQuery
+                                                  .of(context)
+                                                  .size
+                                                  .width /
+                                                  2 -
+                                                  50,
+                                              decoration: BoxDecoration(
+                                                  boxShadow: [
+                                                    inputStyles.boxShadowMain(
+                                                        context)
+                                                  ]),
+                                              child: FormBuilderTextField(
+                                                keyboardType: TextInputType
+                                                    .number,
+                                                attribute: "quantity",
+                                                decoration:
+                                                inputStyles.inputMain("Quantity"),
+                                                validators: [
+                                                  FormBuilderValidators.required()
+                                                ],
+                                                controller: _quantity,
+                                              ),
+                                            ),
+                                            Container(
+                                              width:
+                                              MediaQuery
+                                                  .of(context)
+                                                  .size
+                                                  .width /
+                                                  2 -
+                                                  50,
+                                              decoration: BoxDecoration(
+                                                  boxShadow: [
+                                                    inputStyles.boxShadowMain(
+                                                        context)
+                                                  ]),
+                                              child: FormBuilderTextField(
+                                                keyboardType: TextInputType
+                                                    .number,
+                                                attribute: "price",
+                                                decoration:
+                                                inputStyles.inputMain("Price"),
+                                                validators: [
+                                                  FormBuilderValidators.required()
+                                                ],
+                                                controller: _price,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                ),
-                                SizedBox(
-                                  height: 40,
-                                ),
-                                PrimaryButton(
-                                  buttonText: _isLoading
-                                      ? LoaderLight()
-                                      : Text("ADD ITEM",
-                                      style: TextStyle(
-                                          fontSize: 16, color: Colors.white)),
-                                  onPressed: () {
-                                    if (_fbKey.currentState.saveAndValidate()) {
-                                      _addItem(businessId, userId);
-                                    }
-                                  },
-                                ),
-                                SizedBox(
-                                  height: 10,
-                                ),
-                              ],
-                            )),
-                      ),
-                    ],
+                                  SizedBox(
+                                    height: 40,
+                                  ),
+                                  PrimaryButton(
+                                    buttonText: _isLoading
+                                        ? LoaderLight()
+                                        : Text("ADD ITEM",
+                                        style: TextStyle(
+                                            fontSize: 16, color: Colors.white)),
+                                    onPressed: () {
+                                      if (_fbKey.currentState.saveAndValidate()) {
+                                        _addItem(businessId, userId);
+                                      }
+                                    },
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                ],
+                              )),
+                        ),
+                      ],
+                    ),
                   );
                 })));
   }

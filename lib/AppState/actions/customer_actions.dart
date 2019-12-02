@@ -24,3 +24,9 @@ class AddInvoiceCustomer {
 
   AddInvoiceCustomer({@required this.payload});
 }
+
+class EditInvoiceCustomer {
+  final Customer payload;
+
+  EditInvoiceCustomer({@required this.payload});
+}

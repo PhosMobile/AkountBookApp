@@ -187,4 +187,60 @@ user_id
     """;
   }
 
+
+  String updateInvoice(
+      String id,
+      String title,
+      int number,
+      String poSoNumber,
+      String summary,
+      String issueDate,
+      String dueDate,
+      int subTotalAmount,
+      int totalAmount,
+      String notes,
+      String status,
+      String footer,
+      String customerId,
+      ) {
+    return """
+      mutation{
+          update_invoice(
+          id:"$id"
+          title: "$title", 
+          number: $number, 
+          po_so_number: "$poSoNumber", 
+          summary:"$summary",
+          issue_date: "$issueDate",
+          due_date: "$dueDate",
+          sub_total_amount: $subTotalAmount, 
+          total_amount: $totalAmount, 
+          notes: "$notes", 
+          status:"$status",
+          footer: "$footer",
+          customer_id: $customerId,
+          ){
+      id
+          }
+      }
+    """;
+  }
+
+  String deleteInvoiceItem(
+      String id,
+      ) {
+    return """
+      mutation{
+          delete_invoice_item(
+          id:"$id"
+          ){
+          invoice_id
+          }
+      }
+    """;
+  }
+
+
 }
+
+

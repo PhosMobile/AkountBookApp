@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-class AlertSnaackBar extends StatelessWidget {
+class AlertSnackBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container();

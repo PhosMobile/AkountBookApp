@@ -1,6 +1,8 @@
 import 'package:akount_books/Api/BusinessPage/InvoiceItems.dart';
+import 'package:akount_books/AppState/actions/invoice_actions.dart';
 import 'package:akount_books/Graphql/graphql_config.dart';
 import 'package:akount_books/Graphql/mutations.dart';
+import 'package:akount_books/Models/invoice.dart';
 import 'package:akount_books/Screens/BusinessPage/invoice_sent.dart';
 import 'package:akount_books/Widgets/HeaderTitle.dart';
 import 'package:akount_books/Widgets/loader_widget.dart';
@@ -22,7 +24,6 @@ class SendInvoice extends StatefulWidget {
   @override
   _SendInvoiceState createState() => _SendInvoiceState();
 }
-
 class _SendInvoiceState extends State<SendInvoice> {
   final GlobalKey<FormBuilderState> _fbKey = GlobalKey<FormBuilderState>();
   InputStyles inputStyles = new InputStyles();
@@ -47,242 +48,247 @@ class _SendInvoiceState extends State<SendInvoice> {
           child: StoreConnector<AppState, AppState>(
             converter: (store) => store.state,
             builder: (context, state) {
-              return Column(
-                children: <Widget>[
-                  Container(
-                    padding: EdgeInsets.only(top: 0, left: 20, right: 20),
-                    child: Center(
-                        child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Padding(
-                          padding:
-                              const EdgeInsets.only(top: 18.0, bottom: 28.0),
-                          child: Container(
-                            width: MediaQuery.of(context).size.width,
-                            child: Text(
-                              "Send via (select means of  sending invoice",
-                              textAlign: TextAlign.left,
+              return Container(
+                decoration: BoxDecoration(
+                    border: Border(top: BorderSide(width: 2, color: Theme.of(context).accentColor))
+                ),
+                child: Column(
+                  children: <Widget>[
+                    Container(
+                      padding: EdgeInsets.only(top: 0, left: 20, right: 20),
+                      child: Center(
+                          child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Padding(
+                            padding:
+                                const EdgeInsets.only(top: 18.0, bottom: 28.0),
+                            child: Container(
+                              width: MediaQuery.of(context).size.width,
+                              child: Text(
+                                "Send via (select means of  sending invoice",
+                                textAlign: TextAlign.left,
+                              ),
                             ),
                           ),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: <Widget>[
-                            InkWell(
-                              child: Container(
-                                width: 100,
-                                height: 100,
-                                decoration: sendViaEmail
-                                    ? inputStyles.setSendSelected(context)
-                                    : inputStyles.setSendUnSelected(context),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: <Widget>[
-                                    sendViaEmail
-                                        ? sendViaEmailSelected
-                                        : sendViaEmailUnselected,
-                                    Padding(
-                                      padding: const EdgeInsets.only(top: 10.0),
-                                      child: Text(
-                                        "Email Address",
-                                        style: TextStyle(
-                                          color: sendViaEmail
-                                              ? Colors.white
-                                              : Theme.of(context).primaryColor,
-                                          fontSize: 11.5,
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: <Widget>[
+                              InkWell(
+                                child: Container(
+                                  width: 100,
+                                  height: 100,
+                                  decoration: sendViaEmail
+                                      ? inputStyles.setSendSelected(context)
+                                      : inputStyles.setSendUnSelected(context),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: <Widget>[
+                                      sendViaEmail
+                                          ? sendViaEmailSelected
+                                          : sendViaEmailUnselected,
+                                      Padding(
+                                        padding: const EdgeInsets.only(top: 10.0),
+                                        child: Text(
+                                          "Email Address",
+                                          style: TextStyle(
+                                            color: sendViaEmail
+                                                ? Colors.white
+                                                : Theme.of(context).primaryColor,
+                                            fontSize: 11.5,
+                                          ),
                                         ),
-                                      ),
-                                    )
-                                  ],
+                                      )
+                                    ],
+                                  ),
                                 ),
+                                onTap: () {
+                                  setState(() {
+                                    sendViaSMS = false;
+                                    sendViaEmail = true;
+                                    sendViaWhatsApp = false;
+                                  });
+                                },
                               ),
-                              onTap: () {
-                                setState(() {
-                                  sendViaSMS = false;
-                                  sendViaEmail = true;
-                                  sendViaWhatsApp = false;
-                                });
-                              },
-                            ),
-                            InkWell(
-                              child: Container(
-                                width: 100,
-                                height: 100,
-                                decoration: sendViaWhatsApp
-                                    ? inputStyles.setSendSelected(context)
-                                    : inputStyles.setSendUnSelected(context),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: <Widget>[
-                                    sendViaWhatsApp
-                                        ? sendViaWhatsappSelected
-                                        : sendViaWhatsappUnselected,
-                                    Padding(
-                                      padding: const EdgeInsets.only(top: 10.0),
-                                      child: Text(
-                                        "WhatsApp",
-                                        style: TextStyle(
-                                          color: sendViaWhatsApp
-                                              ? Colors.white
-                                              : Theme.of(context).primaryColor,
-                                          fontSize: 11.5,
+                              InkWell(
+                                child: Container(
+                                  width: 100,
+                                  height: 100,
+                                  decoration: sendViaWhatsApp
+                                      ? inputStyles.setSendSelected(context)
+                                      : inputStyles.setSendUnSelected(context),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: <Widget>[
+                                      sendViaWhatsApp
+                                          ? sendViaWhatsappSelected
+                                          : sendViaWhatsappUnselected,
+                                      Padding(
+                                        padding: const EdgeInsets.only(top: 10.0),
+                                        child: Text(
+                                          "WhatsApp",
+                                          style: TextStyle(
+                                            color: sendViaWhatsApp
+                                                ? Colors.white
+                                                : Theme.of(context).primaryColor,
+                                            fontSize: 11.5,
+                                          ),
                                         ),
-                                      ),
-                                    )
-                                  ],
+                                      )
+                                    ],
+                                  ),
                                 ),
+                                onTap: () {
+                                  setState(() {
+                                    sendViaSMS = false;
+                                    sendViaEmail = false;
+                                    sendViaWhatsApp = true;
+                                  });
+                                },
                               ),
-                              onTap: () {
-                                setState(() {
-                                  sendViaSMS = false;
-                                  sendViaEmail = false;
-                                  sendViaWhatsApp = true;
-                                });
-                              },
-                            ),
-                            InkWell(
-                              child: Container(
-                                width: 100,
-                                height: 100,
-                                decoration: sendViaSMS
-                                    ? inputStyles.setSendSelected(context)
-                                    : inputStyles.setSendUnSelected(context),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: <Widget>[
-                                    sendViaSMS
-                                        ? sendViaSmsSelected
-                                        : sendViaSmsUnselected,
-                                    Padding(
-                                      padding: const EdgeInsets.only(top: 10.0),
-                                      child: Text(
-                                        "SMS",
-                                        style: TextStyle(
-                                          color: sendViaSMS
-                                              ? Colors.white
-                                              : Theme.of(context).primaryColor,
-                                          fontSize: 11.5,
+                              InkWell(
+                                child: Container(
+                                  width: 100,
+                                  height: 100,
+                                  decoration: sendViaSMS
+                                      ? inputStyles.setSendSelected(context)
+                                      : inputStyles.setSendUnSelected(context),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: <Widget>[
+                                      sendViaSMS
+                                          ? sendViaSmsSelected
+                                          : sendViaSmsUnselected,
+                                      Padding(
+                                        padding: const EdgeInsets.only(top: 10.0),
+                                        child: Text(
+                                          "SMS",
+                                          style: TextStyle(
+                                            color: sendViaSMS
+                                                ? Colors.white
+                                                : Theme.of(context).primaryColor,
+                                            fontSize: 11.5,
+                                          ),
                                         ),
-                                      ),
-                                    )
-                                  ],
+                                      )
+                                    ],
+                                  ),
                                 ),
+                                onTap: () {
+                                  setState(() {
+                                    sendViaSMS = true;
+                                    sendViaEmail = false;
+                                    sendViaWhatsApp = false;
+                                  });
+                                },
                               ),
-                              onTap: () {
-                                setState(() {
-                                  sendViaSMS = true;
-                                  sendViaEmail = false;
-                                  sendViaWhatsApp = false;
-                                });
-                              },
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          height: 30.0,
-                        ),
-                        Column(
-                          children: <Widget>[
-                            Container(
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text(
-                                  state.invoiceCustomer.name,
-                                  textAlign: TextAlign.left,
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16),
-                                ),
-                              ),
-                              width: MediaQuery.of(context).size.width,
-                            ),
-                            Container(
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text(
-                                  state.readyInvoice.title,
-                                  style: TextStyle(
-                                      color: Colors.grey,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                              width: MediaQuery.of(context).size.width,
-                            ),
-                            Container(
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text(state.readyInvoice.summary),
-                              ),
-                              width: MediaQuery.of(context).size.width,
-                            ),
-                            Container(
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text(CurrencyConverter().formatPrice(
-                                    int.parse(state.readyInvoice.total_amount),
-                                    state.currentBusiness.currency)),
-                              ),
-                              width: MediaQuery.of(context).size.width,
-                            )
-                          ],
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        Divider(
-                          thickness: 5,
-                        ),
-                        SizedBox(
-                          height: 30,
-                        ),
-                        CheckboxListTile(
-                          title: Text("I have Received Part Payment",
-                              style: TextStyle(color: Colors.grey[700])),
-                          selected: partPayment,
-                          checkColor: Colors.white,
-                          value: partPayment,
-                          onChanged: (value) {
-                            setState(() {
-                              partPayment = value;
-                              fullPayment = false;
-                            });
-                          },
-                          activeColor: Theme.of(context).primaryColor,
-                        ),
-                        CheckboxListTile(
-                          title: Text(
-                            "I have Received Full Payment",
-                            style: TextStyle(color: Colors.grey[700]),
+                            ],
                           ),
-                          selected: fullPayment,
-                          checkColor: Colors.white,
-                          value: fullPayment,
-                          onChanged: (value) {
-                            setState(() {
-                              fullPayment = value;
-                              partPayment = false;
-                            });
-                          },
-                          activeColor: Theme.of(context).primaryColor,
-                        ),
-                        PrimaryButton(
-                          buttonText: _isLoading
-                              ? LoaderLight()
-                              : Text("SEND INVOICE",
-                                  style: TextStyle(
-                                      fontSize: 16, color: Colors.white)),
-                          onPressed: () {
-                            _saveInvoiceName(context);
-                          },
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                      ],
-                    )),
-                  ),
-                ],
+                          SizedBox(
+                            height: 30.0,
+                          ),
+                          Column(
+                            children: <Widget>[
+                              Container(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text(
+                                    state.invoiceCustomer.name,
+                                    textAlign: TextAlign.left,
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16),
+                                  ),
+                                ),
+                                width: MediaQuery.of(context).size.width,
+                              ),
+                              Container(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text(
+                                    state.readyInvoice.title,
+                                    style: TextStyle(
+                                        color: Colors.grey,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                                width: MediaQuery.of(context).size.width,
+                              ),
+                              Container(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text(state.readyInvoice.summary),
+                                ),
+                                width: MediaQuery.of(context).size.width,
+                              ),
+                              Container(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text(CurrencyConverter().formatPrice(
+                                     state.readyInvoice.total_amount,
+                                      state.currentBusiness.currency)),
+                                ),
+                                width: MediaQuery.of(context).size.width,
+                              )
+                            ],
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          Divider(
+                            thickness: 5,
+                          ),
+                          SizedBox(
+                            height: 30,
+                          ),
+                          CheckboxListTile(
+                            title: Text("I have Received Part Payment",
+                                style: TextStyle(color: Colors.grey[700])),
+                            selected: partPayment,
+                            checkColor: Colors.white,
+                            value: partPayment,
+                            onChanged: (value) {
+                              setState(() {
+                                partPayment = value;
+                                fullPayment = false;
+                              });
+                            },
+                            activeColor: Theme.of(context).primaryColor,
+                          ),
+                          CheckboxListTile(
+                            title: Text(
+                              "I have Received Full Payment",
+                              style: TextStyle(color: Colors.grey[700]),
+                            ),
+                            selected: fullPayment,
+                            checkColor: Colors.white,
+                            value: fullPayment,
+                            onChanged: (value) {
+                              setState(() {
+                                fullPayment = value;
+                                partPayment = false;
+                              });
+                            },
+                            activeColor: Theme.of(context).primaryColor,
+                          ),
+                          PrimaryButton(
+                            buttonText: _isLoading
+                                ? LoaderLight()
+                                : Text("SEND INVOICE",
+                                    style: TextStyle(
+                                        fontSize: 16, color: Colors.white)),
+                            onPressed: () {
+                              _saveInvoiceName(context);
+                            },
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                        ],
+                      )),
+                    ),
+                  ],
+                ),
               );
             },
           ),
@@ -312,8 +318,8 @@ class _SendInvoiceState extends State<SendInvoice> {
                 invoiceData.summary,
                 invoiceData.issue_date,
                 invoiceData.due_date,
-                int.parse(invoiceData.sub_total_amount),
-                int.parse(invoiceData.total_amount),
+                invoiceData.sub_total_amount,
+                invoiceData.total_amount,
                 invoiceData.notes,
                 invoiceData.status,
                 invoiceData.footer,
@@ -323,11 +329,25 @@ class _SendInvoiceState extends State<SendInvoice> {
     if (!result.hasErrors) {
       String response = await InvoiceItems().saveInvoiceItems(
           addInvoice.state.invoiceItems, result.data["create_invoice"]["id"]);
-      print(response);
+      dynamic InvoiceQueryData = result.data["create_invoice"];
       if (response == "Done") {
-        setState(() {
-          flushBarTitle = response;
-        });
+        Invoice _invoice = new Invoice(
+            InvoiceQueryData["id"],
+            InvoiceQueryData["title"],
+            InvoiceQueryData["invoice_number"],
+            InvoiceQueryData["po_so_number"],
+            InvoiceQueryData["summary"],
+            InvoiceQueryData["issue_date"],
+            InvoiceQueryData["due_date"],
+            InvoiceQueryData["sub_total_amount"],
+            InvoiceQueryData["total_amount"],
+            InvoiceQueryData["notes"],
+            InvoiceQueryData["status"],
+            InvoiceQueryData["footer"],
+            invoiceData.customer_id,
+            invoiceData.business_id,
+            invoiceData.user_id);
+        addInvoice.dispatch(AddBusinessInvoice(payload: _invoice));
         Navigator.of(context).pop();
         Navigator.push(
           context,
@@ -337,9 +357,7 @@ class _SendInvoiceState extends State<SendInvoice> {
         setState(() {
           flushBarTitle = response;
         });
-
         Navigator.of(context).pop();
-
       }
     } else {
       print(result.errors);
@@ -348,13 +366,13 @@ class _SendInvoiceState extends State<SendInvoice> {
   }
 
   final Widget sendViaWhatsappSelected = new SvgPicture.asset(
-    SVGFiles.send_via_whatsapp_selected,
+    SVGFiles.send_via_whatsApp_selected,
     semanticsLabel: 'send_via_whatsapp_selected',
     allowDrawingOutsideViewBox: true,
   );
 
   final Widget sendViaWhatsappUnselected = new SvgPicture.asset(
-    SVGFiles.send_via_whatsapp_unselected,
+    SVGFiles.send_via_whatsApp_unselected,
     semanticsLabel: 'send_via_whatsapp_unselected',
     allowDrawingOutsideViewBox: true,
   );

@@ -18,3 +18,8 @@ class AddInvoiceItems{
   AddInvoiceItems({@required this.payload});
 }
 
+class EditInvoiceItems{
+  final List<Item> payload;
+  EditInvoiceItems({@required this.payload});
+}
+
