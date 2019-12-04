@@ -1,10 +1,9 @@
 import 'package:akount_books/AppState/app_state.dart';
 import 'package:akount_books/AppState/reducers/app_reducer.dart';
+import 'package:akount_books/Resources/app_config.dart';
+import 'package:akount_books/main.dart';
 import 'package:flutter/material.dart';
 import 'package:redux/redux.dart';
-import 'Resources/app_config.dart';
-import 'main.dart';
-
 void main(){
   final Store<AppState> store = Store<AppState>(
     appReducer,
