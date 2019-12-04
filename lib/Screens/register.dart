@@ -37,155 +37,159 @@ class _RegisterState extends State<Register> {
     }
     return null;
   }
+
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
         body: SingleChildScrollView(
           padding: EdgeInsets.only(top: 60),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          logo.miniLogoAvatar(),
-          SizedBox(height: 20),
-          Text("Sign Up",
-              style: TextStyle(
-                  color: Theme
-                      .of(context)
-                      .primaryColor,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold)),
-          SizedBox(height: 20),
-          Container(
-            padding: EdgeInsets.all(30),
-            child: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    FormBuilder(
-                      key: _fbKey,
-                      initialValue: {
-                        'date': DateTime.now(),
-                        'accept_terms': false,
-                      },
-                      autovalidate: false,
-                      child: Column(
-                        children: <Widget>[
-                          _hasErrors
-                              ? RequestError(errorText: requestErrors)
-                              : Container(),
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 10),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                  boxShadow: [
-                                    inputStyles.boxShadowMain(context)
-                                  ]),
-                              child: FormBuilderTextField(
-                                attribute: "fullName",
-                                decoration: inputStyles.inputMain("Full Name"),
-                                validators: [
-                                  FormBuilderValidators.max(70,
-                                      errorText:
-                                      "Name can no be longer than 70 character"),
-                                  FormBuilderValidators.required()
-                                ],
-                                controller: _userName,
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 10),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                  boxShadow: [
-                                    inputStyles.boxShadowMain(context)
-                                  ]),
-                              child: FormBuilderTextField(
-                                attribute: "email",
-                                decoration: inputStyles.inputMain(
-                                    "Email / Phone"),
-                                validators: [
-                                  FormBuilderValidators.email(
-                                      errorText: "Invalid Email"),
-                                  FormBuilderValidators.minLength(10,
-                                      errorText: "Email/Phone to short")
-                                ],
-                                controller: _phone_email,
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 10),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                  boxShadow: [
-                                    inputStyles.boxShadowMain(context)
-                                  ]),
-                              child: FormBuilderTextField(
-                                attribute: "password",
-                                obscureText: true,
-                                decoration: inputStyles.inputMain("Password"),
-                                validators: [
-                                  FormBuilderValidators.minLength(8,
-                                      errorText: "Wrong password"),
-                                  FormBuilderValidators.required()
-                                ],
-                                controller: _password,
-                              ),
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    PrimaryButton(
-                      buttonText: _isLoading
-                          ? LoaderLight()
-                          : Text("SIGN UP",
-                          style: TextStyle(fontSize: 16, color: Colors.white)),
-                      onPressed: () {
-                        if (_fbKey.currentState.saveAndValidate()) {
-                          _registerUser();
-                        }
-                      },
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Row(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              logo.miniLogoAvatar(),
+              SizedBox(height: 20),
+              Text("Sign Up",
+                  style: TextStyle(
+                      color: Theme
+                          .of(context)
+                          .primaryColor,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold)),
+              SizedBox(height: 20),
+              Container(
+                padding: EdgeInsets.all(30),
+                child: Center(
+                    child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
-                        Text(
-                          "Already ave an account?",
-                          style: TextStyle(fontSize: 16),
+                        FormBuilder(
+                          key: _fbKey,
+                          initialValue: {
+                            'date': DateTime.now(),
+                            'accept_terms': false,
+                          },
+                          autovalidate: false,
+                          child: Column(
+                            children: <Widget>[
+                              _hasErrors
+                                  ? RequestError(errorText: requestErrors)
+                                  : Container(),
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 10),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                      boxShadow: [
+                                        inputStyles.boxShadowMain(context)
+                                      ]),
+                                  child: FormBuilderTextField(
+                                    attribute: "fullName",
+                                    decoration: inputStyles.inputMain(
+                                        "Full Name"),
+                                    validators: [
+                                      FormBuilderValidators.max(70,
+                                          errorText:
+                                          "Name can no be longer than 70 character"),
+                                      FormBuilderValidators.required()
+                                    ],
+                                    controller: _userName,
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 10),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                      boxShadow: [
+                                        inputStyles.boxShadowMain(context)
+                                      ]),
+                                  child: FormBuilderTextField(
+                                    attribute: "email",
+                                    decoration: inputStyles.inputMain(
+                                        "Email / Phone"),
+                                    validators: [
+                                      FormBuilderValidators.email(
+                                          errorText: "Invalid Email"),
+                                      FormBuilderValidators.minLength(10,
+                                          errorText: "Email/Phone to short")
+                                    ],
+                                    controller: _phone_email,
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 10),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                      boxShadow: [
+                                        inputStyles.boxShadowMain(context)
+                                      ]),
+                                  child: FormBuilderTextField(
+                                    attribute: "password",
+                                    obscureText: true,
+                                    decoration: inputStyles.inputMain(
+                                        "Password"),
+                                    validators: [
+                                      FormBuilderValidators.minLength(8,
+                                          errorText: "Wrong password"),
+                                      FormBuilderValidators.required()
+                                    ],
+                                    controller: _password,
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
                         ),
                         SizedBox(
-                          width: 20,
+                          height: 10,
                         ),
-                        InkWell(
-                          child: Text(
-                            "Sign In",
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
-                                color: Theme
-                                    .of(context)
-                                    .primaryColor),
-                          ),
-                          onTap: () {
-                            Navigator.pushNamed(context, "/login");
+                        PrimaryButton(
+                          buttonText: _isLoading
+                              ? LoaderLight()
+                              : Text("SIGN UP",
+                              style: TextStyle(
+                                  fontSize: 16, color: Colors.white)),
+                          onPressed: () {
+                            if (_fbKey.currentState.saveAndValidate()) {
+                              _registerUser();
+                            }
                           },
-                        )
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Text(
+                              "Already ave an account?",
+                              style: TextStyle(fontSize: 16),
+                            ),
+                            SizedBox(
+                              width: 20,
+                            ),
+                            InkWell(
+                              child: Text(
+                                "Sign In",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                    color: Theme
+                                        .of(context)
+                                        .primaryColor),
+                              ),
+                              onTap: () {
+                                Navigator.pushNamed(context, "/login");
+                              },
+                            )
+                          ],
+                        ),
+                        SocialSignUp()
                       ],
-                    ),
-                    SocialSignUp()
-                  ],
-                )),
+                    )),
+              ),
+            ],
           ),
-        ],
-      ),
         ));
   }
 
@@ -222,7 +226,7 @@ class _RegisterState extends State<Register> {
         .millisecondsSinceEpoch);
     GqlConfig graphQLConfiguration = GqlConfig();
     Mutations createUser = new Mutations();
-    QueryResult result = await graphQLConfiguration.getGraphql().mutate(
+    QueryResult result = await graphQLConfiguration.getGraphql(context).mutate(
         MutationOptions(
             document: createUser.createUser(
                 _userName.text, this.phone, this.email, _password.text, otp)));
@@ -235,42 +239,42 @@ class _RegisterState extends State<Register> {
           _hasErrors = true;
         });
       } else if (emailRegex.hasMatch(_phone_email.text.trim())) {
-        var url = "http://10.0.2.2:8000/api/verify_otp_email";
+        var url = "https://akount-book.herokuapp.com/api/verify_otp_email";
         response =
-        await http.post(url, body: {"email": email, "otp": otp.toString()});
-      }
-      if (response.statusCode == 200) {
-        final prefs = await SharedPreferences.getInstance();
-        var user = result.data["create_user"];
-        prefs.setStringList('user_credentials',
-            [_phone_email.text, _password.text, user["id"]]);
-        _userName.text = "";
-        _password.text = "";
-        _phone_email.text = "";
+        await http.post(
+            url, body: {"email": this.email, "otp": otp.toString()});
+        print(response.body);
 
-        setState(() {
-          _isLoading = false;
-          _hasErrors = false;
-        });
-        Navigator.pushNamed(context, "/otp_verifiy");
+        if (response.statusCode == 200) {
+          final prefs = await SharedPreferences.getInstance();
+          var user = result.data["create_user"];
+          prefs.setStringList('user_credentials',
+              [_phone_email.text, _password.text, user["id"]]);
+          _userName.text = "";
+          _password.text = "";
+          _phone_email.text = "";
+
+          setState(() {
+            _isLoading = false;
+            _hasErrors = false;
+          });
+          Navigator.pushNamed(context, "/otp_verifiy");
+        } else {
+          print(response.statusCode);
+          setState(() {
+            requestErrors =
+            "Error registering your Account, please try again later";
+            _isLoading = false;
+            _hasErrors = true;
+          });
+        }
       } else {
-        print(result.errors);
-        print(result.source);
         setState(() {
-          requestErrors =
-          "Error registering your Account, please try again later";
+          requestErrors = "Error Registering your account...pls try again";
           _isLoading = false;
           _hasErrors = true;
         });
       }
-    } else {
-      print(result.errors);
-      print(result.source);
-      setState(() {
-        requestErrors = "Error Registering your account...pls try again";
-        _isLoading = false;
-        _hasErrors = true;
-      });
     }
   }
 }

@@ -6,11 +6,11 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 
 class GetInvoiceItems{
 
-  dynamic fetchInvoiceItems(id) async {
+  dynamic fetchInvoiceItems(id, context) async {
     List<dynamic> invoiceItemList;
     GqlConfig graphQLConfiguration = GqlConfig();
     Queries queries = Queries();
-    QueryResult result = await graphQLConfiguration.getGraphql().query(
+    QueryResult result = await graphQLConfiguration.getGraphql(context).query(
       QueryOptions(
         document: queries.getInvoiceItem,
         variables: {

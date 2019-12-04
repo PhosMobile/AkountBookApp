@@ -33,9 +33,10 @@ class UpdateInvoiceData extends StatefulWidget {
   @override
   _UpdateInvoiceDataState createState() => _UpdateInvoiceDataState();
 }
+
 class _UpdateInvoiceDataState extends State<UpdateInvoiceData> {
   final GlobalKey<FormBuilderState> _fbKey = GlobalKey<FormBuilderState>();
-  GlobalKey<ScaffoldState> scaffoldState = new GlobalKey<ScaffoldState>();
+  GlobalKey<ScaffoldState> _scaffoldState = new GlobalKey<ScaffoldState>();
   InputStyles inputStyles = new InputStyles();
   String requestErrors;
   bool _isDraftLoading = false;
@@ -56,7 +57,7 @@ class _UpdateInvoiceDataState extends State<UpdateInvoiceData> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-        key: scaffoldState,
+        key: _scaffoldState,
         appBar: AppBar(
             backgroundColor: Colors.white,
             iconTheme: IconThemeData(color: Theme.of(context).primaryColor),
@@ -64,20 +65,26 @@ class _UpdateInvoiceDataState extends State<UpdateInvoiceData> {
         body: SingleChildScrollView(
           child: StoreConnector<AppState, AppState>(
               converter: (store) => store.state,
+              onInitialBuild: (state){
+                EditInvoice invoiceData = state.editInvoice;
+                setState(() {
+                  dueDate = state.editInvoice.due_date;
+                  invoiceDate = state.editInvoice.issue_date;
+                  _subTotal.text = invoiceData.sub_total_amount.toString();
+                  _total.text = invoiceData.total_amount.toString();
+                  _notes.text = invoiceData.notes;
+                  _footer.text = invoiceData.footer;
+                });
+
+              },
               builder: (context, state) {
                 EditInvoice invoiceData = state.editInvoice;
+
                 InvoiceName invoiceNameData = InvoiceName(
                     invoiceData.title,
                     invoiceData.number,
                     invoiceData.po_so_number,
                     invoiceData.summary);
-                String businessId = state.currentBusiness.id;
-                String userId = state.loggedInUser.user_id;
-
-                _subTotal.text  = invoiceData.sub_total_amount.toString();
-                _total.text = invoiceData.total_amount.toString();
-                _notes.text = invoiceData.notes;
-                _footer.text = invoiceData.footer;
 
                 if (state.editInvoice != null) {
                   _invoiceName = invoiceNameData.title;
@@ -252,7 +259,8 @@ class _UpdateInvoiceDataState extends State<UpdateInvoiceData> {
                                           buttonText: Text(
                                             invoiceData.invoiceCustomer == null
                                                 ? "Edit Customer"
-                                                : invoiceData.invoiceCustomer.name,
+                                                : invoiceData
+                                                    .invoiceCustomer.name,
                                             style: TextStyle(
                                                 color: Theme.of(context)
                                                     .primaryColor),
@@ -279,7 +287,8 @@ class _UpdateInvoiceDataState extends State<UpdateInvoiceData> {
                                               child: Row(
                                                 children: <Widget>[
                                                   Text(
-                                                      invoiceData.invoiceItem.length
+                                                      invoiceData
+                                                          .invoiceItem.length
                                                           .toString(),
                                                       style: TextStyle(
                                                           color: Theme.of(
@@ -298,7 +307,8 @@ class _UpdateInvoiceDataState extends State<UpdateInvoiceData> {
                                               height: 3.0,
                                             ),
                                             // ignore: sdk_version_ui_as_code
-                                            for (var item in invoiceData.invoiceItem)
+                                            for (var item
+                                                in invoiceData.invoiceItem)
                                               Column(
                                                 children: <Widget>[
                                                   InvoiceItemCard(
@@ -355,7 +365,6 @@ class _UpdateInvoiceDataState extends State<UpdateInvoiceData> {
                                           inputStyles.boxShadowMain(context)
                                         ]),
                                         child: FormBuilderTextField(
-
                                           keyboardType: TextInputType.number,
                                           attribute: "sub_total",
                                           decoration: inputStyles
@@ -441,9 +450,8 @@ class _UpdateInvoiceDataState extends State<UpdateInvoiceData> {
                                     if (_fbKey.currentState.saveAndValidate()) {
                                       _updateInvoice(
                                           state.editInvoice,
-                                        state.currentBusiness.id,
-                                        state.loggedInUser.user_id
-                                      );
+                                          state.currentBusiness.id,
+                                          state.loggedInUser.user_id);
                                     }
                                   },
                                 ),
@@ -455,9 +463,7 @@ class _UpdateInvoiceDataState extends State<UpdateInvoiceData> {
                                               fontWeight: FontWeight.w100,
                                               fontSize: 14,
                                               color: Colors.redAccent)),
-                                  onPressed: () {
-
-                                  },
+                                  onPressed: () {},
                                 ),
                               ],
                             ),
@@ -525,13 +531,20 @@ class _UpdateInvoiceDataState extends State<UpdateInvoiceData> {
 
   void _updateInvoice(EditInvoice invoiceData, businessId, userId) async {
     final addInvoice = StoreProvider.of<AppState>(context);
-    scaffoldState.currentState.showSnackBar(
+    _scaffoldState.currentState.showSnackBar(
         LoadingSnackBar().loader("  Updating Invoice...", context));
+    String invoiceCustomerId;
+
+    if( invoiceData.invoiceCustomer == null){
+      invoiceCustomerId = null;
+    }else{
+      invoiceCustomerId=  invoiceData.invoiceCustomer.id;
+    }
 
     List<Item> invoiceItems = invoiceData.invoiceItem;
     GqlConfig graphQLConfiguration = GqlConfig();
     Mutations _updateInvoice = new Mutations();
-    QueryResult result = await graphQLConfiguration.getGraphql().mutate(
+    QueryResult result = await graphQLConfiguration.getGraphql(context).mutate(
         MutationOptions(
             document: _updateInvoice.updateInvoice(
                 invoiceData.id,
@@ -539,42 +552,40 @@ class _UpdateInvoiceDataState extends State<UpdateInvoiceData> {
                 invoiceData.number,
                 invoiceData.po_so_number,
                 invoiceData.summary,
-                invoiceData.issue_date,
-                invoiceData.due_date,
-                invoiceData.sub_total_amount,
-                invoiceData.total_amount,
-                invoiceData.notes,
+                invoiceDate,
+                dueDate,
+                int.parse( _subTotal.text),
+                int.parse(_total.text),
+               _notes.text,
                 invoiceData.status,
-                invoiceData.footer,
-                invoiceData.invoiceCustomer.id)));
+                _footer.text,
+                invoiceCustomerId)));
 
     if (!result.hasErrors) {
-      String  itemUpdated = await InvoiceItems().updateInvoiceItems(
-          invoiceItems, invoiceData.id);
-      if(itemUpdated == "Done"){
+      String itemUpdated =
+          await InvoiceItems().updateInvoiceItems(invoiceItems, invoiceData.id,context);
+      if (itemUpdated == "Done") {
         Invoice _invoice = new Invoice(
             invoiceData.id,
             invoiceData.title,
             invoiceData.number,
             invoiceData.po_so_number,
             invoiceData.summary,
-            invoiceData.issue_date,
-            invoiceData.due_date,
-            invoiceData.sub_total_amount,
-            invoiceData.total_amount,
-            invoiceData.notes,
+            invoiceDate,
+            dueDate,
+            int.parse( _subTotal.text),
+            int.parse(_total.text),
+            _notes.text,
             invoiceData.status,
-            invoiceData.footer,
-            invoiceData.invoiceCustomer.id,
+            _footer.text,
+            invoiceCustomerId,
             businessId,
             userId);
         addInvoice.dispatch(UpdateBusinessInvoice(payload: _invoice));
         Navigator.pushNamed(context, "/user_dashboard");
       }
-    }else{
+    } else {
       print(result.errors);
     }
-
-    }
   }
-
+}

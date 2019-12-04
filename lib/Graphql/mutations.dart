@@ -65,10 +65,57 @@ class Mutations {
           ){
           id
           name
+          email
+          description
+          address
+          currency
+          image_url
+          user_id
           }
       }
     """;
   }
+
+  String editBusiness(String id, String name, String email, String description,
+      String address, String currency, String imageUrl,) {
+    return """
+      mutation{
+          update_business(
+          id:"$id",
+          name: "$name", 
+          email: "$email", 
+          description: "$description", 
+          address:"$address"
+          currency: "$currency" 
+          image_url: "$imageUrl"
+          ){
+          id
+          name
+          email
+          description
+          address
+          currency
+          image_url
+          user_id
+          }
+      }
+    """;
+  }
+
+
+  String deleteBusiness(String id) {
+    return """
+      mutation{
+          update_business(
+          id:"$id",
+          ){
+          id
+          }
+      }
+    """;
+  }
+
+
 
 
   String createCustomer(String name, String email, String phone,

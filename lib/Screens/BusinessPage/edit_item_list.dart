@@ -172,7 +172,6 @@ class _EditItemListState extends State<EditItemList> {
       ),
     );
   }
-
   updateInvoiceItems(context, List<Item> items) {
     final invoiceItems = StoreProvider.of<AppState>(context);
     invoiceItems.dispatch(EditInvoiceItems(payload: items));

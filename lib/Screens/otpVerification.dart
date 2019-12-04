@@ -136,7 +136,7 @@ class _OTPVerificationState extends State<OTPVerification> {
     GqlConfig graphQLConfiguration = GqlConfig();
 
     Queries queries = Queries();
-    QueryResult result = await graphQLConfiguration.getGraphql().query(
+    QueryResult result = await graphQLConfiguration.getGraphql(context).query(
       QueryOptions(
           document: queries.getOTP,
           variables: <String, dynamic>{"otp": _otp.text}),

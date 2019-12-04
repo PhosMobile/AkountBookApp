@@ -218,7 +218,7 @@ class _AddCustomerState extends State<AddCustomer> {
     final addCustomer = StoreProvider.of<AppState>(context);
     GqlConfig graphQLConfiguration = GqlConfig();
     Mutations createCustomer = new Mutations();
-    QueryResult result = await graphQLConfiguration.getGraphql().mutate(
+    QueryResult result = await graphQLConfiguration.getGraphql(context).mutate(
         MutationOptions(
             document: createCustomer.createCustomer(
                 _customerName.text,

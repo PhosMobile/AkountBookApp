@@ -26,5 +26,6 @@ class AppState {
   Invoice readyInvoice;
 
   EditInvoice editInvoice;
+  Business editBusiness;
 
 }

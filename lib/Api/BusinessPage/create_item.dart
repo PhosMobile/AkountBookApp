@@ -203,7 +203,7 @@ class _AddItemState extends State<AddItem> {
     GqlConfig graphQLConfiguration = GqlConfig();
     Mutations createItem = new Mutations();
     QueryResult result =
-    await graphQLConfiguration.getGraphql().mutate(MutationOptions(
+    await graphQLConfiguration.getGraphql(context).mutate(MutationOptions(
         document: createItem.createItem(
           _itemName.text,
           _description.text,

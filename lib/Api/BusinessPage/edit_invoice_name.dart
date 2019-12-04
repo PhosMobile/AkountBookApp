@@ -38,15 +38,19 @@ class _EditInvoiceNameState extends State<EditInvoiceName> {
         body: SingleChildScrollView(
           child: StoreConnector<AppState, AppState>(
             converter: (store) => store.state,
-            builder: (context, state){
+            onInitialBuild: (state){
               EditInvoice editInvoice = state.editInvoice;
               if(editInvoice != null){
                 InvoiceName invoiceNameFromState = InvoiceName(editInvoice.title, editInvoice.number, editInvoice.po_so_number, editInvoice.summary);
-                _invoiceTitle.text = invoiceNameFromState.title;
-                _invoiceNumber.text = invoiceNameFromState.invoice_number.toString();
-                _poSoNumber.text = invoiceNameFromState.po_so_number;
-                _summary.text = invoiceNameFromState.summary;
+                setState(() {
+                  _invoiceTitle.text = invoiceNameFromState.title;
+                  _invoiceNumber.text = invoiceNameFromState.invoice_number.toString();
+                  _poSoNumber.text = invoiceNameFromState.po_so_number;
+                  _summary.text = invoiceNameFromState.summary;
+                });
               }
+            },
+            builder: (context, state){
               return Container(
                 decoration: BoxDecoration(
                     border: Border(top: BorderSide(width: 2, color: Theme.of(context).accentColor))

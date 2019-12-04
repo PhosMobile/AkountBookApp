@@ -92,7 +92,7 @@ class InvoiceListBuilder extends StatelessWidget {
                       _scaffoldKey.currentState.showSnackBar(
                       LoadingSnackBar().loader("  Getting Invoice Data...", context));
                       List<dynamic> invoiceItems =
-                          await GetInvoiceItems().fetchInvoiceItems(invoice.id);
+                          await GetInvoiceItems().fetchInvoiceItems(invoice.id,context);
                       if (invoiceItems == null) {
                       } else {
                         for (var item in invoiceItems) {

@@ -5,11 +5,12 @@ import 'package:akount_books/AppState/actions/invoice_actions.dart';
 import 'package:akount_books/AppState/actions/item_actions.dart';
 import 'package:akount_books/AppState/actions/user_actions.dart';
 import 'package:akount_books/AppState/app_state.dart';
+import 'package:akount_books/AppState/reducers/business_reducers.dart';
 import 'package:akount_books/AppState/reducers/invoice_reducers.dart';
-import 'package:akount_books/Models/invoice.dart';
 
 AppState appReducer(AppState prevState, dynamic action) {
   AppState newAppState = prevState;
+
   if (action is AddUser) {
     newAppState.loggedInUser = action.payload;
   } else if (action is SaveUserBusinesses) {
@@ -24,17 +25,19 @@ AppState appReducer(AppState prevState, dynamic action) {
     newAppState.businessExpenses = action.payload;
   } else if (action is AddBusinessItem) {
     newAppState.businessItems = action.payload;
-  } else if (action is AddInvoiceCustomer) {
+  }else if (action is AddInvoiceCustomer) {
     newAppState.invoiceCustomer = action.payload;
-  } else if (action is AddNameInvoice) {
+  }else if (action is AddNameInvoice) {
     newAppState.invoiceName = action.payload;
-  } else if (action is AddInvoiceItems) {
+  }else if (action is AddInvoiceItems) {
     newAppState.invoiceItems = action.payload;
   }else if (action is UpdateBusinessCustomers) {
     newAppState.businessCustomers.insert(0, action.payload);
+  }else if (action is UpdateUserBusiness) {
+    newAppState.userBusinesses.insert(0, action.payload);
   }else if (action is UpdateBusinessItems) {
     newAppState.businessItems.insert(0, action.payload);
-  } else if (action is CreateInvoice) {
+  }else if (action is CreateInvoice) {
     newAppState.readyInvoice = action.payload;
   }else if (action is AddBusinessInvoice) {
     newAppState.businessInvoices.insert(0, action.payload);
@@ -42,18 +45,19 @@ AppState appReducer(AppState prevState, dynamic action) {
     newAppState.editInvoice = action.payload;
   }else if (action is EditNameInvoice) {
     InvoiceReducers().updateEditInvoiceName(action.payload, newAppState);
-  }
-  else if (action is EditInvoiceCustomer) {
+  }else if (action is EditInvoiceCustomer) {
     InvoiceReducers().editInvoiceCustomer(action.payload, newAppState);
   }else if (action is EditInvoiceItems) {
     InvoiceReducers().editInvoiceItems(action.payload, newAppState);
-  }
-  else if (action is UpdateBusinessInvoice) {
+  }else if (action is UpdateBusinessInvoice) {
     InvoiceReducers().updateBusinessInvoice(action.payload, newAppState);
+  }else if (action is AddBusinessForEdit) {
+    newAppState.editBusiness = action.payload;
+  }else if (action is UpdateEditedBusiness) {
+    BusinessReducers().updateEditedBusiness(action.payload, newAppState);
+  }else if (action is RemoveDeletedBusiness) {
+    BusinessReducers().removeEditedBusiness(action.payload, newAppState);
   }
   return newAppState;
+
 }
-
-
-
-

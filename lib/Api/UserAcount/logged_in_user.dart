@@ -17,16 +17,15 @@ class LoggedInUser {
   List<Business> businesses = [];
 
   Future fetchLoggedInUser(context, from) async {
-    final LocalStorage storage = new LocalStorage('some_key');
     final business = StoreProvider.of<AppState>(context);
 
     GqlConfig graphQLConfiguration = GqlConfig();
     Queries queries = Queries();
-    QueryResult result = await graphQLConfiguration.getGraphql().query(
-      QueryOptions(
-        document: queries.getLoggedInUser,
-      ),
-    );
+    QueryResult result = await graphQLConfiguration.getGraphql(context).query(
+          QueryOptions(
+            document: queries.getLoggedInUser,
+          ),
+        );
     if (!result.hasErrors) {
       var data = result.data["me"];
       var userBusiness = result.data["me"]["businesses"];
@@ -50,10 +49,7 @@ class LoggedInUser {
       if (from == "registeration") {
         business.dispatch(UserCurrentBusiness(payload: businesses[0]));
         CurrentBusinessData().getBusinessData(context, businesses[0].id);
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => BusinessCreated()),
-        );
+        return;
       } else {
         business.dispatch(UserCurrentBusiness(payload: businesses[0]));
         await CurrentBusinessData().getBusinessData(context, businesses[0].id);
@@ -61,7 +57,6 @@ class LoggedInUser {
       }
     } else {
       print(result.errors);
-      print(result.source);
     }
   }
 }

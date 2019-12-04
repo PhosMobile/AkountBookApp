@@ -200,7 +200,7 @@ class _loginState extends State<Login> {
     });
     GqlConfig graphQLConfiguration = GqlConfig();
     Mutations login = new Mutations();
-    QueryResult result = await graphQLConfiguration.getGraphql().mutate(
+    QueryResult result = await graphQLConfiguration.getGraphql(context).mutate(
       MutationOptions(document: login.login(_email.text, _password.text)),
     );
     if (!result.hasErrors) {

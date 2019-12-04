@@ -132,7 +132,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
     });
     GqlConfig graphQLConfiguration = GqlConfig();
     Mutations forgotPassword = new Mutations();
-    QueryResult result = await graphQLConfiguration.getGraphql().mutate(
+    QueryResult result = await graphQLConfiguration.getGraphql(context).mutate(
           MutationOptions(document: forgotPassword.forgotPassword(_email.text)),
         );
     if (!result.hasErrors) {

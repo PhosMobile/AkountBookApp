@@ -21,7 +21,7 @@ class CurrentBusinessData extends StatelessWidget {
   dynamic getBusinessData(context, id) async {
     GqlConfig graphQLConfiguration = GqlConfig();
     Queries queries = Queries();
-    QueryResult result = await graphQLConfiguration.getGraphql().query(
+    QueryResult result = await graphQLConfiguration.getGraphql(context).query(
           QueryOptions(
               document: queries.getCurrentBusinessData, variables: {"id": id}),
         );

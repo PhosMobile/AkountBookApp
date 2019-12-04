@@ -309,7 +309,7 @@ class _SendInvoiceState extends State<SendInvoice> {
 
     GqlConfig graphQLConfiguration = GqlConfig();
     Mutations createInvoice = new Mutations();
-    QueryResult result = await graphQLConfiguration.getGraphql().mutate(
+    QueryResult result = await graphQLConfiguration.getGraphql(context).mutate(
         MutationOptions(
             document: createInvoice.createInvoice(
                 invoiceData.title,
@@ -328,7 +328,7 @@ class _SendInvoiceState extends State<SendInvoice> {
                 invoiceData.user_id)));
     if (!result.hasErrors) {
       String response = await InvoiceItems().saveInvoiceItems(
-          addInvoice.state.invoiceItems, result.data["create_invoice"]["id"]);
+          addInvoice.state.invoiceItems, result.data["create_invoice"]["id"],context);
       dynamic InvoiceQueryData = result.data["create_invoice"];
       if (response == "Done") {
         Invoice _invoice = new Invoice(

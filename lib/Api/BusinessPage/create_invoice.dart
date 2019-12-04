@@ -567,7 +567,7 @@ class _AddInvoiceState extends State<AddInvoice> {
       }
       GqlConfig graphQLConfiguration = GqlConfig();
       Mutations createInvoice = new Mutations();
-      QueryResult result = await graphQLConfiguration.getGraphql().mutate(
+      QueryResult result = await graphQLConfiguration.getGraphql(context).mutate(
           MutationOptions(
               document: createInvoice.createInvoice(
                   title,
@@ -586,7 +586,7 @@ class _AddInvoiceState extends State<AddInvoice> {
                   userId)));
       if (!result.hasErrors) {
         InvoiceItems().saveInvoiceItems(
-            addInvoice.state.invoiceItems, result.data["create_invoice"]["id"]);
+            addInvoice.state.invoiceItems, result.data["create_invoice"]["id"], context);
         setState(() {
           _isDraftLoading = false;
           _isSendLoading = false;
