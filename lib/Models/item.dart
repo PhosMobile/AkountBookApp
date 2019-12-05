@@ -1,7 +1,7 @@
 class Item {
-  String id, name, description, quantity, price, business_id, user_id;
+  String id, name, description, quantity, price, businessId, userId;
   Item(this.id, this.name, this.description, this.quantity, this.price,
-      this.business_id, this.user_id);
+      this.businessId, this.userId);
 
   Item.fromJson(Map<String, dynamic> jsonObject) {
     this.id = jsonObject['id'];
@@ -9,8 +9,8 @@ class Item {
     this.description = jsonObject['email'];
     this.quantity = jsonObject['description'];
     this.price = jsonObject['address'];
-    this.business_id = jsonObject['currency'];
-    this.user_id = jsonObject['image_url'];
+    this.businessId = jsonObject['currency'];
+    this.userId = jsonObject['image_url'];
   }
 
 }

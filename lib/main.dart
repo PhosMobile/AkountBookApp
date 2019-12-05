@@ -13,7 +13,6 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'AppState/app_state.dart';
 import 'Screens/UserPage/switch_business.dart';
 import 'Screens/forgot_password.dart';
-import 'Resources/app_config.dart';
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -27,7 +26,7 @@ class MyApp extends StatelessWidget {
       store: store,
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        title: AppConfig.of(context).appTitle,
+        title: "Akount Book",
         theme: ThemeData(
           primaryColor: Color.fromRGBO(4, 100, 183, 1),
           accentColor: Color.fromRGBO(200, 228, 253, 1),

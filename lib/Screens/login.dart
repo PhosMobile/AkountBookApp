@@ -16,10 +16,10 @@ import 'package:localstorage/localstorage.dart';
 
 class Login extends StatefulWidget {
   @override
-  _loginState createState() => _loginState();
+  _LoginState createState() => _LoginState();
 }
 
-class _loginState extends State<Login> {
+class _LoginState extends State<Login> {
   final GlobalKey<FormBuilderState> _fbKey = GlobalKey<FormBuilderState>();
   String requestErrors;
   InputStyles inputStyles = new InputStyles();
@@ -209,8 +209,8 @@ class _loginState extends State<Login> {
         _hasErrors = false;
       });
       storage.deleteItem("access_token");
-      var access_token = result.data["login"];
-      storage.setItem("access_token", access_token);
+      var accessToken = result.data["login"];
+      storage.setItem("access_token", accessToken);
       LoggedInUser().fetchLoggedInUser(context, "login");
     } else {
       setState(() {

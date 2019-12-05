@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:akount_books/AppState/actions/customer_actions.dart';
 import 'package:akount_books/AppState/app_state.dart';
 import 'package:akount_books/Graphql/graphql_config.dart';
@@ -14,8 +13,6 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:akount_books/Widgets/Input_styles.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
-import 'package:image_picker/image_picker.dart';
-
 class AddCustomer extends StatefulWidget {
   @override
   _AddCustomerState createState() => _AddCustomerState();
@@ -32,7 +29,6 @@ class _AddCustomerState extends State<AddCustomer> {
   TextEditingController _email = new TextEditingController();
   TextEditingController _phone = new TextEditingController();
   TextEditingController _address = new TextEditingController();
-  File _image;
 
   validate(value, errorText) {
     if (value.isEmpty) {
@@ -55,7 +51,7 @@ class _AddCustomerState extends State<AddCustomer> {
               converter: (store) => store.state,
               builder: (context, state) {
                 String businessId = state.currentBusiness.id;
-                String userId = state.loggedInUser.user_id;
+                String userId = state.loggedInUser.userId;
                 return Container(
                   decoration: BoxDecoration(
                       border: Border(top: BorderSide(width: 2, color: Theme.of(context).accentColor))
@@ -98,13 +94,6 @@ class _AddCustomerState extends State<AddCustomer> {
                                           : Container(),
                                       InkWell(
                                         child: ImageAvatars().attachImage(),
-                                        onTap: () async {
-                                          var image = await ImagePicker.pickImage(
-                                              source: ImageSource.camera);
-                                          setState(() {
-                                            _image = image;
-                                          });
-                                        },
                                       ),
                                       SizedBox(
                                         height: 30,
@@ -229,17 +218,17 @@ class _AddCustomerState extends State<AddCustomer> {
                 userId,
                 null)));
     if (!result.hasErrors) {
-      var result_data = result.data["create_customer"];
+      var resultData = result.data["create_customer"];
       Customer _customer = Customer(
-          result_data["it"],
-          result_data["name"],
-          result_data["email"],
-          result_data["phone"],
-          result_data["address"],
-          result_data["currency"],
-          result_data["image_url"],
-          result_data["business_id"],
-          result_data["user_id"]);
+          resultData["it"],
+          resultData["name"],
+          resultData["email"],
+          resultData["phone"],
+          resultData["address"],
+          resultData["currency"],
+          resultData["image_url"],
+          resultData["business_id"],
+          resultData["user_id"]);
       addCustomer.dispatch(UpdateBusinessCustomers(payload: _customer));
       setState(() {
         _isLoading = false;

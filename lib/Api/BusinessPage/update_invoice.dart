@@ -1,10 +1,8 @@
 import 'package:akount_books/Api/BusinessPage/InvoiceItems.dart';
 import 'package:akount_books/Api/BusinessPage/edit_invoice_name.dart';
-import 'package:akount_books/Api/BusinessPage/send_invoice.dart';
 import 'package:akount_books/AppState/actions/invoice_actions.dart';
 import 'package:akount_books/Graphql/graphql_config.dart';
 import 'package:akount_books/Graphql/mutations.dart';
-import 'package:akount_books/Models/customer.dart';
 import 'package:akount_books/Models/edit_invoice.dart';
 import 'package:akount_books/Models/invoice.dart';
 import 'package:akount_books/Models/invoice_name.dart';
@@ -68,10 +66,10 @@ class _UpdateInvoiceDataState extends State<UpdateInvoiceData> {
               onInitialBuild: (state){
                 EditInvoice invoiceData = state.editInvoice;
                 setState(() {
-                  dueDate = state.editInvoice.due_date;
-                  invoiceDate = state.editInvoice.issue_date;
-                  _subTotal.text = invoiceData.sub_total_amount.toString();
-                  _total.text = invoiceData.total_amount.toString();
+                  dueDate = state.editInvoice.dueDate;
+                  invoiceDate = state.editInvoice.issueDate;
+                  _subTotal.text = invoiceData.subTotalAmount.toString();
+                  _total.text = invoiceData.totalAmount.toString();
                   _notes.text = invoiceData.notes;
                   _footer.text = invoiceData.footer;
                 });
@@ -83,13 +81,13 @@ class _UpdateInvoiceDataState extends State<UpdateInvoiceData> {
                 InvoiceName invoiceNameData = InvoiceName(
                     invoiceData.title,
                     invoiceData.number,
-                    invoiceData.po_so_number,
+                    invoiceData.poSoNumber,
                     invoiceData.summary);
 
                 if (state.editInvoice != null) {
                   _invoiceName = invoiceNameData.title;
                   _invoiceDescription = invoiceNameData.summary;
-                  _invoiceNumber = invoiceNameData.po_so_number;
+                  _invoiceNumber = invoiceNameData.poSoNumber;
                 }
                 return Container(
                   decoration: BoxDecoration(
@@ -226,7 +224,7 @@ class _UpdateInvoiceDataState extends State<UpdateInvoiceData> {
                                           },
                                           buttonText: Text(
                                               invoiceDate == ""
-                                                  ? invoiceData.issue_date
+                                                  ? invoiceData.issueDate
                                                   : invoiceDate,
                                               style: TextStyle(
                                                   color: Theme.of(context)
@@ -238,7 +236,7 @@ class _UpdateInvoiceDataState extends State<UpdateInvoiceData> {
                                           },
                                           buttonText: Text(
                                               dueDate == ""
-                                                  ? invoiceData.due_date
+                                                  ? invoiceData.dueDate
                                                   : dueDate,
                                               style: TextStyle(
                                                   color: Theme.of(context)
@@ -451,7 +449,7 @@ class _UpdateInvoiceDataState extends State<UpdateInvoiceData> {
                                       _updateInvoice(
                                           state.editInvoice,
                                           state.currentBusiness.id,
-                                          state.loggedInUser.user_id);
+                                          state.loggedInUser.userId);
                                     }
                                   },
                                 ),
@@ -550,7 +548,7 @@ class _UpdateInvoiceDataState extends State<UpdateInvoiceData> {
                 invoiceData.id,
                 invoiceData.title,
                 invoiceData.number,
-                invoiceData.po_so_number,
+                invoiceData.poSoNumber,
                 invoiceData.summary,
                 invoiceDate,
                 dueDate,
@@ -569,7 +567,7 @@ class _UpdateInvoiceDataState extends State<UpdateInvoiceData> {
             invoiceData.id,
             invoiceData.title,
             invoiceData.number,
-            invoiceData.po_so_number,
+            invoiceData.poSoNumber,
             invoiceData.summary,
             invoiceDate,
             dueDate,

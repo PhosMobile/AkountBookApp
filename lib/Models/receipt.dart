@@ -1,37 +1,37 @@
 class Receipt {
   String id,
       name,
-      amount_paid,
-      payment_date,
-      payment_method,
-      payment_type,
+      amountPaid,
+      paymentDate,
+      paymentMethod,
+      paymentType,
       status,
-      invoice_id,
-      business_id,
-      user_id;
+      invoiceId,
+      businessId,
+      userId;
 
   Receipt(
       this.id,
       this.name,
-      this.amount_paid,
-      this.payment_date,
-      this.payment_method,
-      this.payment_type,
+      this.amountPaid,
+      this.paymentDate,
+      this.paymentMethod,
+      this.paymentType,
       this.status,
-      this.invoice_id,
-      this.business_id,
-      this.user_id);
+      this.invoiceId,
+      this.businessId,
+      this.userId);
 
   Receipt.fromJson(Map<String, dynamic> jsonObject) {
     this.id = jsonObject['id'];
     this.name = jsonObject['title'];
-    this.amount_paid = jsonObject['number'];
-    this.payment_date = jsonObject['po_so_number'];
-    this.payment_method = jsonObject['summary'];
-    this.payment_type = jsonObject['issue_date'];
+    this.amountPaid = jsonObject['number'];
+    this.paymentDate = jsonObject['po_so_number'];
+    this.paymentMethod = jsonObject['summary'];
+    this.paymentType = jsonObject['issue_date'];
     this.status = jsonObject['due_date'];
-    this.invoice_id = jsonObject['sub_total_amount'];
-    this.business_id = jsonObject['total_amount'];
-    this.user_id = jsonObject['notes'];
+    this.invoiceId = jsonObject['sub_total_amount'];
+    this.businessId = jsonObject['total_amount'];
+    this.userId = jsonObject['notes'];
   }
 }

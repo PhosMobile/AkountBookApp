@@ -1,11 +1,10 @@
-import 'package:akount_books/Resources/app_config.dart';
 import 'package:akount_books/Widgets/logo_avatar.dart';
 import 'package:flutter/material.dart';
 import 'package:akount_books/Widgets/buttons.dart';
 
 
 class Home extends StatelessWidget {
-  ImageAvatars logo = new ImageAvatars();
+  final ImageAvatars logo = new ImageAvatars();
 
   @override
   Widget build(BuildContext context) {

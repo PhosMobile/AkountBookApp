@@ -5,7 +5,6 @@ import 'package:akount_books/Widgets/buttons.dart';
 import 'package:akount_books/utilities/svg_files.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:localstorage/localstorage.dart';
 
 final Widget svg = new SvgPicture.asset(
   SVGFiles.success_icon,
@@ -16,7 +15,6 @@ final Widget svg = new SvgPicture.asset(
 class InvoiceSent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final LocalStorage storage = new LocalStorage('some_key');
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.white,

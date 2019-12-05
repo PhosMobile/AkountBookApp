@@ -6,11 +6,6 @@ class InputStyles {
   BoxDecoration sendSelected;
   BoxDecoration unSendSelected;
 
-  @override
-  Widget build(BuildContext context) {
-    return Container();
-  }
-
   InputDecoration inputMain(inputText) {
     return inputStyle = new InputDecoration(
       filled: true,

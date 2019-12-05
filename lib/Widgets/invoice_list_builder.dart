@@ -32,7 +32,7 @@ class InvoiceListBuilder extends StatelessWidget {
                 itemBuilder: (BuildContext context, int index) {
                   String cName;
                   Customer invoiceCustomer = Invoice.getInvoiceCustomer(
-                      invoices[index].customer_id, customers);
+                      invoices[index].customerId, customers);
                   if(invoiceCustomer != null){
                     cName = invoiceCustomer.name;
                   }
@@ -55,7 +55,7 @@ class InvoiceListBuilder extends StatelessWidget {
                               Text("$invoiceTitle > $cName"),
                               Text(
                                 CurrencyConverter().formatPrice(
-                                    invoice.total_amount, currency),
+                                    invoice.totalAmount, currency),
                                 style: TextStyle(fontWeight: FontWeight.bold),
                               ),
                             ],
@@ -81,7 +81,7 @@ class InvoiceListBuilder extends StatelessWidget {
                                       fontSize: 12),
                                 ),
                               ),
-                              Text(invoice.due_date)
+                              Text(invoice.dueDate)
                             ],
                           )
                         ],

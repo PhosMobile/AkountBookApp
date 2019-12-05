@@ -6,7 +6,6 @@ import 'package:akount_books/Widgets/loader_widget.dart';
 import 'package:akount_books/Widgets/logo_avatar.dart';
 import 'package:akount_books/Widgets/buttons.dart';
 import 'package:akount_books/Widgets/social_sign_up.dart';
-import 'package:akount_books/Api/http_api.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -28,7 +27,7 @@ class _RegisterState extends State<Register> {
   String phone;
   String email;
   TextEditingController _userName = new TextEditingController();
-  TextEditingController _phone_email = new TextEditingController();
+  TextEditingController _phoneEmail = new TextEditingController();
   TextEditingController _password = new TextEditingController();
 
   validate(value, errorText) {
@@ -112,7 +111,7 @@ class _RegisterState extends State<Register> {
                                       FormBuilderValidators.minLength(10,
                                           errorText: "Email/Phone to short")
                                     ],
-                                    controller: _phone_email,
+                                    controller: _phoneEmail,
                                   ),
                                 ),
                               ),
@@ -198,21 +197,20 @@ class _RegisterState extends State<Register> {
     setState(() {
       _isLoading = true;
     });
-    CallApi api = new CallApi();
 
     RegExp phoneRegex =
     new RegExp(r"^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$");
     RegExp emailRegex = new RegExp(
         r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*$");
 
-    if (phoneRegex.hasMatch(_phone_email.text.trim())) {
+    if (phoneRegex.hasMatch(_phoneEmail.text.trim())) {
       setState(() {
-        this.phone = _phone_email.text;
-        this.email = _phone_email.text;
+        this.phone = _phoneEmail.text;
+        this.email = _phoneEmail.text;
       });
-    } else if (emailRegex.hasMatch(_phone_email.text.trim())) {
+    } else if (emailRegex.hasMatch(_phoneEmail.text.trim())) {
       setState(() {
-        this.email = _phone_email.text;
+        this.email = _phoneEmail.text;
       });
     } else {
       setState(() {
@@ -231,14 +229,14 @@ class _RegisterState extends State<Register> {
             document: createUser.createUser(
                 _userName.text, this.phone, this.email, _password.text, otp)));
     if (!result.hasErrors) {
-      if (phoneRegex.hasMatch(_phone_email.text.trim())) {
+      if (phoneRegex.hasMatch(_phoneEmail.text.trim())) {
         setState(() {
           requestErrors =
           "Phone not available now please use a valid email address";
           _isLoading = false;
           _hasErrors = true;
         });
-      } else if (emailRegex.hasMatch(_phone_email.text.trim())) {
+      } else if (emailRegex.hasMatch(_phoneEmail.text.trim())) {
         var url = "https://akount-book.herokuapp.com/api/verify_otp_email";
         response =
         await http.post(
@@ -249,10 +247,10 @@ class _RegisterState extends State<Register> {
           final prefs = await SharedPreferences.getInstance();
           var user = result.data["create_user"];
           prefs.setStringList('user_credentials',
-              [_phone_email.text, _password.text, user["id"]]);
+              [_phoneEmail.text, _password.text, user["id"]]);
           _userName.text = "";
           _password.text = "";
-          _phone_email.text = "";
+          _phoneEmail.text = "";
 
           setState(() {
             _isLoading = false;

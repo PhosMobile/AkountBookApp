@@ -11,7 +11,6 @@ import 'package:akount_books/utilities/currency_convert.dart';
 import 'package:akount_books/utilities/svg_files.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:akount_books/Widgets/Input_styles.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -25,7 +24,6 @@ class SendInvoice extends StatefulWidget {
   _SendInvoiceState createState() => _SendInvoiceState();
 }
 class _SendInvoiceState extends State<SendInvoice> {
-  final GlobalKey<FormBuilderState> _fbKey = GlobalKey<FormBuilderState>();
   InputStyles inputStyles = new InputStyles();
   bool sendViaEmail = true;
   bool sendViaWhatsApp = false;
@@ -225,7 +223,7 @@ class _SendInvoiceState extends State<SendInvoice> {
                                 child: Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: Text(CurrencyConverter().formatPrice(
-                                     state.readyInvoice.total_amount,
+                                     state.readyInvoice.totalAmount,
                                       state.currentBusiness.currency)),
                                 ),
                                 width: MediaQuery.of(context).size.width,
@@ -314,39 +312,39 @@ class _SendInvoiceState extends State<SendInvoice> {
             document: createInvoice.createInvoice(
                 invoiceData.title,
                 invoiceData.number,
-                invoiceData.po_so_number,
+                invoiceData.poSoNumber,
                 invoiceData.summary,
-                invoiceData.issue_date,
-                invoiceData.due_date,
-                invoiceData.sub_total_amount,
-                invoiceData.total_amount,
+                invoiceData.issueDate,
+                invoiceData.dueDate,
+                invoiceData.subTotalAmount,
+                invoiceData.totalAmount,
                 invoiceData.notes,
                 invoiceData.status,
                 invoiceData.footer,
-                invoiceData.customer_id,
-                invoiceData.business_id,
-                invoiceData.user_id)));
+                invoiceData.customerId,
+                invoiceData.businessId,
+                invoiceData.userId)));
     if (!result.hasErrors) {
       String response = await InvoiceItems().saveInvoiceItems(
           addInvoice.state.invoiceItems, result.data["create_invoice"]["id"],context);
-      dynamic InvoiceQueryData = result.data["create_invoice"];
+      dynamic invoiceQueryData = result.data["create_invoice"];
       if (response == "Done") {
         Invoice _invoice = new Invoice(
-            InvoiceQueryData["id"],
-            InvoiceQueryData["title"],
-            InvoiceQueryData["invoice_number"],
-            InvoiceQueryData["po_so_number"],
-            InvoiceQueryData["summary"],
-            InvoiceQueryData["issue_date"],
-            InvoiceQueryData["due_date"],
-            InvoiceQueryData["sub_total_amount"],
-            InvoiceQueryData["total_amount"],
-            InvoiceQueryData["notes"],
-            InvoiceQueryData["status"],
-            InvoiceQueryData["footer"],
-            invoiceData.customer_id,
-            invoiceData.business_id,
-            invoiceData.user_id);
+            invoiceQueryData["id"],
+            invoiceQueryData["title"],
+            invoiceQueryData["invoice_number"],
+            invoiceQueryData["po_so_number"],
+            invoiceQueryData["summary"],
+            invoiceQueryData["issue_date"],
+            invoiceQueryData["due_date"],
+            invoiceQueryData["sub_total_amount"],
+            invoiceQueryData["total_amount"],
+            invoiceQueryData["notes"],
+            invoiceQueryData["status"],
+            invoiceQueryData["footer"],
+            invoiceData.customerId,
+            invoiceData.businessId,
+            invoiceData.userId);
         addInvoice.dispatch(AddBusinessInvoice(payload: _invoice));
         Navigator.of(context).pop();
         Navigator.push(

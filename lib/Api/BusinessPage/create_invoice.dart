@@ -67,12 +67,12 @@ class _AddInvoiceState extends State<AddInvoice> {
               builder: (context, state) {
                 InvoiceName invoiceNameData = state.invoiceName;
                 String businessId = state.currentBusiness.id;
-                String userId = state.loggedInUser.user_id;
+                String userId = state.loggedInUser.userId;
 
                 if (state.invoiceName != null) {
                   _invoiceName = invoiceNameData.title;
                   _invoiceDescription = invoiceNameData.summary;
-                  _invoiceNumber = invoiceNameData.po_so_number;
+                  _invoiceNumber = invoiceNameData.poSoNumber;
                 }
                 return Container(
                   decoration: BoxDecoration(
@@ -525,7 +525,7 @@ class _AddInvoiceState extends State<AddInvoice> {
       userId, Customer customer) async {
     AlertSnackBar alert = AlertSnackBar();
     String title, poSoNumber, summary, customerId, _iDate, _dDate;
-    int invoice_number;
+    int invoiceNumber;
     if (invoiceDate == "") {
       _iDate = CurrentDate().getCurrentDate();
     } else {
@@ -558,12 +558,12 @@ class _AddInvoiceState extends State<AddInvoice> {
         title = "null";
         poSoNumber = "null";
         summary = "null";
-        invoice_number = 0;
+        invoiceNumber = 0;
       } else {
         title = invoiceNameData.title;
-        poSoNumber = invoiceNameData.po_so_number;
+        poSoNumber = invoiceNameData.poSoNumber;
         summary = invoiceNameData.summary;
-        invoice_number = invoiceNameData.invoice_number;
+        invoiceNumber = invoiceNameData.invoiceNumber;
       }
       GqlConfig graphQLConfiguration = GqlConfig();
       Mutations createInvoice = new Mutations();
@@ -571,7 +571,7 @@ class _AddInvoiceState extends State<AddInvoice> {
           MutationOptions(
               document: createInvoice.createInvoice(
                   title,
-                  invoice_number,
+                  invoiceNumber,
                   poSoNumber,
                   summary,
                   _iDate,
@@ -594,8 +594,8 @@ class _AddInvoiceState extends State<AddInvoice> {
         Invoice _invoice = new Invoice(
             result.data["create_invoice"]["id"],
             invoiceName.title,
-            invoiceName.invoice_number,
-            invoiceName.po_so_number,
+            invoiceName.invoiceNumber,
+            invoiceName.poSoNumber,
             invoiceName.summary,
             _iDate,
             _dDate,
@@ -643,8 +643,8 @@ class _AddInvoiceState extends State<AddInvoice> {
       Invoice _invoice = new Invoice(
           "0",
           invoiceName.title,
-          invoiceName.invoice_number,
-          invoiceName.po_so_number,
+          invoiceName.invoiceNumber,
+          invoiceName.poSoNumber,
           invoiceName.summary,
           _iDate,
           _dDate,

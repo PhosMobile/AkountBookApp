@@ -40,8 +40,8 @@ class _AddInvoiceNameState extends State<AddInvoiceName> {
               InvoiceName invoiceNameFromState = state.invoiceName;
               if(invoiceNameFromState != null){
                 _invoiceTitle.text = invoiceNameFromState.title;
-                _invoiceNumber.text = invoiceNameFromState.invoice_number.toString();
-                _poSoNumber.text = invoiceNameFromState.po_so_number;
+                _invoiceNumber.text = invoiceNameFromState.invoiceNumber.toString();
+                _poSoNumber.text = invoiceNameFromState.poSoNumber;
                 _summary.text = invoiceNameFromState.summary;
               }
               return Container(

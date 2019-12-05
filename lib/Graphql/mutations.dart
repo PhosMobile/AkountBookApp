@@ -119,7 +119,7 @@ class Mutations {
 
 
   String createCustomer(String name, String email, String phone,
-      String address, String businessId, String userId, String image_url) {
+      String address, String businessId, String userId, String imageUrl) {
     return """
       mutation{
           create_customer(
@@ -129,7 +129,7 @@ class Mutations {
           address:"$address"
           business_id: "$businessId" 
           user_id: "$userId"
-          image_url:"$image_url"
+          image_url:"$imageUrl"
           ){
           id
           name

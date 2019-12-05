@@ -7,8 +7,8 @@ import 'package:akount_books/Models/item.dart';
 class InvoiceReducers{
   updateEditInvoiceName(InvoiceName iName, AppState state){
     state.editInvoice.title = iName.title;
-    state.editInvoice.number = iName.invoice_number;
-    state.editInvoice.po_so_number = iName.po_so_number;
+    state.editInvoice.number = iName.invoiceNumber;
+    state.editInvoice.poSoNumber = iName.poSoNumber;
     state.editInvoice.summary = iName.summary;
   }
   editInvoiceCustomer(Customer customer, AppState state){

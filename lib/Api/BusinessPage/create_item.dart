@@ -45,7 +45,7 @@ class _AddItemState extends State<AddItem> {
                 converter: (store) => store.state,
                 builder: (context, state) {
                   String businessId = state.currentBusiness.id;
-                  String userId = state.loggedInUser.user_id;
+                  String userId = state.loggedInUser.userId;
                   return Container(
                     decoration: BoxDecoration(
                         border: Border(top: BorderSide(width: 2, color: Theme.of(context).accentColor))
@@ -213,15 +213,15 @@ class _AddItemState extends State<AddItem> {
           userId,
         )));
     if (!result.hasErrors) {
-      var result_data = result.data["create_item"];
+      var resultData = result.data["create_item"];
       Item _item = new Item(
-          result_data["id"],
-          result_data["name"],
-          result_data["description"],
-          result_data["quantity"],
-          result_data["price"],
-          result_data["business_id"],
-          result_data["user_id"]);
+          resultData["id"],
+          resultData["name"],
+          resultData["description"],
+          resultData["quantity"],
+          resultData["price"],
+          resultData["business_id"],
+          resultData["user_id"]);
       addItem.dispatch(UpdateBusinessItems(payload: _item));
       setState(() {
         _isLoading = false;

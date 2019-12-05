@@ -41,18 +41,18 @@ class ViewInvoiceDraft extends StatelessWidget {
                     invoice.id,
                     invoice.title,
                     invoice.number,
-                    invoice.po_so_number,
+                    invoice.poSoNumber,
                     invoice.summary,
-                    invoice.issue_date,
-                    invoice.due_date,
-                    invoice.sub_total_amount,
-                    invoice.total_amount,
+                    invoice.issueDate,
+                    invoice.dueDate,
+                    invoice.subTotalAmount,
+                    invoice.totalAmount,
                     invoice.notes,
                     invoice.status,
                     invoice.footer,
-                    invoice.customer_id,
-                    invoice.business_id,
-                    invoice.user_id,
+                    invoice.customerId,
+                    invoice.businessId,
+                    invoice.userId,
                     invoiceItem,
                     customer);
 
@@ -85,9 +85,9 @@ class ViewInvoiceDraft extends StatelessWidget {
                               title: "Invoice Name:", value: invoice.title),
                           ViewInvoiceFieldCard(
                               title: "Invoice Date:",
-                              value: invoice.issue_date),
+                              value: invoice.issueDate),
                           ViewInvoiceFieldCard(
-                              title: "Due Date:", value: invoice.due_date),
+                              title: "Due Date:", value: invoice.dueDate),
                           SizedBox(
                             height: 30,
                           ),
@@ -126,7 +126,7 @@ class ViewInvoiceDraft extends StatelessWidget {
                           ViewInvoiceFieldCard(
                               title: "Amount Due",
                               value: CurrencyConverter()
-                                  .formatPrice(invoice.total_amount, "NGN")),
+                                  .formatPrice(invoice.totalAmount, "NGN")),
                           SizedBox(
                             height: 30,
                           ),

@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:akount_books/Api/BusinessPage/current_business_data.dart';
 import 'package:akount_books/Api/UserAcount/logged_in_user.dart';
 import 'package:akount_books/AppState/actions/business_actions.dart';
@@ -18,7 +17,6 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:akount_books/Widgets/Input_styles.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -42,7 +40,6 @@ class _AddBusinessState extends State<AddBusiness> {
   TextEditingController _businessDescription = new TextEditingController();
   TextEditingController _businessAddress = new TextEditingController();
   String currency = "NGN";
-  File _image;
 
   validate(value, errorText) {
     if (value.isEmpty) {
@@ -95,13 +92,6 @@ class _AddBusinessState extends State<AddBusiness> {
                                       : Container(),
                                   InkWell(
                                     child: ImageAvatars().attachImage(),
-                                    onTap: () async {
-                                      var image = await ImagePicker.pickImage(
-                                          source: ImageSource.camera);
-                                      setState(() {
-                                        _image = image;
-                                      });
-                                    },
                                   ),
                                   SizedBox(
                                     height: 30,
@@ -255,7 +245,7 @@ class _AddBusinessState extends State<AddBusiness> {
     final prefs = await SharedPreferences.getInstance();
     final user = prefs.getStringList('user_credentials') ?? [];
     if (user.length == 0) {
-      userId = loggedInUser.state.loggedInUser.user_id;
+      userId = loggedInUser.state.loggedInUser.userId;
     } else {
       userEmail = user[0];
       userPassword = user[1];
@@ -306,8 +296,8 @@ class _AddBusinessState extends State<AddBusiness> {
             _isLoading = false;
             _hasErrors = false;
           });
-          var access_token = result.data["login"];
-          storage.setItem("access_token", access_token);
+          var accessToken = result.data["login"];
+          storage.setItem("access_token", accessToken);
           await LoggedInUser().fetchLoggedInUser(context, "registeration");
           Navigator.push(
             context,

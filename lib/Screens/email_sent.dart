@@ -19,7 +19,6 @@ final Widget svg = new SvgPicture.asset(
 class _EmailSentState extends State<EmailSent> {
   final GlobalKey<FormBuilderState> _fbKey = GlobalKey<FormBuilderState>();
   InputStyles inputStyles = new InputStyles();
-  TextEditingController _email = new TextEditingController();
   var wrongToken = '';
   var confirmPassword = "";
   var validEmail = "";

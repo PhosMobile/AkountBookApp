@@ -5,17 +5,17 @@ class EditInvoice {
   String id,
       title,
       summary,
-      issue_date,
-      due_date,
+      issueDate,
+      dueDate,
       notes,
       status,
       footer,
-      customer_id,
-      business_id,
-      user_id,
-      po_so_number;
+      customerId,
+      businessId,
+      userId,
+      poSoNumber;
   int number;
-  int sub_total_amount,total_amount;
+  int subTotalAmount,totalAmount;
   List<Item> invoiceItem = [];
 
   Customer invoiceCustomer;
@@ -24,18 +24,18 @@ class EditInvoice {
       this.id,
       this.title,
       this.number,
-      this.po_so_number,
+      this.poSoNumber,
       this.summary,
-      this.issue_date,
-      this.due_date,
-      this.sub_total_amount,
-      this.total_amount,
+      this.issueDate,
+      this.dueDate,
+      this.subTotalAmount,
+      this.totalAmount,
       this.notes,
       this.status,
       this.footer,
-      this.customer_id,
-      this.business_id,
-      this.user_id,
+      this.customerId,
+      this.businessId,
+      this.userId,
       this.invoiceItem,
       this.invoiceCustomer
       );

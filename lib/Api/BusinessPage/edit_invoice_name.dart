@@ -41,11 +41,11 @@ class _EditInvoiceNameState extends State<EditInvoiceName> {
             onInitialBuild: (state){
               EditInvoice editInvoice = state.editInvoice;
               if(editInvoice != null){
-                InvoiceName invoiceNameFromState = InvoiceName(editInvoice.title, editInvoice.number, editInvoice.po_so_number, editInvoice.summary);
+                InvoiceName invoiceNameFromState = InvoiceName(editInvoice.title, editInvoice.number, editInvoice.poSoNumber, editInvoice.summary);
                 setState(() {
                   _invoiceTitle.text = invoiceNameFromState.title;
-                  _invoiceNumber.text = invoiceNameFromState.invoice_number.toString();
-                  _poSoNumber.text = invoiceNameFromState.po_so_number;
+                  _invoiceNumber.text = invoiceNameFromState.invoiceNumber.toString();
+                  _poSoNumber.text = invoiceNameFromState.poSoNumber;
                   _summary.text = invoiceNameFromState.summary;
                 });
               }
