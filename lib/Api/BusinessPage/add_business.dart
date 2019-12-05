@@ -5,7 +5,6 @@ import 'package:akount_books/AppState/app_state.dart';
 import 'package:akount_books/Graphql/graphql_config.dart';
 import 'package:akount_books/Graphql/mutations.dart';
 import 'package:akount_books/Models/business.dart';
-import 'package:akount_books/Screens/business_created.dart';
 import 'package:akount_books/Widgets/HeaderTitle.dart';
 import 'package:akount_books/Widgets/error.dart';
 import 'package:akount_books/Widgets/loader_widget.dart';
@@ -299,11 +298,7 @@ class _AddBusinessState extends State<AddBusiness> {
           var accessToken = result.data["login"];
           storage.setItem("access_token", accessToken);
           await LoggedInUser().fetchLoggedInUser(context, "registeration");
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => BusinessCreated()),
-          );
-          return;
+
         } else {
           setState(() {
             requestErrors = result.errors.toString().substring(10, 36);

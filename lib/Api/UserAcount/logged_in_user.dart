@@ -6,6 +6,7 @@ import 'package:akount_books/Graphql/graphql_config.dart';
 import 'package:akount_books/Graphql/queries.dart';
 import 'package:akount_books/Models/user.dart';
 import 'package:akount_books/Models/business.dart';
+import 'package:akount_books/Screens/business_created.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
@@ -47,7 +48,10 @@ class LoggedInUser {
       if (from == "registeration") {
         business.dispatch(UserCurrentBusiness(payload: businesses[0]));
         CurrentBusinessData().getBusinessData(context, businesses[0].id);
-        return;
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => BusinessCreated()),
+        );
       } else {
         business.dispatch(UserCurrentBusiness(payload: businesses[0]));
         await CurrentBusinessData().getBusinessData(context, businesses[0].id);
