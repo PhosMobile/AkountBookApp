@@ -84,8 +84,7 @@ class ViewInvoiceDraft extends StatelessWidget {
                           ViewInvoiceFieldCard(
                               title: "Invoice Name:", value: invoice.title),
                           ViewInvoiceFieldCard(
-                              title: "Invoice Date:",
-                              value: invoice.issueDate),
+                              title: "Invoice Date:", value: invoice.issueDate),
                           ViewInvoiceFieldCard(
                               title: "Due Date:", value: invoice.dueDate),
                           SizedBox(

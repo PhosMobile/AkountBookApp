@@ -3,7 +3,7 @@ import 'package:akount_books/AppState/app_state.dart';
 import 'package:akount_books/Graphql/graphql_config.dart';
 import 'package:akount_books/Graphql/mutations.dart';
 import 'package:akount_books/Models/business.dart';
-import 'package:akount_books/Screens/business_edited.dart';
+import 'package:akount_books/Screens/business_updated.dart';
 import 'package:akount_books/Widgets/HeaderTitle.dart';
 import 'package:akount_books/Widgets/error.dart';
 import 'package:akount_books/Widgets/loader_widget.dart';
@@ -16,6 +16,8 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
 class EditBusiness extends StatefulWidget {
+  final Business business;
+  EditBusiness({ @required this.business});
   @override
   _EditBusinessState createState() => _EditBusinessState();
 
@@ -59,7 +61,7 @@ class _EditBusinessState extends State<EditBusiness> {
           child: StoreConnector<AppState, AppState>(
               converter: (store) => store.state,
               onInitialBuild: (state){
-                Business business = state.editBusiness;
+                Business business = widget.business;
                 setState(() {
                   _businessName.text= business.name;
                   _businessEmail.text= business.email;
@@ -222,7 +224,7 @@ class _EditBusinessState extends State<EditBusiness> {
                                           fontSize: 16, color: Colors.white)),
                                   onPressed: () {
                                     if (_fbKey.currentState.saveAndValidate()) {
-                                      _addUserBusiness();
+                                      _updateUserBusiness(widget.business.id);
                                     }
                                   },
                                 ),
@@ -239,7 +241,7 @@ class _EditBusinessState extends State<EditBusiness> {
         ));
   }
 
-  void _addUserBusiness() async {
+  void _updateUserBusiness(businessId) async {
     setState(() {
       _isLoading = true;
     });
@@ -249,7 +251,7 @@ class _EditBusinessState extends State<EditBusiness> {
     QueryResult result = await graphQLConfiguration.getGraphql(context).mutate(
         MutationOptions(
             document: editBusiness.editBusiness(
-              business.state.editBusiness.id,
+                businessId,
                 _businessName.text,
                 _businessEmail.text,
                 _businessDescription.text,
@@ -277,7 +279,6 @@ class _EditBusinessState extends State<EditBusiness> {
           MaterialPageRoute(
               builder: (context) => BusinessEdited()),
         );
-
     } else {
       print(result.errors);
       setState(() {

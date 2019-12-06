@@ -32,7 +32,6 @@ class _SendInvoiceState extends State<SendInvoice> {
   bool fullPayment = false;
   String requestErrors;
   bool _isLoading = false;
-
   String flushBarTitle = "";
 
   @override

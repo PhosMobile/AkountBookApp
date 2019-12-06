@@ -33,7 +33,7 @@ class InvoiceListBuilder extends StatelessWidget {
                   String cName;
                   Customer invoiceCustomer = Invoice.getInvoiceCustomer(
                       invoices[index].customerId, customers);
-                  if(invoiceCustomer != null){
+                  if (invoiceCustomer != null) {
                     cName = invoiceCustomer.name;
                   }
                   String invoiceTitle = invoices[index].title;
@@ -54,8 +54,8 @@ class InvoiceListBuilder extends StatelessWidget {
                             children: <Widget>[
                               Text("$invoiceTitle > $cName"),
                               Text(
-                                CurrencyConverter().formatPrice(
-                                    invoice.totalAmount, currency),
+                                CurrencyConverter()
+                                    .formatPrice(invoice.totalAmount, currency),
                                 style: TextStyle(fontWeight: FontWeight.bold),
                               ),
                             ],
@@ -89,10 +89,10 @@ class InvoiceListBuilder extends StatelessWidget {
                     ),
                     onTap: () async {
                       List<Item> allInvoiceItems = [];
-                      _scaffoldKey.currentState.showSnackBar(
-                      LoadingSnackBar().loader("  Getting Invoice Data...", context));
-                      List<dynamic> invoiceItems =
-                          await GetInvoiceItems().fetchInvoiceItems(invoice.id,context);
+                      _scaffoldKey.currentState.showSnackBar(LoadingSnackBar()
+                          .loaderHigh("  Getting Invoice Data...", context));
+                      List<dynamic> invoiceItems = await GetInvoiceItems()
+                          .fetchInvoiceItems(invoice.id, context);
                       if (invoiceItems == null) {
                       } else {
                         for (var item in invoiceItems) {
@@ -106,15 +106,17 @@ class InvoiceListBuilder extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => draft?ViewInvoiceDraft(invoice: invoice,
-                                customer: invoiceCustomer,
-                                invoiceItem: allInvoiceItems,
-                                currency:currency):ViewInvoice(
-                                invoice: invoice,
-                                customer: invoiceCustomer,
-                                invoiceItem: allInvoiceItems,
-                                currency:currency
-                            )),
+                            builder: (context) => draft
+                                ? ViewInvoiceDraft(
+                                    invoice: invoice,
+                                    customer: invoiceCustomer,
+                                    invoiceItem: allInvoiceItems,
+                                    currency: currency)
+                                : ViewInvoice(
+                                    invoice: invoice,
+                                    customer: invoiceCustomer,
+                                    invoiceItem: allInvoiceItems,
+                                    currency: currency)),
                       );
                     },
                   );

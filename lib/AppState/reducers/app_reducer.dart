@@ -51,8 +51,6 @@ AppState appReducer(AppState prevState, dynamic action) {
     InvoiceReducers().editInvoiceItems(action.payload, newAppState);
   }else if (action is UpdateBusinessInvoice) {
     InvoiceReducers().updateBusinessInvoice(action.payload, newAppState);
-  }else if (action is AddBusinessForEdit) {
-    newAppState.editBusiness = action.payload;
   }else if (action is UpdateEditedBusiness) {
     BusinessReducers().updateEditedBusiness(action.payload, newAppState);
   }else if (action is RemoveDeletedBusiness) {

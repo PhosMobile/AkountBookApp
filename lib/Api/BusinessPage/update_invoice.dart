@@ -24,6 +24,7 @@ import 'package:akount_books/Widgets/Input_styles.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:akount_books/Api/BusinessPage/delete_invoice.dart';
 
 import '../../AppState/app_state.dart';
 
@@ -461,7 +462,14 @@ class _UpdateInvoiceDataState extends State<UpdateInvoiceData> {
                                               fontWeight: FontWeight.w100,
                                               fontSize: 14,
                                               color: Colors.redAccent)),
-                                  onPressed: () {},
+                                  onPressed: () async{
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  DeleteAnInvoice(invoiceId: state.editInvoice.id,)),
+                                        );
+                                  },
                                 ),
                               ],
                             ),

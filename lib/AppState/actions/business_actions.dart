@@ -12,10 +12,6 @@ class UserCurrentBusiness {
   final Business payload;
   UserCurrentBusiness({@required this.payload});
 }
-class AddBusinessForEdit {
-  final Business payload;
-  AddBusinessForEdit({@required this.payload});
-}
 class UpdateEditedBusiness {
   final Business payload;
   UpdateEditedBusiness({@required this.payload});

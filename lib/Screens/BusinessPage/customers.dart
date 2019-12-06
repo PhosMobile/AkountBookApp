@@ -1,6 +1,7 @@
 import 'package:akount_books/Api/BusinessPage/create_customer.dart';
 import 'package:akount_books/AppState/app_state.dart';
 import 'package:akount_books/Models/customer.dart';
+import 'package:akount_books/Screens/BusinessPage/customer_summary.dart';
 import 'package:akount_books/Widgets/customer_card.dart';
 import 'package:akount_books/Widgets/empty.dart';
 import 'package:akount_books/utilities/svg_files.dart';
@@ -46,7 +47,10 @@ class _CustomersState extends State<Customers> {
                                     child: CustomerCard(customer: businessCustomers[index])
                                 ),
                                 onTap: (){
-//
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => CustomerSummary(customer:businessCustomers[index])),
+                                  );
                                 },
                               );
                             }),
@@ -67,7 +71,7 @@ class _CustomersState extends State<Customers> {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => AddCustomer()),
+                MaterialPageRoute(builder: (context) => AddCustomer(direct: true,)),
               );
             }));
   }

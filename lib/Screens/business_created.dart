@@ -76,7 +76,7 @@ class BusinessCreated extends StatelessWidget {
                         storage.deleteItem("fromRegistration");
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => AddCustomer()),
+                          MaterialPageRoute(builder: (context) => AddCustomer(direct: true,)),
                         );
                       })
                 ],

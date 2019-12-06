@@ -10,6 +10,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 class Dashboard extends StatefulWidget {
+  final int currentTab;
+  const Dashboard({@required this.currentTab});
   @override
   _DashboardState createState() => _DashboardState();
 }
@@ -22,6 +24,12 @@ class _DashboardState extends State<Dashboard> {
     Expenses(),
     Reports()
   ];
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _selectedIndex = widget.currentTab;
+  }
 
   final Widget svg = new SvgPicture.asset(
     SVGFiles.success_icon,

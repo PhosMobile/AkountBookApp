@@ -47,7 +47,7 @@ class LoggedInUser {
       saveUserBusiness.dispatch(SaveUserBusinesses(payload: businesses));
       if (from == "registeration") {
         business.dispatch(UserCurrentBusiness(payload: businesses[0]));
-        CurrentBusinessData().getBusinessData(context, businesses[0].id);
+        await CurrentBusinessData().getBusinessData(context, businesses[0].id);
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => BusinessCreated()),

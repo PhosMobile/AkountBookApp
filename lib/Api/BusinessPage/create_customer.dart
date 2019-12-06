@@ -3,6 +3,7 @@ import 'package:akount_books/AppState/app_state.dart';
 import 'package:akount_books/Graphql/graphql_config.dart';
 import 'package:akount_books/Graphql/mutations.dart';
 import 'package:akount_books/Models/customer.dart';
+import 'package:akount_books/Screens/customer_created.dart';
 import 'package:akount_books/Widgets/HeaderTitle.dart';
 import 'package:akount_books/Widgets/error.dart';
 import 'package:akount_books/Widgets/loader_widget.dart';
@@ -14,6 +15,9 @@ import 'package:akount_books/Widgets/Input_styles.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 class AddCustomer extends StatefulWidget {
+  final bool direct;
+  const AddCustomer({@required this.direct});
+
   @override
   _AddCustomerState createState() => _AddCustomerState();
 }
@@ -233,7 +237,14 @@ class _AddCustomerState extends State<AddCustomer> {
       setState(() {
         _isLoading = false;
       });
-      Navigator.pop(context);
+      if(widget.direct){
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => CustomerCreated(customer:_customer)),
+        );
+      }else{
+        Navigator.pop(context);
+      }
     } else {
       print(result.errors);
       setState(() {

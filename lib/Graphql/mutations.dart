@@ -106,7 +106,7 @@ class Mutations {
   String deleteBusiness(String id) {
     return """
       mutation{
-          update_business(
+          delete_business(
           id:"$id",
           ){
           id
@@ -286,6 +286,21 @@ user_id
       }
     """;
   }
+
+  String deleteInvoice(
+      String id,
+      ) {
+    return """
+      mutation{
+          delete_invoice(
+          id:"$id"
+          ){
+          id
+          }
+      }
+    """;
+  }
+
 
 
 }

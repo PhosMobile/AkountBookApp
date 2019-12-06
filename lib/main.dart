@@ -1,4 +1,5 @@
-import 'package:akount_books/Api/BusinessPage/add_business.dart';
+import 'package:akount_books/Api/BusinessPage/create_business.dart';
+import 'package:akount_books/Api/BusinessPage/edit_business.dart';
 import 'package:akount_books/Screens/UserPage/dasboard.dart';
 import 'package:akount_books/Screens/UserPage/logout.dart';
 import 'package:akount_books/Screens/email_sent.dart';
@@ -43,9 +44,10 @@ class MyApp extends StatelessWidget {
           '/complete_registraton': (context) => OTPVerification(),
           '/forgot_password': (context) => ForgotPassword(),
           '/email_sent': (context) => EmailSent(),
-          '/user_dashboard': (context) => Dashboard(),
+          '/user_dashboard': (context) => Dashboard(currentTab: 0,),
           '/add_business': (context) => AddBusiness(),
           '/switch_account': (context) => SwitchBusiness(),
+          '/update_business': (context) => EditBusiness(business: store.state.currentBusiness,),
           '/logout': (context) => Logout(),
         },
         home: Home(),

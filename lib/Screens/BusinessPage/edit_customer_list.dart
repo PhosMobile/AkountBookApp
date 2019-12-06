@@ -57,7 +57,7 @@ class EditCustomerList extends StatelessWidget {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => AddCustomer()),
+                                      builder: (context) => AddCustomer(direct: false,)),
                                 );
                               },
                             ),
@@ -90,7 +90,7 @@ class EditCustomerList extends StatelessWidget {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => AddCustomer()),
+                                        builder: (context) => AddCustomer(direct: false,)),
                                   );
                                 },
                               ),

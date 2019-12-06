@@ -1,4 +1,4 @@
-import 'package:akount_books/Api/BusinessPage/add_business.dart';
+import 'package:akount_books/Api/BusinessPage/create_business.dart';
 import 'package:akount_books/Graphql/graphql_config.dart';
 import 'package:akount_books/Graphql/queries.dart';
 import 'package:akount_books/Widgets/Input_styles.dart';

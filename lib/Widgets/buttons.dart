@@ -121,6 +121,33 @@ class DeleteButton extends StatelessWidget {
   }
 }
 
+class CancelButton extends StatelessWidget {
+  final Widget buttonText;
+
+  CancelButton({@required this.onPressed, @required this.buttonText});
+
+  final GestureTapCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: MediaQuery.of(context).size.width - 40,
+      child: InkWell(
+        splashColor: Color.fromRGBO(183, 4, 4, 1),
+        child: Center(
+          child: Padding(
+            padding: EdgeInsets.all(10.0),
+            child: buttonText,
+          ),
+        ),
+        onTap: onPressed,
+      ),
+    );
+  }
+}
+
+
+
 class DeleteMiniButton extends StatelessWidget {
   final Widget buttonText;
 

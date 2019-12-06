@@ -1,3 +1,4 @@
+import 'package:akount_books/Api/BusinessPage/create_business.dart';
 import 'package:akount_books/Api/BusinessPage/current_business_data.dart';
 import 'package:akount_books/Api/BusinessPage/edit_business.dart';
 import 'package:akount_books/AppState/actions/business_actions.dart';
@@ -17,10 +18,10 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 class SwitchBusiness extends StatefulWidget {
+
   @override
   _SwitchBusinessState createState() => _SwitchBusinessState();
 }
-
 
 class _SwitchBusinessState extends State<SwitchBusiness> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
@@ -87,13 +88,12 @@ class _SwitchBusinessState extends State<SwitchBusiness> {
                                                 width: 35,
                                                 child: switchBusiness)),
                                         Expanded(
-                                            child:  Text(
-                                                  accountBusinesses[index].name,
-                                                  style: TextStyle(
-                                                      color:
-                                                          Colors.blueGrey[20]),
-                                                ),
-                                               ),
+                                          child: Text(
+                                            accountBusinesses[index].name,
+                                            style: TextStyle(
+                                                color: Colors.blueGrey[20]),
+                                          ),
+                                        ),
                                         Radio(
                                           materialTapTargetSize:
                                               MaterialTapTargetSize.padded,
@@ -114,65 +114,97 @@ class _SwitchBusinessState extends State<SwitchBusiness> {
                                 onLongPressEnd: (dragDetail) {
                                   setState(() {
                                     currentBusiness = accountBusinesses[index];
-                                    snackActive= true;
+                                    snackActive = true;
                                   });
-                                  _scaffoldKey.currentState.removeCurrentSnackBar();
+                                  _scaffoldKey.currentState
+                                      .removeCurrentSnackBar();
                                   _scaffoldKey.currentState
                                       .showSnackBar(SnackBar(
                                     backgroundColor:
                                         Color.fromRGBO(4, 100, 183, 1),
                                     content: Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
                                       children: <Widget>[
                                         InkWell(
-                                            child: Icon(MdiIcons.fileEdit),
-                                        onTap: (){
-                                          final editInvoice = StoreProvider.of<AppState>(context);
-                                          editInvoice.dispatch(AddBusinessForEdit(payload: accountBusinesses[index]));
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) => EditBusiness()),
-                                          );
-
-
-                                        },),
-
+                                          child: Icon(MdiIcons.fileEdit),
+                                          onTap: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      EditBusiness(business: accountBusinesses[index])),
+                                            );
+                                          },
+                                        ),
                                         InkWell(
-                                          child:Icon(MdiIcons.delete),
-                                          onTap: ()async{
-                                            _scaffoldKey.currentState.removeCurrentSnackBar();
-                                            _scaffoldKey.currentState.showSnackBar(
-                                                LoadingSnackBar().loader(
-                                                    "  Deleting Business...", context));
-                                            GqlConfig graphQLConfiguration = GqlConfig();
-                                            Mutations deleteBusiness = new Mutations();
-                                            QueryResult result = await graphQLConfiguration.getGraphql(context).mutate(
-                                                MutationOptions(
-                                                    document: deleteBusiness.deleteBusiness(
-                                                        accountBusinesses[index].id)));
-                                                  if(result.hasErrors){
-                                                    print(result.errors);
-                                                  }
-                                            final editInvoice = StoreProvider.of<AppState>(context);
-                                            editInvoice.dispatch(RemoveDeletedBusiness(payload: accountBusinesses[index]));
-                                            _scaffoldKey.currentState.removeCurrentSnackBar();
-
-                                          },)
-
+                                          child: Icon(MdiIcons.delete),
+                                          onTap: () async {
+                                            _scaffoldKey.currentState
+                                                .removeCurrentSnackBar();
+                                            _scaffoldKey.currentState
+                                                .showSnackBar(LoadingSnackBar()
+                                                    .loader(
+                                                        "  Deleting Business...",
+                                                        context));
+                                            GqlConfig graphQLConfiguration =
+                                                GqlConfig();
+                                            Mutations deleteBusiness =
+                                                new Mutations();
+                                            QueryResult result =
+                                                await graphQLConfiguration
+                                                    .getGraphql(context)
+                                                    .mutate(MutationOptions(
+                                                        document: deleteBusiness
+                                                            .deleteBusiness(
+                                                                accountBusinesses[
+                                                                        index]
+                                                                    .id)));
+                                            if (result.hasErrors) {
+                                            } else {
+                                              final editInvoice =
+                                                  StoreProvider.of<AppState>(
+                                                      context);
+                                              editInvoice.dispatch(
+                                                  RemoveDeletedBusiness(
+                                                      payload:
+                                                          accountBusinesses[
+                                                              index]));
+                                              if (accountBusinesses.length >
+                                                  0) {
+                                                setState(() {
+                                                  currentBusiness =
+                                                      accountBusinesses[0];
+                                                });
+                                                CurrentBusinessData()
+                                                    .getBusinessData(context,
+                                                        currentBusiness.id);
+                                              } else {
+                                                Navigator.pushReplacement(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          AddBusiness()),
+                                                );
+                                              }
+                                              _scaffoldKey.currentState
+                                                  .removeCurrentSnackBar();
+                                            }
+                                          },
+                                        )
                                       ],
                                     ),
                                     duration: Duration(hours: 1),
                                   ));
                                 },
-                                  onTap: () {
-                                    _scaffoldKey.currentState.removeCurrentSnackBar(reason: SnackBarClosedReason.timeout);
-                                    setState(() {
-                                      currentBusiness =
-                                      accountBusinesses[
-                                      index];
-                                    });
-                                  },
+                                onTap: () {
+                                  _scaffoldKey.currentState
+                                      .removeCurrentSnackBar(
+                                          reason: SnackBarClosedReason.timeout);
+                                  setState(() {
+                                    currentBusiness = accountBusinesses[index];
+                                  });
+                                },
                               );
                             }),
                       ),

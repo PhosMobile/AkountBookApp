@@ -8,7 +8,7 @@ import 'package:akount_books/Models/invoice.dart';
 import 'package:akount_books/Models/invoice_name.dart';
 import 'package:akount_books/Models/item.dart';
 import 'package:akount_books/Screens/BusinessPage/add_customers_list.dart';
-import 'package:akount_books/Api/BusinessPage/add_invoice_name.dart';
+import 'package:akount_books/Api/BusinessPage/create_invoice_name.dart';
 import 'package:akount_books/Screens/BusinessPage/draft_saved.dart';
 import 'package:akount_books/Screens/BusinessPage/add_item_list.dart';
 import 'package:akount_books/Widgets/AlertSnackBar.dart';
@@ -28,6 +28,7 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import '../../AppState/app_state.dart';
+
 class AddInvoice extends StatefulWidget {
   @override
   _AddInvoiceState createState() => _AddInvoiceState();
@@ -487,7 +488,6 @@ class _AddInvoiceState extends State<AddInvoice> {
       });
     }, currentTime: DateTime.now(), locale: LocaleType.en);
   }
-
   _pickDueDate() {
     var maxTime = DateTime.now().year + 10;
     DatePicker.showDatePicker(context,
@@ -504,7 +504,6 @@ class _AddInvoiceState extends State<AddInvoice> {
       });
     }, currentTime: DateTime.now(), locale: LocaleType.en);
   }
-
   final Widget pickDate = new SvgPicture.asset(
     SVGFiles.pick_date,
     semanticsLabel: 'Akount-book',
@@ -520,7 +519,6 @@ class _AddInvoiceState extends State<AddInvoice> {
     semanticsLabel: 'Akount-book',
     allowDrawingOutsideViewBox: true,
   );
-
   void _saveInvoice(InvoiceName invoiceNameData, bool isDraft, businessId,
       userId, Customer customer) async {
     AlertSnackBar alert = AlertSnackBar();
@@ -536,19 +534,16 @@ class _AddInvoiceState extends State<AddInvoice> {
     } else {
       _dDate = dueDate;
     }
-
     final addInvoice = StoreProvider.of<AppState>(context);
     List<Item> invoiceItems = addInvoice.state.invoiceItems;
     Customer invoiceCustomer = addInvoice.state.invoiceCustomer;
     InvoiceName invoiceName = addInvoice.state.invoiceName;
-
     String _status;
     if (customer == null) {
       customerId = null;
     } else {
       customerId = customer.id;
     }
-
     if (isDraft) {
       setState(() {
         _isDraftLoading = true;
@@ -558,7 +553,7 @@ class _AddInvoiceState extends State<AddInvoice> {
         title = "null";
         poSoNumber = "null";
         summary = "null";
-        invoiceNumber = 0;
+        invoiceNumber = -1;
       } else {
         title = invoiceNameData.title;
         poSoNumber = invoiceNameData.poSoNumber;
@@ -566,10 +561,11 @@ class _AddInvoiceState extends State<AddInvoice> {
         invoiceNumber = invoiceNameData.invoiceNumber;
       }
       GqlConfig graphQLConfiguration = GqlConfig();
-      Mutations createInvoice = new Mutations();
-      QueryResult result = await graphQLConfiguration.getGraphql(context).mutate(
-          MutationOptions(
-              document: createInvoice.createInvoice(
+      Mutations cInvoice = new Mutations();
+      QueryResult result = await graphQLConfiguration
+          .getGraphql(context)
+          .mutate(MutationOptions(
+              document: cInvoice.createInvoice(
                   title,
                   invoiceNumber,
                   poSoNumber,
@@ -581,41 +577,39 @@ class _AddInvoiceState extends State<AddInvoice> {
                   _notes.text,
                   _status,
                   _footer.text,
-                  customerId,
+                  customer != null ?customerId:"-1",
                   businessId,
                   userId)));
       if (!result.hasErrors) {
-        InvoiceItems().saveInvoiceItems(
-            addInvoice.state.invoiceItems, result.data["create_invoice"]["id"], context);
+        InvoiceItems().saveInvoiceItems(addInvoice.state.invoiceItems,
+            result.data["create_invoice"]["id"], context);
         setState(() {
           _isDraftLoading = false;
           _isSendLoading = false;
         });
         Invoice _invoice = new Invoice(
             result.data["create_invoice"]["id"],
-            invoiceName.title,
-            invoiceName.invoiceNumber,
-            invoiceName.poSoNumber,
-            invoiceName.summary,
+            title,
+            invoiceNumber,
+            poSoNumber,
+            summary,
             _iDate,
             _dDate,
             int.parse(_subTotal.text),
-           int.parse( _total.text),
+            int.parse(_total.text),
             _notes.text,
             _status,
             _footer.text,
             customerId,
-            addInvoice.state.currentBusiness.id,
+            businessId,
             userId);
         addInvoice.dispatch(AddBusinessInvoice(payload: _invoice));
-
-        Navigator.push(
+        Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => DraftSaved()),
+          MaterialPageRoute(builder: (context) => DraftSaved(invoice: _invoice,invoiceItem: addInvoice.state.invoiceItems,customer: customer,)),
         );
       } else {
-        print(result.errors);
-
+        print(result.source);
         setState(() {
           _isDraftLoading = false;
           _isSendLoading = false;

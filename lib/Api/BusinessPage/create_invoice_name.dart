@@ -35,8 +35,7 @@ class _AddInvoiceNameState extends State<AddInvoiceName> {
             title: HeaderTitle(headerText: "Invoice Name")),
         body: SingleChildScrollView(
           child: StoreConnector<AppState, AppState>(
-            converter: (store) => store.state,
-            builder: (context, state){
+            onInitialBuild: (state){
               InvoiceName invoiceNameFromState = state.invoiceName;
               if(invoiceNameFromState != null){
                 _invoiceTitle.text = invoiceNameFromState.title;
@@ -44,6 +43,9 @@ class _AddInvoiceNameState extends State<AddInvoiceName> {
                 _poSoNumber.text = invoiceNameFromState.poSoNumber;
                 _summary.text = invoiceNameFromState.summary;
               }
+            },
+            converter: (store) => store.state,
+            builder: (context, state){
               return Container(
                 decoration: BoxDecoration(
                     border: Border(top: BorderSide(width: 2, color: Theme.of(context).accentColor))

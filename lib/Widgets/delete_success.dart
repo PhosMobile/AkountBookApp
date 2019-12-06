@@ -1,6 +1,3 @@
-import 'package:akount_books/Api/BusinessPage/create_customer.dart';
-import 'package:akount_books/Api/BusinessPage/create_invoice.dart';
-import 'package:akount_books/Screens/UserPage/dasboard.dart';
 import 'package:akount_books/Widgets/buttons.dart';
 import 'package:akount_books/utilities/svg_files.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +9,12 @@ final Widget svg = new SvgPicture.asset(
   allowDrawingOutsideViewBox: true,
 );
 
-class InvoiceSent extends StatelessWidget {
+class DeleteSuccess extends StatelessWidget {
+  final String message;
+  final Widget nextScreen;
+
+  const DeleteSuccess({Key key, this.message, this.nextScreen}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,12 +43,12 @@ class InvoiceSent extends StatelessWidget {
                     children: <Widget>[
                       svg,
                       SizedBox(
-                        height: 10,
+                        height: 5,
                       ),
                       Padding(
                         padding: const EdgeInsets.all(18.0),
                         child: Text(
-                          "You have successfully send",
+                         message,
                           textAlign: TextAlign.center,
                         ),
                       ),
@@ -55,37 +57,15 @@ class InvoiceSent extends StatelessWidget {
                       ),
                     ],
                   ),
-                  PrimaryButton(
-                      buttonText: Text("SEND REMINDER",
-                          style: TextStyle(fontSize: 16, color: Colors.white)),
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => AddInvoice()),
-                        );
-                      }),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  SecondaryButton(
-                      buttonText: Text("SEND RECEIPT",
+                  CancelButton(
+                      buttonText: Text("BACK TO INVOICE PAGE",
                           style: TextStyle(fontSize: 16, color: Theme.of(context).primaryColor)),
                       onPressed: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => AddCustomer(direct: true,)),
+                          MaterialPageRoute(builder: (context) => nextScreen),
                         );
                       }),
-                  SizedBox(height: 30,),
-                  InkWell(
-                    child: Text("BACK TO CUSTOMERS PAGE", style: TextStyle(color: Theme.of(context).primaryColor)),
-                    onTap: (){
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => Dashboard(currentTab: 0,)),
-                      );
-                    },
-                  )
                 ],
               ),
             ),

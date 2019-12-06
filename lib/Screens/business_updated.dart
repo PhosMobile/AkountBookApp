@@ -29,8 +29,9 @@ class BusinessEdited extends StatelessWidget {
         ),
         body: Container(
           decoration: BoxDecoration(
-              border: Border(top: BorderSide(width: 2, color: Theme.of(context).accentColor))
-          ),
+              border: Border(
+                  top: BorderSide(
+                      width: 2, color: Theme.of(context).accentColor))),
           child: new Center(
             child: Padding(
               padding: const EdgeInsets.all(20.0),
@@ -47,12 +48,12 @@ class BusinessEdited extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.all(18.0),
                         child: Text(
-                          "You have successfully setup your business page",
+                          "You have successfully updated \n your business page",
                           textAlign: TextAlign.center,
                         ),
                       ),
                       SizedBox(
-                        height: 5,
+                        height: 30,
                       ),
                     ],
                   ),
@@ -71,12 +72,15 @@ class BusinessEdited extends StatelessWidget {
                   ),
                   SecondaryButton(
                       buttonText: Text("ADD CUSTOMER",
-                          style: TextStyle(fontSize: 16, color: Colors.white)),
+                          style: TextStyle(
+                              fontSize: 16,
+                              color: Theme.of(context).primaryColor)),
                       onPressed: () {
                         storage.deleteItem("fromRegistration");
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => AddCustomer()),
+                          MaterialPageRoute(
+                              builder: (context) => AddCustomer(direct: true,)),
                         );
                       })
                 ],
