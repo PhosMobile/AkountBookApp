@@ -34,4 +34,26 @@ class Receipt {
     this.businessId = jsonObject['total_amount'];
     this.userId = jsonObject['notes'];
   }
+
+  static List<Receipt> invoiceReceipts(List<Receipt> invoices){
+    List<Receipt> receipts = [];
+    invoices.forEach((invoice){
+      if(invoice.status.toLowerCase() == "sent"){
+        receipts.add(invoice);
+      }
+    });
+    return receipts;
+  }
+
+  static List<Receipt> customerReceipts(List<Receipt> receipts, invoiceId){
+    List<Receipt> customerReceipts = [];
+    receipts.forEach((receipt){
+      if(receipt.invoiceId == invoiceId){
+        customerReceipts.add(receipt);
+      }
+    });
+    return customerReceipts;
+  }
+
+
 }

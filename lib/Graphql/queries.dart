@@ -49,6 +49,18 @@ class Queries {
               business_id
               user_id
             }
+            receipts{
+              id
+              name
+              amount_paid
+              payment_date
+              payment_method
+              payment_type
+              status
+              invoice_id
+              business_id
+              user_id
+            }
             items{
               id
               name

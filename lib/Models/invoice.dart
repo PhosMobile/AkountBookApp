@@ -75,6 +75,17 @@ class Invoice {
     return draftInvoices;
   }
 
+  static List<Invoice> customerInvoices(List<Invoice> invoices, customerId){
+    List<Invoice> customerInvoices = [];
+    invoices.forEach((invoice){
+      if(invoice.customerId == customerId){
+        customerInvoices.add(invoice);
+      }
+    });
+    return customerInvoices;
+  }
+
+
   static Customer getInvoiceCustomer(String id, List<Customer> customers){
     Customer iCustomer;
     customers.forEach((customer){

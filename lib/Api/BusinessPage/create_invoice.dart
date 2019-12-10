@@ -1,9 +1,11 @@
 import 'package:akount_books/Api/BusinessPage/InvoiceItems.dart';
 import 'package:akount_books/Api/BusinessPage/send_invoice.dart';
+import 'package:akount_books/AppState/actions/discount_actions.dart';
 import 'package:akount_books/AppState/actions/invoice_actions.dart';
 import 'package:akount_books/Graphql/graphql_config.dart';
 import 'package:akount_books/Graphql/mutations.dart';
 import 'package:akount_books/Models/customer.dart';
+import 'package:akount_books/Models/discount.dart';
 import 'package:akount_books/Models/invoice.dart';
 import 'package:akount_books/Models/invoice_name.dart';
 import 'package:akount_books/Models/item.dart';
@@ -17,8 +19,10 @@ import 'package:akount_books/Widgets/error.dart';
 import 'package:akount_books/Widgets/invoice_item_card.dart';
 import 'package:akount_books/Widgets/loader_widget.dart';
 import 'package:akount_books/Widgets/buttons.dart';
+import 'package:akount_books/utilities/currency_convert.dart';
 import 'package:akount_books/utilities/current_date.dart';
 import 'package:akount_books/utilities/svg_files.dart';
+import 'package:akount_books/utilities/total_and_sub_total.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
@@ -47,12 +51,20 @@ class _AddInvoiceState extends State<AddInvoice> {
   TextEditingController _total = new TextEditingController();
   TextEditingController _notes = new TextEditingController();
   TextEditingController _footer = new TextEditingController();
+  TextEditingController _discount_description = new TextEditingController();
+  TextEditingController _discount_amount = new TextEditingController();
+
   String invoiceDate = "";
   String dueDate = "";
   String _invoiceName = "INVOICE NAME";
   String _invoiceType = "DRAFT";
   String _invoiceDescription = "Project Name / Description";
   String _invoiceNumber = "P.S/S.O Number";
+
+  List<Map<String, dynamic>> _children = [];
+  int _count = 0;
+
+  int discountTax = 1;
 
   @override
   Widget build(BuildContext context) {
@@ -288,7 +300,6 @@ class _AddInvoiceState extends State<AddInvoice> {
                                             SizedBox(
                                               height: 3.0,
                                             ),
-                                            // ignore: sdk_version_ui_as_code
                                             for (var item in state.invoiceItems)
                                               Column(
                                                 children: <Widget>[
@@ -333,6 +344,70 @@ class _AddInvoiceState extends State<AddInvoice> {
                                     ),
                                   ),
                                   SizedBox(height: 10),
+                                  InkWell(
+                                    child: Container(
+                                      child: Row(
+                                        children: <Widget>[
+                                          Icon(
+                                            Icons.add,
+                                            color:
+                                                Theme.of(context).primaryColor,
+                                          ),
+                                          Text("Add Discount / Tax",
+                                              style: TextStyle(
+                                                  color: Theme.of(context)
+                                                      .primaryColor)),
+                                        ],
+                                      ),
+                                    ),
+                                    onTap: () {
+                                      _add();
+                                    },
+                                  ),
+                                  for (var item in _children)
+                                    Padding(
+                                     padding: EdgeInsets.all(8),
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: <Widget>[
+                                          Expanded(child: Text(item["description"])),
+                                          SizedBox(width: 10),
+                                          Text(item["amount"]),
+                                          SizedBox(width: 10),
+                                          Container(
+                                            child: item["type"] == 1
+                                                ? Icon(
+                                              Icons.add,
+                                              size: 12,
+                                              color: Colors.white,
+                                            )
+                                                : Icon(
+                                              Icons.remove,
+                                              size: 12,
+                                              color: Colors.white,
+                                            ),
+                                            decoration: BoxDecoration(
+                                                color: Theme.of(context)
+                                                    .primaryColor),
+                                            padding: EdgeInsets.all(5),
+                                          ),
+                                          SizedBox(width: 10),
+                                          InkWell(
+                                            child: Container(child: Icon(Icons.delete, size: 15,
+                                              color: Colors.redAccent,)),
+                                            onTap: (){
+                                              setState(() {
+                                                _children.remove(item);
+                                              });
+                                            },
+                                          )
+
+                                        ],
+                                      ),
+                                    ),
+                                  SizedBox(
+                                    height: 20,
+                                  ),
                                   Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
@@ -346,12 +421,16 @@ class _AddInvoiceState extends State<AddInvoice> {
                                           inputStyles.boxShadowMain(context)
                                         ]),
                                         child: FormBuilderTextField(
+                                          readOnly: true,
                                           keyboardType: TextInputType.number,
                                           attribute: "sub_total",
-                                          decoration: inputStyles
-                                              .inputMain("Sub Total"),
+                                          decoration: inputStyles.inputMain(
+                                              CurrencyConverter().formatPrice(
+                                                  TotalAndSubTotal()
+                                                      .getSubTotal(context),
+                                                  state.currentBusiness
+                                                      .currency)),
                                           validators: [
-                                            FormBuilderValidators.required(),
                                             FormBuilderValidators.numeric()
                                           ],
                                           controller: _subTotal,
@@ -366,18 +445,21 @@ class _AddInvoiceState extends State<AddInvoice> {
                                           inputStyles.boxShadowMain(context)
                                         ]),
                                         child: FormBuilderTextField(
+                                          readOnly: true,
                                           keyboardType: TextInputType.number,
                                           attribute: "total",
-                                          decoration:
-                                              inputStyles.inputMain("Total"),
+                                          decoration: inputStyles.inputMain(CurrencyConverter().formatPrice(calculateTotal(), state.currentBusiness
+                                              .currency)),
                                           validators: [
-                                            FormBuilderValidators.required(),
                                             FormBuilderValidators.numeric()
                                           ],
                                           controller: _total,
                                         ),
                                       ),
                                     ],
+                                  ),
+                                  SizedBox(
+                                    height: 20,
                                   ),
                                   SizedBox(
                                     height: 20,
@@ -488,6 +570,7 @@ class _AddInvoiceState extends State<AddInvoice> {
       });
     }, currentTime: DateTime.now(), locale: LocaleType.en);
   }
+
   _pickDueDate() {
     var maxTime = DateTime.now().year + 10;
     DatePicker.showDatePicker(context,
@@ -504,6 +587,7 @@ class _AddInvoiceState extends State<AddInvoice> {
       });
     }, currentTime: DateTime.now(), locale: LocaleType.en);
   }
+
   final Widget pickDate = new SvgPicture.asset(
     SVGFiles.pick_date,
     semanticsLabel: 'Akount-book',
@@ -519,6 +603,7 @@ class _AddInvoiceState extends State<AddInvoice> {
     semanticsLabel: 'Akount-book',
     allowDrawingOutsideViewBox: true,
   );
+
   void _saveInvoice(InvoiceName invoiceNameData, bool isDraft, businessId,
       userId, Customer customer) async {
     AlertSnackBar alert = AlertSnackBar();
@@ -572,12 +657,12 @@ class _AddInvoiceState extends State<AddInvoice> {
                   summary,
                   _iDate,
                   _dDate,
-                  int.parse(_subTotal.text),
-                  int.parse(_total.text),
+                  TotalAndSubTotal().getSubTotal(context),
+                  calculateTotal(),
                   _notes.text,
                   _status,
                   _footer.text,
-                  customer != null ?customerId:"-1",
+                  customer != null ? customerId : "-1",
                   businessId,
                   userId)));
       if (!result.hasErrors) {
@@ -595,8 +680,8 @@ class _AddInvoiceState extends State<AddInvoice> {
             summary,
             _iDate,
             _dDate,
-            int.parse(_subTotal.text),
-            int.parse(_total.text),
+            TotalAndSubTotal().getSubTotal(context),
+            calculateTotal(),
             _notes.text,
             _status,
             _footer.text,
@@ -604,10 +689,31 @@ class _AddInvoiceState extends State<AddInvoice> {
             businessId,
             userId);
         addInvoice.dispatch(AddBusinessInvoice(payload: _invoice));
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => DraftSaved(invoice: _invoice,invoiceItem: addInvoice.state.invoiceItems,customer: customer,)),
-        );
+
+
+        for(var discount in _children){
+        QueryResult discountResult = await graphQLConfiguration
+            .getGraphql(context)
+            .mutate(MutationOptions(
+            document: cInvoice.createDiscount(discount["description"], discount["amount"], discount["type"], result.data["create_invoice"]["id"], businessId, userId)));
+        if(!discountResult.hasErrors){
+          Discount _invoiceDiscount = new Discount("0", discount["description"], discount["amount"], discount["type"], addInvoice.state.currentBusiness.id,"0",addInvoice.state.loggedInUser.userId);
+          addInvoice.dispatch(CreateDiscount(payload: _invoiceDiscount));
+
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+                builder: (context) => DraftSaved(
+                  invoice: _invoice,
+                  invoiceItem: addInvoice.state.invoiceItems,
+                  customer: customer,
+                )),
+          );
+        }else{
+          print(discountResult.errors);
+        }
+        }
+
       } else {
         print(result.source);
         setState(() {
@@ -642,8 +748,8 @@ class _AddInvoiceState extends State<AddInvoice> {
           invoiceName.summary,
           _iDate,
           _dDate,
-          int.parse(_subTotal.text),
-          int.parse(_total.text),
+          TotalAndSubTotal().getSubTotal(context),
+          calculateTotal(),
           _notes.text,
           _status,
           _footer.text,
@@ -652,10 +758,130 @@ class _AddInvoiceState extends State<AddInvoice> {
           userId);
       addInvoice.dispatch(CreateInvoice(payload: _invoice));
 
+      for(var discount in _children){
+        Discount _invoiceDiscount = new Discount("0", discount["description"], discount["amount"], discount["type"], addInvoice.state.currentBusiness.id,"0",addInvoice.state.loggedInUser.userId);
+        addInvoice.dispatch(CreateDiscount(payload: _invoiceDiscount));
+      }
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => SendInvoice()),
       );
     }
+  }
+
+  void _add() {
+    showModalBottomSheet(
+        isScrollControlled: true,
+        context: context,
+        builder: (context) {
+          return StatefulBuilder(
+              builder: (BuildContext context, StateSetter setState
+                  /*You can rename this!*/) {
+            return Padding(
+              padding: MediaQuery.of(context).viewInsets,
+              child: Container(
+                height: 300,
+                child: Column(
+                  children: <Widget>[
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget>[
+                        Container(
+                          child: Row(
+                            children: <Widget>[
+                              Radio(
+                                  activeColor: Theme.of(context).primaryColor,
+                                  value: 1,
+                                  groupValue: discountTax,
+                                  onChanged: (value) {
+                                    print(value);
+                                    setState(() {
+                                      discountTax = value;
+                                    });
+                                  }),
+                              Text("Discount")
+                            ],
+                          ),
+                        ),
+                        Container(
+                          child: Row(
+                            children: <Widget>[
+                              Radio(
+                                  activeColor: Theme.of(context).primaryColor,
+                                  value: 2,
+                                  groupValue: discountTax,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      discountTax = value;
+                                    });
+                                  }),
+                              Text("Tax")
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    Container(
+                      padding: EdgeInsets.only(left: 20, right: 20),
+                      child: Column(
+                        children: <Widget>[
+                          TextFormField(
+                            decoration: const InputDecoration(
+                              labelText: 'Description',
+                            ),
+                            controller: _discount_description,
+                          ),
+                          TextFormField(
+                            keyboardType: TextInputType.number,
+                            decoration: const InputDecoration(
+                              labelText: 'Amount',
+                            ),
+                            controller: _discount_amount,
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          PrimaryMiniButton(
+                              onPressed: () {
+                                Map<String, dynamic> discountDetail = {
+                                  "description": _discount_description.text,
+                                  "amount": _discount_amount.text,
+                                  "type": discountTax
+                                };
+                                setState(() {
+                                  _children.add(discountDetail);
+                                });
+                                Navigator.pop(context);
+                              },
+                              buttonText: Text(
+                                "Add",
+                                style: TextStyle(color: Colors.white),
+                              ))
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            );
+          });
+        });
+  }
+
+  int calculateTotal() {
+    int total = TotalAndSubTotal().getSubTotal(context);
+
+    if(_children.length == 0){
+
+    }else{
+      _children.forEach((item){
+        if(item["type"] == 2){
+              total = total - int.parse(item["amount"]);
+        }else{
+          total = total + int.parse(item["amount"]);
+        }
+      });
+    }
+    return total;
   }
 }

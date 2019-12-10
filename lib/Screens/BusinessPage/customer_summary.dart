@@ -2,6 +2,8 @@ import 'package:akount_books/Api/BusinessPage/create_invoice.dart';
 import 'package:akount_books/AppState/app_state.dart';
 import 'package:akount_books/Models/customer.dart';
 import 'package:akount_books/Models/invoice.dart';
+import 'package:akount_books/Models/receipt.dart';
+import 'package:akount_books/Widgets/ReceiptListBuilder.dart';
 import 'package:akount_books/Widgets/empty.dart';
 import 'package:akount_books/Widgets/invoice_list_builder.dart';
 import 'package:flutter/material.dart';
@@ -83,10 +85,17 @@ class _CustomerSummaryState extends State<CustomerSummary> {
               StoreConnector<AppState, AppState>(
                 builder: (context, state) {
                   List<Invoice> businessInvoice = state.businessInvoices;
-                  List<Invoice> draftInvoice =
-                  Invoice.draftInvoices(businessInvoice);
-                  List<Invoice> sentInvoice =
-                  Invoice.sentInvoices(businessInvoice);
+                  List<Receipt> businessReceipts = state.businessReceipts;
+                  List<Receipt>allCustomerReceipts=[];
+                  List<Invoice> customerInvoices =
+                  Invoice.customerInvoices(businessInvoice, widget.customer.id);
+                  customerInvoices.forEach((invoice){
+                    List<Receipt> invoiceReceipts =
+                    Receipt.customerReceipts(businessReceipts, invoice.id);
+                    invoiceReceipts.forEach((invoice){
+                      allCustomerReceipts.add(invoice);
+                    });
+                  });
                   return Container(
                     height: MediaQuery.of(context).size.height - 200,
                     child: Column(
@@ -94,14 +103,14 @@ class _CustomerSummaryState extends State<CustomerSummary> {
                         Expanded(
                           child: TabBarView(
                             children: [
-                              sentInvoice.length != 0? InvoiceListBuilder(invoices: sentInvoice, draft:false):Container(
+                              customerInvoices.length != 0 ? InvoiceListBuilder(invoices: customerInvoices, draft:false):Container(
                                 child: Center(
-                                  child: Empty(text: "No Sent Invoice"),
+                                  child: Empty(text: "No Invoice for ${widget.customer.name}"),
                                 ),
                               ),
-                              draftInvoice.length != 0 ? InvoiceListBuilder(invoices: draftInvoice, draft:true):Container(
+                              allCustomerReceipts.length != 0 ? ReceiptListBuilder(receipts: allCustomerReceipts, draft:true,customer: widget.customer):Container(
                                 child: Center(
-                                  child:  Empty(text: "No Draft Invoice"),
+                                  child:  Empty(text: "No Receipt for ${widget.customer.name}"),
                                 ),
                               )
                             ],

@@ -1,8 +1,10 @@
 import 'package:akount_books/AppState/actions/business_actions.dart';
 import 'package:akount_books/AppState/actions/customer_actions.dart';
+import 'package:akount_books/AppState/actions/discount_actions.dart';
 import 'package:akount_books/AppState/actions/expense_actions.dart';
 import 'package:akount_books/AppState/actions/invoice_actions.dart';
 import 'package:akount_books/AppState/actions/item_actions.dart';
+import 'package:akount_books/AppState/actions/receipt_actions.dart';
 import 'package:akount_books/AppState/actions/user_actions.dart';
 import 'package:akount_books/AppState/app_state.dart';
 import 'package:akount_books/AppState/reducers/business_reducers.dart';
@@ -17,7 +19,10 @@ AppState appReducer(AppState prevState, dynamic action) {
     newAppState.userBusinesses = action.payload;
   } else if (action is UserCurrentBusiness) {
     newAppState.currentBusiness = action.payload;
-  } else if (action is FetchUserInvoice) {
+  }else if (action is AddReceipt) {
+    newAppState.businessReceipts = action.payload;
+  }
+  else if (action is FetchUserInvoice) {
     newAppState.businessInvoices = action.payload;
   } else if (action is AddCustomer) {
     newAppState.businessCustomers = action.payload;
@@ -55,6 +60,8 @@ AppState appReducer(AppState prevState, dynamic action) {
     BusinessReducers().updateEditedBusiness(action.payload, newAppState);
   }else if (action is RemoveDeletedBusiness) {
     BusinessReducers().removeEditedBusiness(action.payload, newAppState);
+  }else if (action is CreateDiscount) {
+    newAppState.invoiceDiscount.add(action.payload);
   }
   return newAppState;
 

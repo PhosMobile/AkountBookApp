@@ -11,7 +11,6 @@ class Expenses extends StatefulWidget {
   @override
   _ExpensesState createState() => _ExpensesState();
 }
-
 class _ExpensesState extends State<Expenses> {
   @override
   Widget build(BuildContext context) {

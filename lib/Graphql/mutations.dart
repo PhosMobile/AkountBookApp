@@ -301,7 +301,35 @@ user_id
     """;
   }
 
-
+  String createDiscount(
+      String description,
+      String amount,
+      int dType,
+      String invoiceId,
+      String businessId,
+      String userId,
+      ) {
+    return """
+      mutation{
+          create_discount(
+          description:"$description"
+          amount:$amount
+          d_type:$dType
+          invoice_id:"$invoiceId"
+          business_id:"$businessId"
+          user_id:"$userId"
+          ){
+          id
+          description
+          amount
+          d_type
+          invoice_id
+          business_id
+          user_id
+          }
+      }
+    """;
+  }
 
 }
 
