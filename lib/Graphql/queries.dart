@@ -49,6 +49,18 @@ class Queries {
               business_id
               user_id
             }
+            receipts{
+              id
+              name
+              amount_paid
+              payment_date
+              payment_method
+              payment_type
+              status
+              invoice_id
+              business_id
+              user_id
+            }
             items{
               id
               name
@@ -85,4 +97,16 @@ class Queries {
                               }
                             }
                           """;
+  String getInvoiceItem = r"""
+                    query GetInvoiceItem($invoice_id : ID!){
+                      get_invoice_item(invoice_id:$invoice_id){
+                        id
+                        item_id
+                        invoice_id
+                      }
+                    }
+                  """;
+
+
+
 }

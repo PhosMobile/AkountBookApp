@@ -7,14 +7,26 @@ class AddCustomer {
   AddCustomer({@required this.payload});
 }
 
-class UpdateCustomer {
-  final Customer payload;
 
-  UpdateCustomer({@required this.payload});
+class UpdateBusinessCustomers {
+  final Customer payload;
+  UpdateBusinessCustomers({@required this.payload});
 }
 
 class DeleteCustomer {
   final Customer payload;
 
   DeleteCustomer({@required this.payload});
+}
+
+class AddInvoiceCustomer {
+  final Customer payload;
+
+  AddInvoiceCustomer({@required this.payload});
+}
+
+class EditInvoiceCustomer {
+  final Customer payload;
+
+  EditInvoiceCustomer({@required this.payload});
 }

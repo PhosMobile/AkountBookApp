@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
 
-class InputStyles extends StatelessWidget {
+class InputStyles {
   InputDecoration inputStyle;
   BoxShadow inputShadow;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container();
-  }
+  BoxDecoration sendSelected;
+  BoxDecoration unSendSelected;
 
   InputDecoration inputMain(inputText) {
     return inputStyle = new InputDecoration(
@@ -25,4 +22,30 @@ class InputStyles extends StatelessWidget {
         offset: Offset(1.0, 3.0),
         spreadRadius: 1);
   }
+
+
+  BoxDecoration setSendSelected(context) {
+    return sendSelected = BoxDecoration(
+        border: Border.all(
+            width: 1,
+            color: Theme.of(context).primaryColor),
+        color: Theme.of(context).primaryColor,
+        boxShadow: [
+          boxShadowMain(context)
+        ]);
+  }
+
+  BoxDecoration setSendUnSelected(context) {
+     return sendSelected = BoxDecoration(
+        border: Border.all(
+            width: 1,
+            color: Colors.grey),
+        color: Colors.white,
+        boxShadow: [
+          boxShadowMain(context)
+        ]);
+  }
+
+
+
 }

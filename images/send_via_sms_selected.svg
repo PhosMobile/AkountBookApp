@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="29" height="29" viewBox="0 0 29 29">
+  <g id="send_via_sms_selected" transform="translate(-229 -212)">
+    <circle id="Ellipse_43" data-name="Ellipse 43" cx="14.5" cy="14.5" r="14.5" transform="translate(229 212)" fill="#007fee"/>
+    <g id="mobile-message" transform="translate(149.313 216.469)">
+      <g id="Group_81" data-name="Group 81" transform="translate(89.69 2.536)">
+        <g id="Group_80" data-name="Group 80">
+          <path id="Path_104" data-name="Path 104" d="M93.494,0h-7a1.167,1.167,0,0,0-1.166,1.166V12.824A1.167,1.167,0,0,0,86.5,13.99h7a1.167,1.167,0,0,0,1.166-1.166V1.166A1.167,1.167,0,0,0,93.494,0Zm.583,12.824a.584.584,0,0,1-.583.583h-7a.584.584,0,0,1-.583-.583V11.659h8.161v1.166Zm0-1.749H85.916V1.166A.583.583,0,0,1,86.5.583h7a.584.584,0,0,1,.583.583Z" transform="translate(-85.333)" fill="#fff"/>
+          <path id="Path_105" data-name="Path 105" d="M234.957,43.249h.583a.291.291,0,1,0,0-.583h-.583a.291.291,0,1,0,0,.583Z" transform="translate(-230.586 -41.5)" fill="#fff"/>
+          <path id="Path_106" data-name="Path 106" d="M213.624,448.583h1.749a.291.291,0,1,0,0-.583h-1.749a.291.291,0,1,0,0,.583Z" transform="translate(-209.835 -435.759)" fill="#fff"/>
+          <circle id="Ellipse_44" data-name="Ellipse 44" cx="0.291" cy="0.291" r="0.291" transform="translate(7.578 1.166)" fill="#fff"/>
+          <path id="Path_107" data-name="Path 107" d="M154.288,128h-4.08a.875.875,0,0,0-.874.874v4.663a.291.291,0,0,0,.18.269.291.291,0,0,0,.318-.063l1.08-1.081h3.377a.875.875,0,0,0,.874-.874v-2.915A.875.875,0,0,0,154.288,128Zm.291,3.789a.292.292,0,0,1-.291.292h-3.5a.291.291,0,0,0-.206.085l-.668.668v-3.96a.292.292,0,0,1,.291-.291h4.08a.292.292,0,0,1,.291.291Z" transform="translate(-147.584 -124.502)" fill="#fff"/>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>

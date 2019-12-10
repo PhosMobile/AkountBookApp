@@ -7,7 +7,7 @@ class MenuList {
     new MenuItem(
         title: "Edit Business Page",
         icon: Icon(Icons.event),
-        link: "/user_dashboard"),
+        link: "/update_business"),
     new MenuItem(
         title: "Add New Business",
         icon: Icon(Icons.create_new_folder),

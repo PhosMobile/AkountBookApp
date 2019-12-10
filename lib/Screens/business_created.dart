@@ -27,55 +27,60 @@ class BusinessCreated extends StatelessWidget {
             },
           ),
         ),
-        body: new Center(
-          child: Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Column(
-                  children: <Widget>[
-                    svg,
-                    SizedBox(
-                      height: 5,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(18.0),
-                      child: Text(
-                        "You have successfully setup your business page",
-                        textAlign: TextAlign.center,
+        body: Container(
+          decoration: BoxDecoration(
+              border: Border(top: BorderSide(width: 2, color: Theme.of(context).accentColor))
+          ),
+          child: new Center(
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Column(
+                    children: <Widget>[
+                      svg,
+                      SizedBox(
+                        height: 5,
                       ),
-                    ),
-                    SizedBox(
-                      height: 5,
-                    ),
-                  ],
-                ),
-                PrimaryButton(
-                    buttonText: Text("ADD INVOICE",
-                        style: TextStyle(fontSize: 16, color: Colors.white)),
-                    onPressed: () {
-                      storage.deleteItem("fromRegistration");
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => AddInvoice()),
-                      );
-                    }),
-                SizedBox(
-                  height: 10,
-                ),
-                SecondaryButton(
-                    buttonText: Text("ADD CUSTOMER",
-                        style: TextStyle(fontSize: 16, color: Colors.white)),
-                    onPressed: () {
-                      storage.deleteItem("fromRegistration");
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => AddCustomer()),
-                      );
-                    })
-              ],
+                      Padding(
+                        padding: const EdgeInsets.all(18.0),
+                        child: Text(
+                          "You have successfully setup your business page",
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                      SizedBox(
+                        height: 5,
+                      ),
+                    ],
+                  ),
+                  PrimaryButton(
+                      buttonText: Text("ADD INVOICE",
+                          style: TextStyle(fontSize: 16, color: Colors.white)),
+                      onPressed: () {
+                        storage.deleteItem("fromRegistration");
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => AddInvoice()),
+                        );
+                      }),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  SecondaryButton(
+                      buttonText: Text("ADD CUSTOMER",
+                          style: TextStyle(fontSize: 16, color: Colors.white)),
+                      onPressed: () {
+                        storage.deleteItem("fromRegistration");
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => AddCustomer(direct: true,)),
+                        );
+                      })
+                ],
+              ),
             ),
           ),
         ));
