@@ -164,7 +164,7 @@ class _LoginState extends State<Login> {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: <Widget>[
                                     Text(
-                                      "Already ave an account?",
+                                      "Already have an account?",
                                       style: TextStyle(fontSize: 16),
                                     ),
                                     SizedBox(

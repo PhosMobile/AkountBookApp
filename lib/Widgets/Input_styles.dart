@@ -23,6 +23,13 @@ class InputStyles {
         spreadRadius: 1);
   }
 
+  BoxShadow dropDownMenu(context) {
+    return inputShadow = BoxShadow(
+        blurRadius: 4.0,
+        color: Colors.white,
+        offset: Offset(1.0, 3.0),
+        spreadRadius: 1);
+  }
 
   BoxDecoration setSendSelected(context) {
     return sendSelected = BoxDecoration(

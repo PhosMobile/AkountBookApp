@@ -224,7 +224,7 @@ class _AddCustomerState extends State<AddCustomer> {
     if (!result.hasErrors) {
       var resultData = result.data["create_customer"];
       Customer _customer = Customer(
-          resultData["it"],
+          resultData["id"],
           resultData["name"],
           resultData["email"],
           resultData["phone"],

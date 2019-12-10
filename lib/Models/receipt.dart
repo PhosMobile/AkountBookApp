@@ -8,6 +8,7 @@ class Receipt {
       status,
       invoiceId,
       businessId,
+      customerId,
       userId;
 
   Receipt(
@@ -20,6 +21,7 @@ class Receipt {
       this.status,
       this.invoiceId,
       this.businessId,
+      this.customerId,
       this.userId);
 
   Receipt.fromJson(Map<String, dynamic> jsonObject) {

@@ -25,6 +25,7 @@ class AppState {
   List<Discount> invoiceDiscount = [];
   Customer invoiceCustomer;
   Invoice readyInvoice;
+  Receipt invoiceReceipt;
 
   EditInvoice editInvoice;
 }

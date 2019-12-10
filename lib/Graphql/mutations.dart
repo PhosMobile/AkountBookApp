@@ -331,6 +331,47 @@ user_id
     """;
   }
 
+  String createReceipt(
+  String name,
+  int amountPaid,
+  String paymentDate,
+  String paymentMethod,
+  String paymentType,
+  String status,
+  String invoiceId,
+  String businessId,
+  String customerId,
+  String userId
+      ) {
+    return """
+      mutation{
+          create_receipt(
+          name:"$name"
+          amount_paid:$amountPaid
+          payment_date:"$paymentDate"
+          payment_method:"$paymentMethod"
+          payment_type:"$paymentType"
+          status:"$status"
+          invoice_id:"$invoiceId"
+          business_id:"$businessId"
+          customer_id:"$customerId"
+          user_id:"$userId"
+          ){
+            id
+            name
+            amount_paid
+            payment_date
+            payment_method
+            payment_type
+            status
+            invoice_id
+            business_id
+            customer_id
+            user_id
+          }
+      }
+    """;
+  }
 }
 
 

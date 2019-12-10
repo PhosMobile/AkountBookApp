@@ -74,6 +74,7 @@ class _DeleteAnInvoiceState extends State<DeleteAnInvoice> {
                           buttonText: Text("DELETE",
                               style: TextStyle(fontSize: 16, color: Colors.white)),
                           onPressed: () async{
+                            print(widget.invoiceId);
                             _scaffoldState.currentState
                                 .removeCurrentSnackBar();
                             _scaffoldState.currentState
@@ -93,6 +94,7 @@ class _DeleteAnInvoiceState extends State<DeleteAnInvoice> {
                                     .deleteInvoice(widget.invoiceId)));
                             if (result.hasErrors) {
                               print(result.errors);
+                              print("errors");
                             } else {
                               await CurrentBusinessData().getBusinessData(context, state.currentBusiness.id);
                               Navigator.pushReplacement(

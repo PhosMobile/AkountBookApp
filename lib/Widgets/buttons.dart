@@ -201,7 +201,38 @@ class DatePickerButton extends StatelessWidget {
     );
   }
 }
+class DatePickerButtonLarge extends StatelessWidget {
+  final Widget buttonText;
+  final dynamic icon;
 
+  DatePickerButtonLarge(
+      {@required this.onPressed,
+        @required this.buttonText,
+        @required this.icon});
+
+  final GestureTapCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: MediaQuery
+          .of(context)
+          .size
+          .width,
+      child: RaisedButton(
+        color: Colors.white,
+        splashColor: Theme.of(context).accentColor,
+        child: Padding(
+            padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[buttonText, icon],
+            )),
+        onPressed: onPressed,
+      ),
+    );
+  }
+}
 class DatePickerButtonFull extends StatelessWidget {
   final Widget buttonText;
   final Icon icon;

@@ -133,9 +133,10 @@ saveReceipts(context, data){
         item["status"],
         item["invoice_id"],
         item["business_id"],
+        item["customerId"],
         item["user_id"]);
     receipts.add(receipt);
   }
   final saveReceipt = StoreProvider.of<AppState>(context);
-  saveReceipt.dispatch(AddReceipt(payload: receipts));
+  saveReceipt.dispatch(AddBusinessReceipt(payload: receipts));
 }

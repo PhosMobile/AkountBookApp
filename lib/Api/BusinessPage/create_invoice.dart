@@ -40,7 +40,7 @@ class AddInvoice extends StatefulWidget {
 
 class _AddInvoiceState extends State<AddInvoice> {
   final GlobalKey<FormBuilderState> _fbKey = GlobalKey<FormBuilderState>();
-  GlobalKey<ScaffoldState> scaffoldState = new GlobalKey<ScaffoldState>();
+  GlobalKey<ScaffoldState> _scaffoldState = new GlobalKey<ScaffoldState>();
   InputStyles inputStyles = new InputStyles();
   String requestErrors;
   bool _isDraftLoading = false;
@@ -51,8 +51,8 @@ class _AddInvoiceState extends State<AddInvoice> {
   TextEditingController _total = new TextEditingController();
   TextEditingController _notes = new TextEditingController();
   TextEditingController _footer = new TextEditingController();
-  TextEditingController _discount_description = new TextEditingController();
-  TextEditingController _discount_amount = new TextEditingController();
+  TextEditingController _discountDescription = new TextEditingController();
+  TextEditingController _discountAmount = new TextEditingController();
 
   String invoiceDate = "";
   String dueDate = "";
@@ -62,14 +62,13 @@ class _AddInvoiceState extends State<AddInvoice> {
   String _invoiceNumber = "P.S/S.O Number";
 
   List<Map<String, dynamic>> _children = [];
-  int _count = 0;
 
   int discountTax = 1;
 
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-        key: scaffoldState,
+        key: _scaffoldState,
         appBar: AppBar(
             backgroundColor: Colors.white,
             iconTheme: IconThemeData(color: Theme.of(context).primaryColor),
@@ -87,6 +86,16 @@ class _AddInvoiceState extends State<AddInvoice> {
                   _invoiceDescription = invoiceNameData.summary;
                   _invoiceNumber = invoiceNameData.poSoNumber;
                 }
+
+                _subTotal.text =
+                    CurrencyConverter().formatPrice(
+                        TotalAndSubTotal()
+                            .getSubTotal(context),
+                        state.currentBusiness
+                            .currency);
+                _total.text = CurrencyConverter().formatPrice(calculateTotal(), state.currentBusiness
+                    .currency);
+
                 return Container(
                   decoration: BoxDecoration(
                       border: Border(
@@ -377,12 +386,12 @@ class _AddInvoiceState extends State<AddInvoice> {
                                           Container(
                                             child: item["type"] == 1
                                                 ? Icon(
-                                              Icons.add,
+                                              Icons.remove,
                                               size: 12,
                                               color: Colors.white,
                                             )
                                                 : Icon(
-                                              Icons.remove,
+                                              Icons.add,
                                               size: 12,
                                               color: Colors.white,
                                             ),
@@ -421,18 +430,16 @@ class _AddInvoiceState extends State<AddInvoice> {
                                           inputStyles.boxShadowMain(context)
                                         ]),
                                         child: FormBuilderTextField(
+                                          initialValue:
+                                          CurrencyConverter().formatPrice(
+                                              TotalAndSubTotal()
+                                                  .getSubTotal(context),
+                                              state.currentBusiness
+                                                  .currency) ,
                                           readOnly: true,
                                           keyboardType: TextInputType.number,
                                           attribute: "sub_total",
-                                          decoration: inputStyles.inputMain(
-                                              CurrencyConverter().formatPrice(
-                                                  TotalAndSubTotal()
-                                                      .getSubTotal(context),
-                                                  state.currentBusiness
-                                                      .currency)),
-                                          validators: [
-                                            FormBuilderValidators.numeric()
-                                          ],
+                                          decoration: inputStyles.inputMain("Sub Total"),
                                           controller: _subTotal,
                                         ),
                                       ),
@@ -448,11 +455,7 @@ class _AddInvoiceState extends State<AddInvoice> {
                                           readOnly: true,
                                           keyboardType: TextInputType.number,
                                           attribute: "total",
-                                          decoration: inputStyles.inputMain(CurrencyConverter().formatPrice(calculateTotal(), state.currentBusiness
-                                              .currency)),
-                                          validators: [
-                                            FormBuilderValidators.numeric()
-                                          ],
+                                          decoration: inputStyles.inputMain("Total"),
                                           controller: _total,
                                         ),
                                       ),
@@ -620,6 +623,7 @@ class _AddInvoiceState extends State<AddInvoice> {
       _dDate = dueDate;
     }
     final addInvoice = StoreProvider.of<AppState>(context);
+
     List<Item> invoiceItems = addInvoice.state.invoiceItems;
     Customer invoiceCustomer = addInvoice.state.invoiceCustomer;
     InvoiceName invoiceName = addInvoice.state.invoiceName;
@@ -724,19 +728,19 @@ class _AddInvoiceState extends State<AddInvoice> {
     } else {
       _status = "SENT";
       if (invoiceCustomer == null) {
-        scaffoldState.currentState
+        _scaffoldState.currentState
             .showSnackBar(alert.showSnackBar("Invoice must contain customer"));
         return;
       } else if (invoiceItems.length == 0) {
-        scaffoldState.currentState.showSnackBar(
+        _scaffoldState.currentState.showSnackBar(
             alert.showSnackBar("No item sellected for this invoice."));
         return;
       } else if (_subTotal.text.length == 0) {
-        scaffoldState.currentState.showSnackBar(
+        _scaffoldState.currentState.showSnackBar(
             alert.showSnackBar("Invoice Sub total cannot be empty"));
         return;
       } else if (_total.text.length == 0) {
-        scaffoldState.currentState
+        _scaffoldState.currentState
             .showSnackBar(alert.showSnackBar("Invoice Total cannot be empty"));
         return;
       }
@@ -829,14 +833,14 @@ class _AddInvoiceState extends State<AddInvoice> {
                             decoration: const InputDecoration(
                               labelText: 'Description',
                             ),
-                            controller: _discount_description,
+                            controller: _discountDescription,
                           ),
                           TextFormField(
                             keyboardType: TextInputType.number,
                             decoration: const InputDecoration(
                               labelText: 'Amount',
                             ),
-                            controller: _discount_amount,
+                            controller: _discountAmount,
                           ),
                           SizedBox(
                             height: 20,
@@ -844,8 +848,8 @@ class _AddInvoiceState extends State<AddInvoice> {
                           PrimaryMiniButton(
                               onPressed: () {
                                 Map<String, dynamic> discountDetail = {
-                                  "description": _discount_description.text,
-                                  "amount": _discount_amount.text,
+                                  "description": _discountDescription.text,
+                                  "amount": _discountAmount.text,
                                   "type": discountTax
                                 };
                                 setState(() {
@@ -876,9 +880,9 @@ class _AddInvoiceState extends State<AddInvoice> {
     }else{
       _children.forEach((item){
         if(item["type"] == 2){
-              total = total - int.parse(item["amount"]);
+              total = total + int.parse(item["amount"]);
         }else{
-          total = total + int.parse(item["amount"]);
+          total = total - int.parse(item["amount"]);
         }
       });
     }

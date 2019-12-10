@@ -174,11 +174,13 @@ class _AddBusinessState extends State<AddBusiness> {
                                     ),
                                   ),
                                   Padding(
-                                    padding: const EdgeInsets.only(bottom: 10),
+                                    padding: const EdgeInsets.only(bottom: 50),
                                     child: Container(
                                       decoration: BoxDecoration(boxShadow: [
-                                        inputStyles.boxShadowMain(context)
-                                      ]),
+                                        inputStyles.dropDownMenu(context)
+                                      ],
+                                      border: Border.all(color: Theme.of(context).accentColor, width: 3) ),
+
                                       child: FormBuilderDropdown(
                                         onChanged: (value) {
                                           setState(() {
