@@ -1,3 +1,4 @@
+import 'package:akount_books/Api/BusinessPage/update_draft.dart';
 import 'package:akount_books/Api/BusinessPage/update_invoice.dart';
 import 'package:akount_books/AppState/actions/invoice_actions.dart';
 import 'package:akount_books/AppState/app_state.dart';
@@ -37,31 +38,7 @@ class ViewInvoiceDraft extends StatelessWidget {
             InkWell(
               child: Icon(MdiIcons.dotsVertical),
               onTap: () {
-                EditInvoice _invoice = EditInvoice(
-                    invoice.id,
-                    invoice.title,
-                    invoice.number,
-                    invoice.poSoNumber,
-                    invoice.summary,
-                    invoice.issueDate,
-                    invoice.dueDate,
-                    invoice.subTotalAmount,
-                    invoice.totalAmount,
-                    invoice.notes,
-                    invoice.status,
-                    invoice.footer,
-                    invoice.customerId,
-                    invoice.businessId,
-                    invoice.userId,
-                    invoiceItem,
-                    customer);
-
-                final editInvoice = StoreProvider.of<AppState>(context);
-                editInvoice.dispatch(AddEditInvoice(payload: _invoice));
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => UpdateInvoiceData()),
-                );
+                editAndSendDraft(context);
               },
             )
           ],
@@ -138,7 +115,9 @@ class ViewInvoiceDraft extends StatelessWidget {
                                         fontWeight: FontWeight.w100,
                                         fontSize: 14,
                                         color: Colors.white)),
-                                onPressed: () {},
+                                onPressed: () {
+                                  editAndSendDraft(context);
+                                },
                               ),
                             ],
                           ),
@@ -149,5 +128,32 @@ class ViewInvoiceDraft extends StatelessWidget {
                 ),
               );
             }));
+  }
+
+  editAndSendDraft(context){
+    EditInvoice _invoice = EditInvoice(
+        invoice.id,
+        invoice.title,
+        invoice.number,
+        invoice.poSoNumber,
+        invoice.summary,
+        invoice.issueDate,
+        invoice.dueDate,
+        invoice.subTotalAmount,
+        invoice.totalAmount,
+        invoice.notes,
+        invoice.status,
+        invoice.footer,
+        invoice.customerId,
+        invoice.businessId,
+        invoice.userId,
+        invoiceItem,
+        customer);
+    final editInvoice = StoreProvider.of<AppState>(context);
+    editInvoice.dispatch(AddEditInvoice(payload: _invoice));
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => UpdateDraft()),
+    );
   }
 }

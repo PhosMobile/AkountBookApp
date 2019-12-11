@@ -27,7 +27,7 @@ class EditCustomerList extends StatelessWidget {
         appBar: AppBar(
           backgroundColor: Colors.white,
           iconTheme: IconThemeData(color: Theme.of(context).primaryColor),
-          title: HeaderTitle(headerText: "Select Customer"),elevation: 0,),
+          title: HeaderTitle(headerText: "Select Customers"),elevation: 0,),
         body: Container(
           decoration: BoxDecoration(
               border: Border(top: BorderSide(width: 2, color: Theme.of(context).accentColor))

@@ -1,5 +1,8 @@
+import 'package:akount_books/Api/BusinessPage/create_receipt.dart';
+import 'package:akount_books/Api/BusinessPage/record_payment.dart';
 import 'package:akount_books/Api/BusinessPage/update_invoice.dart';
 import 'package:akount_books/AppState/actions/invoice_actions.dart';
+import 'package:akount_books/AppState/actions/item_actions.dart';
 import 'package:akount_books/AppState/app_state.dart';
 import 'package:akount_books/Models/customer.dart';
 import 'package:akount_books/Models/edit_invoice.dart';
@@ -65,6 +68,7 @@ class ViewInvoice extends StatelessWidget {
 
                     final editInvoice = StoreProvider.of<AppState>(context);
                     editInvoice.dispatch(AddEditInvoice(payload: _invoice));
+                    editInvoice.dispatch(EditInvoiceItems(payload: invoiceItem));
                     Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -91,6 +95,8 @@ class ViewInvoice extends StatelessWidget {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: <Widget>[
+                          ViewInvoiceFieldCard(
+                              title: "Customer Name:", value: customer.name),
                           ViewInvoiceFieldCard(
                               title: "Invoice Name:", value: invoice.title),
                           ViewInvoiceFieldCard(
@@ -157,6 +163,12 @@ class ViewInvoice extends StatelessWidget {
                                         fontSize: 14,
                                         color: Theme.of(context).primaryColor)),
                                 onPressed: () {
+                                  StoreProvider.of<AppState>(context).dispatch(CreateInvoice(payload: invoice));
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => RecordPayment()),
+                                  );
                                 },
                               ),
                             ],

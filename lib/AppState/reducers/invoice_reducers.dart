@@ -22,7 +22,7 @@ class InvoiceReducers{
     state.businessInvoices.forEach((singleInvoice){
       if(singleInvoice.id == invoice.id){
         state.businessInvoices.remove(singleInvoice);
-        state.businessInvoices.add(invoice);
+        state.businessInvoices.insert(0,invoice);
       }
     });
   }

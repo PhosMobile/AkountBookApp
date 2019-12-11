@@ -56,7 +56,7 @@ class _CustomersState extends State<Customers> {
                             }),
                       ),
                     ),
-                    SizedBox(height: 20),
+                    SizedBox(height:80)
                   ],
                 ),
               );

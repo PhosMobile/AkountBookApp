@@ -23,6 +23,7 @@ class SVGFiles {
   static const add_customer = "images/add_customer.svg";
   static const add_item = "images/add_item.svg";
   static const selected = "images/selected.svg";
+  static const attach_invoice = "images/attach_invoice.svg";
 
 
   static const send_via_whatsApp_selected = "images/send_via_whatsapp_selected.svg";

@@ -125,16 +125,6 @@ class _CustomerSummaryState extends State<CustomerSummary> {
             ],
           ),
         ),
-        floatingActionButton: FloatingActionButton(
-            backgroundColor: Theme.of(context).primaryColor,
-            child: Icon(Icons.add),
-            foregroundColor: Colors.white,
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => AddInvoice()),
-              );
-            }),
       ),
     );
   }

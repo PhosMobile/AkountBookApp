@@ -15,3 +15,20 @@ class AlertSnackBar extends StatelessWidget {
     );
   }
 }
+
+class AlertSnackBarError extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container();
+  }
+  SnackBar showSnackBar(alertText){
+    return SnackBar(
+      behavior: SnackBarBehavior.floating,
+      backgroundColor: Colors.redAccent,
+      content: Container(
+        child: Text("$alertText", textAlign: TextAlign.center,style: TextStyle(color: Colors.white),),
+      ),
+      duration: Duration(seconds: 3),
+    );
+  }
+}

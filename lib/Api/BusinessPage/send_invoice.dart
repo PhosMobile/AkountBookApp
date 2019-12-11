@@ -276,7 +276,7 @@ class _SendInvoiceState extends State<SendInvoice> {
                                   Radio(
                                     activeColor: Theme.of(context).primaryColor,
                                     value: 1,
-                                    groupValue: receivedPayment,
+                                    groupValue: receivedPayment,onChanged: (e){}
                                   )
                                 ],
                               ),
@@ -310,7 +310,7 @@ class _SendInvoiceState extends State<SendInvoice> {
                                       activeColor:
                                           Theme.of(context).primaryColor,
                                       value: 2,
-                                      groupValue: receivedPayment)
+                                      groupValue: receivedPayment,onChanged: (e){})
                                 ],
                               ),
                             ),
@@ -358,7 +358,6 @@ class _SendInvoiceState extends State<SendInvoice> {
           ),
         ));
   }
-
   void _saveInvoiceName(context) async {
     flushBarTitle = "Sending Invoice";
     Flushbar(
@@ -391,21 +390,6 @@ class _SendInvoiceState extends State<SendInvoice> {
                 invoiceData.customerId,
                 invoiceData.businessId,
                 invoiceData.userId)));
-
-    print(invoiceData.title);
-    print(invoiceData.number);
-    print(invoiceData.poSoNumber);
-    print(invoiceData.summary);
-   print( invoiceData.issueDate);
-   print( invoiceData.dueDate);
-   print( invoiceData.subTotalAmount);
-   print( invoiceData.totalAmount);
-   print( invoiceData.notes);
-   print( invoiceData.status);
-   print( invoiceData.footer);
-   print( invoiceData.customerId);
-   print( invoiceData.businessId);
-   print( invoiceData.userId);
     if (!result.hasErrors) {
 
       String response = await InvoiceItems().saveInvoiceItems(

@@ -15,7 +15,9 @@ import 'package:akount_books/Widgets/invoice_item_card.dart';
 import 'package:akount_books/Widgets/loader_widget.dart';
 import 'package:akount_books/Widgets/buttons.dart';
 import 'package:akount_books/Widgets/loading_snack_bar.dart';
+import 'package:akount_books/utilities/currency_convert.dart';
 import 'package:akount_books/utilities/svg_files.dart';
+import 'package:akount_books/utilities/total_and_sub_total.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
@@ -46,12 +48,17 @@ class _UpdateInvoiceDataState extends State<UpdateInvoiceData> {
   TextEditingController _total = new TextEditingController();
   TextEditingController _notes = new TextEditingController();
   TextEditingController _footer = new TextEditingController();
+  TextEditingController _discountDescription = new TextEditingController();
+  TextEditingController _discountAmount = new TextEditingController();
   String _invoiceName = "INVOICE NAME";
   String invoiceDate = "";
   String dueDate = "";
   String _invoiceType = "DRAFT";
   String _invoiceDescription = "Project Name / Description";
   String _invoiceNumber = "P.S/S.O Number";
+  bool isNewInvoice = false ;
+  List<Map<String, dynamic>> _children = [];
+  int discountTax = 1;
 
   @override
   Widget build(BuildContext context) {
@@ -74,7 +81,6 @@ class _UpdateInvoiceDataState extends State<UpdateInvoiceData> {
                   _notes.text = invoiceData.notes;
                   _footer.text = invoiceData.footer;
                 });
-
               },
               builder: (context, state) {
                 EditInvoice invoiceData = state.editInvoice;
@@ -90,6 +96,16 @@ class _UpdateInvoiceDataState extends State<UpdateInvoiceData> {
                   _invoiceDescription = invoiceNameData.summary;
                   _invoiceNumber = invoiceNameData.poSoNumber;
                 }
+
+                _subTotal.text =
+                    CurrencyConverter().formatPrice(
+                        TotalAndSubTotal()
+                            .getSubTotal(context,isNewInvoice),
+                        state.currentBusiness
+                            .currency);
+                _total.text = CurrencyConverter().formatPrice(calculateTotal(), state.currentBusiness
+                    .currency);
+
                 return Container(
                   decoration: BoxDecoration(
                       border: Border(
@@ -351,6 +367,71 @@ class _UpdateInvoiceDataState extends State<UpdateInvoiceData> {
                                     ),
                                   ),
                                   SizedBox(height: 10),
+                                  InkWell(
+                                    child: Container(
+                                      child: Row(
+                                        children: <Widget>[
+                                          Icon(
+                                            Icons.add,
+                                            color:
+                                            Theme.of(context).primaryColor,
+                                          ),
+                                          Text("Add Discount / Tax",
+                                              style: TextStyle(
+                                                  color: Theme.of(context)
+                                                      .primaryColor)),
+                                        ],
+                                      ),
+                                    ),
+                                    onTap: () {
+                                      _add();
+                                    },
+                                  ),
+                                  for (var item in _children)
+                                    Padding(
+                                      padding: EdgeInsets.all(8),
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: <Widget>[
+                                          Expanded(child: Text(item["description"])),
+                                          SizedBox(width: 10),
+                                          Text(item["amount"]),
+                                          SizedBox(width: 10),
+                                          Container(
+                                            child: item["type"] == 1
+                                                ? Icon(
+                                              Icons.remove,
+                                              size: 12,
+                                              color: Colors.white,
+                                            )
+                                                : Icon(
+                                              Icons.add,
+                                              size: 12,
+                                              color: Colors.white,
+                                            ),
+                                            decoration: BoxDecoration(
+                                                color: Theme.of(context)
+                                                    .primaryColor),
+                                            padding: EdgeInsets.all(5),
+                                          ),
+                                          SizedBox(width: 10),
+                                          InkWell(
+                                            child: Container(child: Icon(Icons.delete, size: 15,
+                                              color: Colors.redAccent,)),
+                                            onTap: (){
+                                              setState(() {
+                                                _children.remove(item);
+                                              });
+                                            },
+                                          )
+
+                                        ],
+                                      ),
+                                    ),
+                                  SizedBox(
+                                    height: 20,
+                                  ),
+                                  SizedBox(height: 10),
                                   Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
@@ -368,10 +449,6 @@ class _UpdateInvoiceDataState extends State<UpdateInvoiceData> {
                                           attribute: "sub_total",
                                           decoration: inputStyles
                                               .inputMain("Sub Total"),
-                                          validators: [
-                                            FormBuilderValidators.required(),
-                                            FormBuilderValidators.numeric()
-                                          ],
                                           controller: _subTotal,
                                         ),
                                       ),
@@ -388,10 +465,6 @@ class _UpdateInvoiceDataState extends State<UpdateInvoiceData> {
                                           attribute: "total",
                                           decoration:
                                               inputStyles.inputMain("Total"),
-                                          validators: [
-                                            FormBuilderValidators.required(),
-                                            FormBuilderValidators.numeric()
-                                          ],
                                           controller: _total,
                                         ),
                                       ),
@@ -560,8 +633,8 @@ class _UpdateInvoiceDataState extends State<UpdateInvoiceData> {
                 invoiceData.summary,
                 invoiceDate,
                 dueDate,
-                int.parse( _subTotal.text),
-                int.parse(_total.text),
+                TotalAndSubTotal().getSubTotal(context, isNewInvoice),
+                calculateTotal(),
                _notes.text,
                 invoiceData.status,
                 _footer.text,
@@ -579,8 +652,8 @@ class _UpdateInvoiceDataState extends State<UpdateInvoiceData> {
             invoiceData.summary,
             invoiceDate,
             dueDate,
-            int.parse( _subTotal.text),
-            int.parse(_total.text),
+            TotalAndSubTotal().getSubTotal(context, isNewInvoice),
+            calculateTotal(),
             _notes.text,
             invoiceData.status,
             _footer.text,
@@ -593,5 +666,120 @@ class _UpdateInvoiceDataState extends State<UpdateInvoiceData> {
     } else {
       print(result.errors);
     }
+  }
+
+  void _add() {
+    showModalBottomSheet(
+        isScrollControlled: true,
+        context: context,
+        builder: (context) {
+          return StatefulBuilder(
+              builder: (BuildContext context, StateSetter setState
+                  /*You can rename this!*/) {
+                return Padding(
+                  padding: MediaQuery.of(context).viewInsets,
+                  child: Container(
+                    height: 300,
+                    child: Column(
+                      children: <Widget>[
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: <Widget>[
+                            Container(
+                              child: Row(
+                                children: <Widget>[
+                                  Radio(
+                                      activeColor: Theme.of(context).primaryColor,
+                                      value: 1,
+                                      groupValue: discountTax,
+                                      onChanged: (value) {
+                                        print(value);
+                                        setState(() {
+                                          discountTax = value;
+                                        });
+                                      }),
+                                  Text("Discount")
+                                ],
+                              ),
+                            ),
+                            Container(
+                              child: Row(
+                                children: <Widget>[
+                                  Radio(
+                                      activeColor: Theme.of(context).primaryColor,
+                                      value: 2,
+                                      groupValue: discountTax,
+                                      onChanged: (value) {
+                                        setState(() {
+                                          discountTax = value;
+                                        });
+                                      }),
+                                  Text("Tax")
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                        Container(
+                          padding: EdgeInsets.only(left: 20, right: 20),
+                          child: Column(
+                            children: <Widget>[
+                              TextFormField(
+                                decoration: const InputDecoration(
+                                  labelText: 'Description',
+                                ),
+                                controller: _discountDescription,
+                              ),
+                              TextFormField(
+                                keyboardType: TextInputType.number,
+                                decoration: const InputDecoration(
+                                  labelText: 'Amount',
+                                ),
+                                controller: _discountAmount,
+                              ),
+                              SizedBox(
+                                height: 20,
+                              ),
+                              PrimaryMiniButton(
+                                  onPressed: () {
+                                    Map<String, dynamic> discountDetail = {
+                                      "description": _discountDescription.text,
+                                      "amount": _discountAmount.text,
+                                      "type": discountTax
+                                    };
+                                    setState(() {
+                                      _children.add(discountDetail);
+                                    });
+                                    Navigator.pop(context);
+                                  },
+                                  buttonText: Text(
+                                    "Add",
+                                    style: TextStyle(color: Colors.white),
+                                  ))
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                );
+              });
+        });
+  }
+  int calculateTotal() {
+    int total = TotalAndSubTotal().getSubTotal(context, isNewInvoice);
+
+    if(_children.length == 0){
+
+    }else{
+      _children.forEach((item){
+        if(item["type"] == 2){
+          total = total + int.parse(item["amount"]);
+        }else{
+          total = total - int.parse(item["amount"]);
+        }
+      });
+    }
+    return total;
   }
 }

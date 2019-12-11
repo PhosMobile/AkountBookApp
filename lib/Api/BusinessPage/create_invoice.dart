@@ -53,7 +53,7 @@ class _AddInvoiceState extends State<AddInvoice> {
   TextEditingController _footer = new TextEditingController();
   TextEditingController _discountDescription = new TextEditingController();
   TextEditingController _discountAmount = new TextEditingController();
-
+  bool isNewInvoice = true;
   String invoiceDate = "";
   String dueDate = "";
   String _invoiceName = "INVOICE NAME";
@@ -90,11 +90,12 @@ class _AddInvoiceState extends State<AddInvoice> {
                 _subTotal.text =
                     CurrencyConverter().formatPrice(
                         TotalAndSubTotal()
-                            .getSubTotal(context),
+                            .getSubTotal(context,isNewInvoice),
                         state.currentBusiness
                             .currency);
                 _total.text = CurrencyConverter().formatPrice(calculateTotal(), state.currentBusiness
                     .currency);
+
 
                 return Container(
                   decoration: BoxDecoration(
@@ -430,12 +431,6 @@ class _AddInvoiceState extends State<AddInvoice> {
                                           inputStyles.boxShadowMain(context)
                                         ]),
                                         child: FormBuilderTextField(
-                                          initialValue:
-                                          CurrencyConverter().formatPrice(
-                                              TotalAndSubTotal()
-                                                  .getSubTotal(context),
-                                              state.currentBusiness
-                                                  .currency) ,
                                           readOnly: true,
                                           keyboardType: TextInputType.number,
                                           attribute: "sub_total",
@@ -661,7 +656,7 @@ class _AddInvoiceState extends State<AddInvoice> {
                   summary,
                   _iDate,
                   _dDate,
-                  TotalAndSubTotal().getSubTotal(context),
+                  TotalAndSubTotal().getSubTotal(context,isNewInvoice),
                   calculateTotal(),
                   _notes.text,
                   _status,
@@ -684,7 +679,7 @@ class _AddInvoiceState extends State<AddInvoice> {
             summary,
             _iDate,
             _dDate,
-            TotalAndSubTotal().getSubTotal(context),
+            TotalAndSubTotal().getSubTotal(context,isNewInvoice),
             calculateTotal(),
             _notes.text,
             _status,
@@ -752,7 +747,7 @@ class _AddInvoiceState extends State<AddInvoice> {
           invoiceName.summary,
           _iDate,
           _dDate,
-          TotalAndSubTotal().getSubTotal(context),
+          TotalAndSubTotal().getSubTotal(context,isNewInvoice),
           calculateTotal(),
           _notes.text,
           _status,
@@ -873,7 +868,7 @@ class _AddInvoiceState extends State<AddInvoice> {
   }
 
   int calculateTotal() {
-    int total = TotalAndSubTotal().getSubTotal(context);
+    int total = TotalAndSubTotal().getSubTotal(context,isNewInvoice);
 
     if(_children.length == 0){
 

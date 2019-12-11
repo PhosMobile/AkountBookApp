@@ -26,6 +26,6 @@ class AppState {
   Customer invoiceCustomer;
   Invoice readyInvoice;
   Receipt invoiceReceipt;
-
   EditInvoice editInvoice;
+
 }
