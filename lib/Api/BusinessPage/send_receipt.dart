@@ -1,14 +1,9 @@
-import 'package:akount_books/Api/BusinessPage/InvoiceItems.dart';
-import 'package:akount_books/Api/BusinessPage/create_receipt.dart';
-import 'package:akount_books/AppState/actions/invoice_actions.dart';
-import 'package:akount_books/AppState/actions/receipt_actions.dart';
-import 'package:akount_books/Graphql/graphql_config.dart';
-import 'package:akount_books/Graphql/mutations.dart';
+import 'package:akount_books/AppState/app_state.dart';
+import 'package:akount_books/Models/customer.dart';
 import 'package:akount_books/Models/invoice.dart';
 import 'package:akount_books/Models/receipt.dart';
-import 'package:akount_books/Screens/BusinessPage/invoice_sent.dart';
+import 'package:akount_books/Screens/BusinessPage/receipt_sent.dart';
 import 'package:akount_books/Widgets/HeaderTitle.dart';
-import 'package:akount_books/Widgets/loader_widget.dart';
 import 'package:akount_books/Widgets/buttons.dart';
 import 'package:akount_books/utilities/currency_convert.dart';
 import 'package:akount_books/utilities/svg_files.dart';
@@ -17,10 +12,6 @@ import 'package:flutter/material.dart';
 import 'package:akount_books/Widgets/Input_styles.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:graphql_flutter/graphql_flutter.dart';
-import 'package:flushbar/flushbar.dart';
-
-import '../../AppState/app_state.dart';
 
 class SendReceipt extends StatefulWidget {
   @override
@@ -35,7 +26,6 @@ class _SendReceiptState extends State<SendReceipt> {
   bool partPayment = true;
   bool fullPayment = false;
   String requestErrors;
-  bool _isLoading = false;
   String flushBarTitle = "";
   int receivedPayment = 0;
 
@@ -50,6 +40,9 @@ class _SendReceiptState extends State<SendReceipt> {
           child: StoreConnector<AppState, AppState>(
             converter: (store) => store.state,
             builder: (context, state) {
+              Invoice invoice = state.readyInvoice;
+              Receipt receipt = state.invoiceReceipt;
+              Customer customer = state.invoiceCustomer;
               return Container(
                 decoration: BoxDecoration(
                     border: Border(
@@ -196,60 +189,39 @@ class _SendReceiptState extends State<SendReceipt> {
                               SizedBox(
                                 height: 30.0,
                               ),
-//                              Column(
-//                                children: <Widget>[
-//                                  Container(
-//                                    child: Padding(
-//                                      padding: const EdgeInsets.only(left:20.0),
-//                                      child: Text(
-//                                        state.invoiceCustomer.name,
-//                                        textAlign: TextAlign.left,
-//                                        style: TextStyle(
-//                                            fontWeight: FontWeight.bold,
-//                                            fontSize: 16),
-//                                      ),
-//                                    ),
-//                                    width: MediaQuery.of(context).size.width,
-//                                  ),
-//                                  Container(
-//                                    child: Padding(
-//                                      padding: const EdgeInsets.only(left:20.0),
-//                                      child: Text(
-//                                        state.readyInvoice.title,
-//                                        style: TextStyle(
-//                                            color: Colors.grey,
-//                                            fontWeight: FontWeight.bold),
-//                                      ),
-//                                    ),
-//                                    width: MediaQuery.of(context).size.width,
-//                                  ),
-//                                  Container(
-//                                    child: Padding(
-//                                      padding: const EdgeInsets.only(left:20.0),
-//                                      child: Text(state.readyInvoice.summary),
-//                                    ),
-//                                    width: MediaQuery.of(context).size.width,
-//                                  ),
-//                                  Container(
-//                                    child: Padding(
-//                                      padding: const EdgeInsets.only(left:20.0),
-//                                      child: Text(CurrencyConverter().formatPrice(
-//                                          state.readyInvoice.totalAmount,
-//                                          state.currentBusiness.currency)),
-//                                    ),
-//                                    width: MediaQuery.of(context).size.width,
-//                                  )
-//                                ],
-//                              ),
-                              Divider(
-                                thickness: 2,
+                              Column(
+                                children: <Widget>[
+                                  Container(
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(left:20.0),
+                                      child: Text(
+                                       "Hi, ${state.invoiceCustomer.name}",
+                                        textAlign: TextAlign.left,
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 16),
+                                      ),
+                                    ),
+                                    width: MediaQuery.of(context).size.width,
+                                  ),
+                                  Container(
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(left:20.0, top: 5, bottom: 5),
+                                      child: Text(
+                                        "here's the payment of receipt  for the total amount of \n ${CurrencyConverter().formatPrice(int.parse(state.invoiceReceipt.amountPaid), state.currentBusiness.currency)}",
+                                        style: TextStyle(
+                                            color: Colors.black38,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
+                                    width: MediaQuery.of(context).size.width,
+                                  ),
+                                ],
                               ),
+
                               state.invoiceReceipt != null
                                   ? Card(
                                 child: ListTile(
-                                  trailing:InkWell(child: Icon(Icons.delete, color: Colors.redAccent,size: 16,),onTap: (){
-                                    deleteInvoiceReceipt(context);
-                                  },),
                                   title: Text(
                                     "${state.invoiceReceipt.paymentType} Payment of ${CurrencyConverter().formatPrice(int.parse(state.invoiceReceipt.amountPaid), state.currentBusiness.currency)}",
                                     textAlign: TextAlign.left,
@@ -266,16 +238,15 @@ class _SendReceiptState extends State<SendReceipt> {
                               SizedBox(
                                 height: 20,
                               ),
-
                               SizedBox(height: 20,),
                               PrimaryButton(
-                                buttonText: _isLoading
-                                    ? LoaderLight()
-                                    : Text("SEND RECEIPT",
+                                buttonText: Text("SEND RECEIPT",
                                     style: TextStyle(
-                                        fontSize: 16, color: Colors.white)),
+                                        fontWeight: FontWeight.w100,
+                                        fontSize: 14,
+                                        color: Colors.white)),
                                 onPressed: () {
-//                                  _saveInvoiceName(context);
+                                      _sendReceipt(context,receipt,customer,invoice);
                                 },
                               ),
                               SizedBox(
@@ -291,11 +262,14 @@ class _SendReceiptState extends State<SendReceipt> {
           ),
         ));
   }
-  deleteInvoiceReceipt(context){
-    final removeInvoice = StoreProvider.of<AppState>(context);
-    removeInvoice.dispatch(DeleteInvoiceReceipt(payload: removeInvoice.state.invoiceReceipt));
-  }
 
+  _sendReceipt(context, Receipt receipt, Customer customer, Invoice invoice){
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+          builder: (context) => ReceiptSent(customer:customer)),
+    );
+  }
   final Widget sendViaWhatsAppSelected = new SvgPicture.asset(
     SVGFiles.send_via_whatsApp_selected,
     semanticsLabel: 'send_via_whatsapp_selected',
@@ -307,6 +281,7 @@ class _SendReceiptState extends State<SendReceipt> {
     semanticsLabel: 'send_via_whatsapp_unselected',
     allowDrawingOutsideViewBox: true,
   );
+
   final Widget sendViaEmailSelected = new SvgPicture.asset(
     SVGFiles.send_via_email_selected,
     semanticsLabel: 'send_via_email_selected',

@@ -639,7 +639,6 @@ class _UpdateInvoiceDataState extends State<UpdateInvoiceData> {
                 invoiceData.status,
                 _footer.text,
                 invoiceCustomerId)));
-
     if (!result.hasErrors) {
       String itemUpdated =
           await InvoiceItems().updateInvoiceItems(invoiceItems, invoiceData.id,context);
@@ -667,7 +666,6 @@ class _UpdateInvoiceDataState extends State<UpdateInvoiceData> {
       print(result.errors);
     }
   }
-
   void _add() {
     showModalBottomSheet(
         isScrollControlled: true,

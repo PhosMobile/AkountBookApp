@@ -132,7 +132,6 @@ class ReceiptPreview extends StatelessWidget {
             customer.id,
             _state.loggedInUser.userId)));
     if (receiptResult.hasErrors) {
-      print("RECEIPT");
       print(receiptResult.errors);
     } else {
       dynamic _receiptDataBody = receiptResult.data["create_receipt"];

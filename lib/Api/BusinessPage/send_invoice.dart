@@ -200,7 +200,7 @@ class _SendInvoiceState extends State<SendInvoice> {
                             children: <Widget>[
                               Container(
                                 child: Padding(
-                                  padding: const EdgeInsets.only(left:20.0),
+                                  padding: const EdgeInsets.only(left: 20.0),
                                   child: Text(
                                     state.invoiceCustomer.name,
                                     textAlign: TextAlign.left,
@@ -213,7 +213,7 @@ class _SendInvoiceState extends State<SendInvoice> {
                               ),
                               Container(
                                 child: Padding(
-                                  padding: const EdgeInsets.only(left:20.0),
+                                  padding: const EdgeInsets.only(left: 20.0),
                                   child: Text(
                                     state.readyInvoice.title,
                                     style: TextStyle(
@@ -225,14 +225,14 @@ class _SendInvoiceState extends State<SendInvoice> {
                               ),
                               Container(
                                 child: Padding(
-                                  padding: const EdgeInsets.only(left:20.0),
+                                  padding: const EdgeInsets.only(left: 20.0),
                                   child: Text(state.readyInvoice.summary),
                                 ),
                                 width: MediaQuery.of(context).size.width,
                               ),
                               Container(
                                 child: Padding(
-                                  padding: const EdgeInsets.only(left:20.0),
+                                  padding: const EdgeInsets.only(left: 20.0),
                                   child: Text(CurrencyConverter().formatPrice(
                                       state.readyInvoice.totalAmount,
                                       state.currentBusiness.currency)),
@@ -247,9 +247,16 @@ class _SendInvoiceState extends State<SendInvoice> {
                           state.invoiceReceipt != null
                               ? Card(
                                   child: ListTile(
-                                    trailing:InkWell(child: Icon(Icons.delete, color: Colors.redAccent,size: 16,),onTap: (){
-                                      deleteInvoiceReceipt(context);
-                                    },),
+                                    trailing: InkWell(
+                                      child: Icon(
+                                        Icons.delete,
+                                        color: Colors.redAccent,
+                                        size: 16,
+                                      ),
+                                      onTap: () {
+                                        deleteInvoiceReceipt(context);
+                                      },
+                                    ),
                                     title: Text(
                                       "${state.invoiceReceipt.paymentType} Payment of ${CurrencyConverter().formatPrice(int.parse(state.invoiceReceipt.amountPaid), state.currentBusiness.currency)}",
                                       textAlign: TextAlign.left,
@@ -259,8 +266,8 @@ class _SendInvoiceState extends State<SendInvoice> {
                                       textAlign: TextAlign.left,
                                     ),
                                   ),
-                            color: Colors.white,
-                            clipBehavior: Clip.none,
+                                  color: Colors.white,
+                                  clipBehavior: Clip.none,
                                 )
                               : Container(),
                           SizedBox(
@@ -274,10 +281,11 @@ class _SendInvoiceState extends State<SendInvoice> {
                                       child:
                                           Text("I have Received Part Payment")),
                                   Radio(
-                                    activeColor: Theme.of(context).primaryColor,
-                                    value: 1,
-                                    groupValue: receivedPayment,onChanged: (e){}
-                                  )
+                                      activeColor:
+                                          Theme.of(context).primaryColor,
+                                      value: 1,
+                                      groupValue: receivedPayment,
+                                      onChanged: (e) {})
                                 ],
                               ),
                             ),
@@ -310,7 +318,8 @@ class _SendInvoiceState extends State<SendInvoice> {
                                       activeColor:
                                           Theme.of(context).primaryColor,
                                       value: 2,
-                                      groupValue: receivedPayment,onChanged: (e){})
+                                      groupValue: receivedPayment,
+                                      onChanged: (e) {})
                                 ],
                               ),
                             ),
@@ -334,7 +343,9 @@ class _SendInvoiceState extends State<SendInvoice> {
                               }
                             },
                           ),
-                          SizedBox(height: 20,),
+                          SizedBox(
+                            height: 20,
+                          ),
                           PrimaryButton(
                             buttonText: _isLoading
                                 ? LoaderLight()
@@ -358,6 +369,7 @@ class _SendInvoiceState extends State<SendInvoice> {
           ),
         ));
   }
+
   void _saveInvoiceName(context) async {
     flushBarTitle = "Sending Invoice";
     Flushbar(
@@ -369,7 +381,8 @@ class _SendInvoiceState extends State<SendInvoice> {
     )..show(context);
     final addInvoice = StoreProvider.of<AppState>(context);
     final invoiceData = StoreProvider.of<AppState>(context).state.readyInvoice;
-    final receiptData = StoreProvider.of<AppState>(context).state.invoiceReceipt;
+    final receiptData =
+        StoreProvider.of<AppState>(context).state.invoiceReceipt;
 
     GqlConfig graphQLConfiguration = GqlConfig();
     Mutations createInvoice = new Mutations();
@@ -390,8 +403,8 @@ class _SendInvoiceState extends State<SendInvoice> {
                 invoiceData.customerId,
                 invoiceData.businessId,
                 invoiceData.userId)));
-    if (!result.hasErrors) {
 
+    if (!result.hasErrors) {
       String response = await InvoiceItems().saveInvoiceItems(
           addInvoice.state.invoiceItems,
           result.data["create_invoice"]["id"],
@@ -399,62 +412,65 @@ class _SendInvoiceState extends State<SendInvoice> {
       dynamic invoiceQueryData = result.data["create_invoice"];
 
       if (response == "Done") {
-        Mutations createReceipt = new Mutations();
-        QueryResult receiptResult =
-        await graphQLConfiguration.getGraphql(context).mutate(MutationOptions(
-            document: createReceipt.createReceipt(
-                addInvoice.state.invoiceName.title+"001",
-                int.parse(receiptData.amountPaid),
-                receiptData.paymentDate,
-                receiptData.paymentMethod, receiptData.paymentType, "done",invoiceQueryData["id"],
-                invoiceData.businessId,
-                invoiceData.customerId,
-                invoiceData.userId)));
-        if(receiptResult.hasErrors){
-          print("RECEIPT");
-          print(receiptResult.errors);
-        }else{
-          dynamic receiptData = receiptResult.data["create_receipt"];
-          Invoice _invoice = new Invoice(
-              invoiceQueryData["id"],
-              invoiceQueryData["title"],
-              invoiceQueryData["invoice_number"],
-              invoiceQueryData["po_so_number"],
-              invoiceQueryData["summary"],
-              invoiceQueryData["issue_date"],
-              invoiceQueryData["due_date"],
-              invoiceQueryData["sub_total_amount"],
-              invoiceQueryData["total_amount"],
-              invoiceQueryData["notes"],
-              invoiceQueryData["status"],
-              invoiceQueryData["footer"],
-              invoiceData.customerId,
-              invoiceData.businessId,
-              invoiceData.userId);
-
-          Receipt _receipt = new Receipt(
-              receiptData["id"],
-              receiptData["name"],
-              receiptData["amount_paid"],
-              receiptData["payment_date"],
-              receiptData["payment_method"],
-              receiptData["payment_type"],
-              receiptData["status"],
-              receiptData["invoice_id"],
-              receiptData["business_id"],
-              receiptData["customer_id"],
-              receiptData["user_id"]
-          );
-
-
-          addInvoice.dispatch(AddBusinessInvoice(payload: _invoice));
-          addInvoice.dispatch(UpdateBusinessReceipt(payload: _receipt));
-          Navigator.of(context).pop();
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => InvoiceSent()),
-          );
+        if (receiptData != null) {
+          Mutations createReceipt = new Mutations();
+          QueryResult receiptResult = await graphQLConfiguration
+              .getGraphql(context)
+              .mutate(MutationOptions(
+                  document: createReceipt.createReceipt(
+                      addInvoice.state.invoiceName.title + "001",
+                      int.parse(receiptData.amountPaid),
+                      receiptData.paymentDate,
+                      receiptData.paymentMethod,
+                      receiptData.paymentType,
+                      "done",
+                      invoiceQueryData["id"],
+                      invoiceData.businessId,
+                      invoiceData.customerId,
+                      invoiceData.userId)));
+          if (receiptResult.hasErrors) {
+            print(receiptResult.errors);
+          } else {
+            dynamic receiptData = receiptResult.data["create_receipt"];
+            Receipt _receipt = new Receipt(
+                receiptData["id"],
+                receiptData["name"],
+                receiptData["amount_paid"],
+                receiptData["payment_date"],
+                receiptData["payment_method"],
+                receiptData["payment_type"],
+                receiptData["status"],
+                receiptData["invoice_id"],
+                receiptData["business_id"],
+                receiptData["customer_id"],
+                receiptData["user_id"]);
+            addInvoice.dispatch(UpdateBusinessReceipt(payload: _receipt));
+          }
         }
+        Invoice _invoice = new Invoice(
+            invoiceQueryData["id"],
+            invoiceQueryData["title"],
+            invoiceQueryData["invoice_number"],
+            invoiceQueryData["po_so_number"],
+            invoiceQueryData["summary"],
+            invoiceQueryData["issue_date"],
+            invoiceQueryData["due_date"],
+            invoiceQueryData["sub_total_amount"],
+            invoiceQueryData["total_amount"],
+            invoiceQueryData["notes"],
+            invoiceQueryData["status"],
+            invoiceQueryData["footer"],
+            invoiceData.customerId,
+            invoiceData.businessId,
+            invoiceData.userId);
+
+        addInvoice.dispatch(AddBusinessInvoice(payload: _invoice));
+
+        Navigator.of(context).pop();
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => InvoiceSent(customer:addInvoice.state.invoiceCustomer)),
+        );
       } else {
         setState(() {
           flushBarTitle = response;
@@ -462,15 +478,15 @@ class _SendInvoiceState extends State<SendInvoice> {
         Navigator.of(context).pop();
       }
     } else {
-      print("INVOICE");
       print(result.errors);
       Navigator.of(context).pop();
     }
   }
 
-  deleteInvoiceReceipt(context){
+  deleteInvoiceReceipt(context) {
     final removeInvoice = StoreProvider.of<AppState>(context);
-    removeInvoice.dispatch(DeleteInvoiceReceipt(payload: removeInvoice.state.invoiceReceipt));
+    removeInvoice.dispatch(
+        DeleteInvoiceReceipt(payload: removeInvoice.state.invoiceReceipt));
   }
 
   final Widget sendViaWhatsAppSelected = new SvgPicture.asset(

@@ -28,7 +28,13 @@ class CustomerCreated extends StatelessWidget {
           leading: InkWell(
             child: Icon(Icons.arrow_back),
             onTap: () {
-              Navigator.pushNamed(context, "/user_dashboard");
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => Dashboard(
+                      currentTab: 1,
+                    )),
+              );
             },
           ),
         ),

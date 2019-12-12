@@ -13,10 +13,10 @@ final Widget svg = new SvgPicture.asset(
   allowDrawingOutsideViewBox: true,
 );
 
-class InvoiceSent extends StatelessWidget {
+class ReceiptSent extends StatelessWidget {
   final Customer customer;
 
-  const InvoiceSent({this.customer});
+  const ReceiptSent({@required this.customer});
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +32,7 @@ class InvoiceSent extends StatelessWidget {
                 context,
                 MaterialPageRoute(
                     builder: (context) => Dashboard(
-                      currentTab: 0,
+                      currentTab: 1,
                     )),
               );
             },
@@ -59,53 +59,26 @@ class InvoiceSent extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.all(18.0),
                         child: Text(
-                          "You have successfully sent an  \ninvoice to ${customer.name} \n via Email",
+                          "You have successfully sent a  \n a payment receipt to ${customer.name} \n via Email",
                           textAlign: TextAlign.center,
                         ),
                       ),
-                      SizedBox(
-                        height: 5,
-                      ),
                     ],
                   ),
-                  PrimaryButton(
-                      buttonText: Text("SEND REMINDER",
-                          style: TextStyle(fontSize: 16, color: Colors.white)),
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => AddInvoice()),
-                        );
-                      }),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  SecondaryButton(
-                      buttonText: Text("SEND RECEIPT",
-                          style: TextStyle(
-                              fontSize: 16,
-                              color: Theme.of(context).primaryColor)),
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => RecordPayment()),
-                        );
-                      }),
                   SizedBox(
                     height: 30,
                   ),
                   InkWell(
-                    child: Text("BACK TO INVOICES PAGE",
+                    child: Text("BACK TO CUSTOMERS PAGE",
                         style:
-                            TextStyle(color: Theme.of(context).primaryColor)),
+                        TextStyle(color: Theme.of(context).primaryColor)),
                     onTap: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
                             builder: (context) => Dashboard(
-                                  currentTab: 0,
-                                )),
+                              currentTab: 1,
+                            )),
                       );
                     },
                   )

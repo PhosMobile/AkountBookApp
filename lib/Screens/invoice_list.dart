@@ -1,4 +1,4 @@
-import 'package:akount_books/Api/BusinessPage/create_invoice.dart';
+import 'package:akount_books/Api/BusinessPage/attach_new_invoice.dart';
 import 'package:akount_books/AppState/actions/invoice_actions.dart';
 import 'package:akount_books/AppState/app_state.dart';
 import 'package:akount_books/Models/customer.dart';
@@ -32,7 +32,7 @@ class _InvoiceListState extends State<InvoiceList> {
                 child: Container(
                   child: ChooseButton(
                     buttonText: Text(
-                      "Add Invoice",
+                      "Attach New Invoice",
                       style: TextStyle(
                           color: Theme.of(context).primaryColor),
                     ),
@@ -44,7 +44,7 @@ class _InvoiceListState extends State<InvoiceList> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => AddInvoice()),
+                            builder: (context) => AttachNewInvoice()),
                       );
                     },
                   ),

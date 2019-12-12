@@ -4,6 +4,7 @@ import 'package:akount_books/Models/invoice.dart';
 import 'package:akount_books/Models/receipt.dart';
 import 'package:akount_books/Screens/BusinessPage/preview_receipt.dart';
 import 'package:akount_books/Screens/invoice_list.dart';
+import 'package:akount_books/Widgets/AlertSnackBar.dart';
 import 'package:akount_books/Widgets/HeaderTitle.dart';
 import 'package:akount_books/Widgets/loader_widget.dart';
 import 'package:akount_books/Widgets/buttons.dart';
@@ -32,24 +33,22 @@ class _RecordPaymentState extends State<RecordPayment> {
   String paymentType = "";
   int receivedPayment = 2;
   String methodOfPayment = "CASH";
+
   @override
   Widget build(BuildContext context) {
-
-
     return new Scaffold(
         key: _scaffoldState,
         appBar: AppBar(
             backgroundColor: Colors.white,
-            iconTheme: IconThemeData(color: Theme
-                .of(context)
-                .primaryColor),
+            iconTheme: IconThemeData(color: Theme.of(context).primaryColor),
             title: HeaderTitle(headerText: "Send Receipt")),
         body: SingleChildScrollView(
             child: StoreConnector<AppState, AppState>(
                 converter: (store) => store.state,
-                onInitialBuild: (state){
+                onInitialBuild: (state) {
                   setState(() {
-                    _amountPaid.text = state.readyInvoice.totalAmount.toString();
+                    _amountPaid.text =
+                        state.readyInvoice.totalAmount.toString();
                     paymentType = "Full";
                   });
                 },
@@ -57,11 +56,12 @@ class _RecordPaymentState extends State<RecordPayment> {
                   String businessId = state.currentBusiness.id;
                   String userId = state.loggedInUser.userId;
 
-
                   return Container(
                     decoration: BoxDecoration(
-                        border: Border(top: BorderSide(width: 2, color: Theme.of(context).accentColor))
-                    ),
+                        border: Border(
+                            top: BorderSide(
+                                width: 2,
+                                color: Theme.of(context).accentColor))),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
@@ -69,218 +69,250 @@ class _RecordPaymentState extends State<RecordPayment> {
                           padding: EdgeInsets.all(20),
                           child: Center(
                               child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: <Widget>[
-                                  FormBuilder(
-                                    key: _fbKey,
-                                    initialValue: {
-                                      'date': DateTime.now(),
-                                      'accept_terms': false,
-                                    },
-                                    autovalidate: false,
-                                    child: Column(
-                                      children: <Widget>[
-                                        Padding(
-                                          padding: const EdgeInsets.only(bottom: 15),
-                                          child: Container(
-                                              decoration: BoxDecoration(boxShadow: [
-                                                inputStyles.boxShadowMain(context)
-                                              ]),
-                                              child: ChooseButton(
-                                                buttonText: Text(
-                                                  state.readyInvoice == null
-                                                      ? "Attach Invoice"
-                                                      : state.readyInvoice.title,
-                                                  style: TextStyle(
-                                                      color: Theme.of(context)
-                                                          .primaryColor),
-                                                ),
-                                                icon: attachInvoice,
-                                                onPressed: () {
-                                                  Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            InvoiceList()),
-                                                  );
-                                                },
-                                              )),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.only(
-                                              bottom: 10),
-                                          child: Container(
-                                            decoration: BoxDecoration(boxShadow: [
-                                              inputStyles.boxShadowMain(context)
-                                            ]),
-                                            child: FormBuilderTextField(
-                                              keyboardType: TextInputType.number,
-                                              attribute: "receipt_name",
-                                              decoration:
-                                              inputStyles.inputMain("Receipt Name"),
-                                              validators: [
-                                                FormBuilderValidators.required()
-                                              ],
-                                              controller: _receiptName,
-                                            ),
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.only(
-                                              bottom: 10),
-                                          child: Container(
-                                            decoration: BoxDecoration(boxShadow: [
-                                              inputStyles.boxShadowMain(context)
-                                            ]),
-                                            child: FormBuilderTextField(
-                                              onChanged: (value){
-                                                  if(int.parse(value) >= state.readyInvoice.totalAmount ){
-                                                    setState(() {
-                                                      receivedPayment = 2;
-                                                      paymentType = "Full";
-                                                    });
-                                                  }else{
-                                                    setState(() {
-                                                      receivedPayment = 1;
-                                                      paymentType = "Part";
-                                                    });
-                                                  }
-                                              },
-                                              keyboardType: TextInputType.number,
-                                              attribute: "amount_paid",
-                                              decoration:
-                                              inputStyles.inputMain("Amount Paid"),
-                                              validators: [
-                                                FormBuilderValidators.required()
-                                              ],
-                                              controller: _amountPaid,
-                                            ),
-                                          ),
-                                        ),
-
-                                        SizedBox(height: 10),
-                                        DatePickerButtonLarge(
-                                            onPressed: () {
-                                              _pickDueDate();
-                                            },
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              FormBuilder(
+                                key: _fbKey,
+                                initialValue: {
+                                  'date': DateTime.now(),
+                                  'accept_terms': false,
+                                },
+                                autovalidate: false,
+                                child: Column(
+                                  children: <Widget>[
+                                    Padding(
+                                      padding:
+                                          const EdgeInsets.only(bottom: 15),
+                                      child: Container(
+                                          decoration: BoxDecoration(boxShadow: [
+                                            inputStyles.boxShadowMain(context)
+                                          ]),
+                                          child: ChooseButton(
                                             buttonText: Text(
-                                                paymentDate == ""
-                                                    ? "Payment Date"
-                                                    : paymentDate,
-                                                style: TextStyle(
-                                                    color: Theme.of(context)
-                                                        .primaryColor)),
-                                            icon: pickDate),
-                                        SizedBox(height: 10),
-                                        Padding(
-                                          padding: const EdgeInsets.only(bottom: 10),
-                                          child: Container(
-                                            decoration: BoxDecoration(boxShadow: [
-                                              inputStyles.dropDownMenu(context),
-                                            ]),
-                                            child: FormBuilderDropdown(
-                                              onChanged: (value) {
-                                                setState(() {
-                                                  methodOfPayment = value;
-                                                });
-                                              },
-                                              attribute: "methodOfPayment",
-                                              // initialValue: 'Male',
-                                              hint: Text('Select Payment Method'),
-                                              validators: [
-                                                FormBuilderValidators.required()
-                                              ],
-                                              items: ['CHEQUE', 'CASH', 'TRANSFER']
-                                                  .map((methodOfPayment) => DropdownMenuItem(
-                                                  value: methodOfPayment,
-                                                  child: Text("$methodOfPayment")))
-                                                  .toList(),
+                                              state.readyInvoice == null
+                                                  ? "Attach Invoice"
+                                                  : state.readyInvoice.title,
+                                              style: TextStyle(
+                                                  color: Theme.of(context)
+                                                      .primaryColor),
                                             ),
-                                          ),
+                                            icon: attachInvoice,
+                                            onPressed: () {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        InvoiceList()),
+                                              );
+                                            },
+                                          )),
+                                    ),
+                                    Padding(
+                                      padding:
+                                          const EdgeInsets.only(bottom: 10),
+                                      child: Container(
+                                        decoration: BoxDecoration(boxShadow: [
+                                          inputStyles.boxShadowMain(context)
+                                        ]),
+                                        child: FormBuilderTextField(
+                                          attribute: "receipt_name",
+                                          decoration: inputStyles
+                                              .inputMain("Receipt Name"),
+                                          validators: [
+                                            FormBuilderValidators.required()
+                                          ],
+                                          controller: _receiptName,
                                         ),
-
-                                      ],
-                                    ),
-                                  ),
-                                  InkWell(
-                                    child: Container(
-                                      child: Row(
-                                        children: <Widget>[
-                                          Expanded(
-                                              child:
-                                              Text("I have Received Part Payment")),
-                                          Radio(
-                                            activeColor: Theme.of(context).primaryColor,
-                                            value: 1,
-                                            groupValue: receivedPayment,onChanged: (e){}
-                                          )
-                                        ],
                                       ),
                                     ),
-                                    onTap: () {
-                                      setState(() {
-                                        receivedPayment = 1;
-                                      });
-                                    },
-                                  ),
-                                  InkWell(
-                                    child: Container(
-                                      child: Row(
-                                        children: <Widget>[
-                                          Expanded(
-                                              child:
-                                              Text("I have Received Full Payment")),
-                                          Radio(
-                                              activeColor:
+                                    Padding(
+                                      padding:
+                                          const EdgeInsets.only(bottom: 10),
+                                      child: Container(
+                                        decoration: BoxDecoration(boxShadow: [
+                                          inputStyles.boxShadowMain(context)
+                                        ]),
+                                        child: FormBuilderTextField(
+                                          onChanged: (value) {
+                                            if (int.parse(value) >=
+                                                state
+                                                    .readyInvoice.totalAmount) {
+                                              setState(() {
+                                                receivedPayment = 2;
+                                                paymentType = "Full";
+                                              });
+                                            } else {
+                                              setState(() {
+                                                receivedPayment = 1;
+                                                paymentType = "Part";
+                                              });
+                                            }
+                                          },
+                                          keyboardType: TextInputType.number,
+                                          attribute: "amount_paid",
+                                          decoration: inputStyles
+                                              .inputMain("Amount Paid"),
+                                          validators: [
+                                            FormBuilderValidators.required()
+                                          ],
+                                          controller: _amountPaid,
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(height: 10),
+                                    DatePickerButtonLarge(
+                                        onPressed: () {
+                                          _pickDueDate();
+                                        },
+                                        buttonText: Text(
+                                            paymentDate == ""
+                                                ? "Payment Date"
+                                                : paymentDate,
+                                            style: TextStyle(
+                                                color: Theme.of(context)
+                                                    .primaryColor)),
+                                        icon: pickDate),
+                                    SizedBox(height: 10),
+                                    Padding(
+                                      padding:
+                                          const EdgeInsets.only(bottom: 10),
+                                      child: Container(
+                                        decoration: BoxDecoration(boxShadow: [
+                                          inputStyles.dropDownMenu(context),
+                                        ]),
+                                        child: FormBuilderDropdown(
+                                          onChanged: (value) {
+                                            setState(() {
+                                              methodOfPayment = value;
+                                            });
+                                          },
+                                          attribute: "methodOfPayment",
+                                          // initialValue: 'Male',
+                                          hint: Text('Select Payment Method'),
+                                          validators: [
+                                            FormBuilderValidators.required()
+                                          ],
+                                          items: ['CHEQUE', 'CASH', 'TRANSFER']
+                                              .map((methodOfPayment) =>
+                                                  DropdownMenuItem(
+                                                      value: methodOfPayment,
+                                                      child: Text(
+                                                          "$methodOfPayment")))
+                                              .toList(),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              InkWell(
+                                child: Container(
+                                  child: Row(
+                                    children: <Widget>[
+                                      Expanded(
+                                          child: Text(
+                                              "I have Received Part Payment")),
+                                      Radio(
+                                          activeColor:
                                               Theme.of(context).primaryColor,
-                                              value: 2,
-                                              groupValue: receivedPayment,onChanged: (e){})
-                                        ],
-                                      ),
-                                    ),
-                                    onTap: () {
-                                      setState(() {
-                                        receivedPayment = 2;
-                                      });
-                                    },
+                                          value: 1,
+                                          groupValue: receivedPayment,
+                                          onChanged: (e) {})
+                                    ],
                                   ),
-                                  SizedBox(
-                                    height: 40,
+                                ),
+                                onTap: () {
+                                  setState(() {
+                                    receivedPayment = 1;
+                                  });
+                                },
+                              ),
+                              InkWell(
+                                child: Container(
+                                  child: Row(
+                                    children: <Widget>[
+                                      Expanded(
+                                          child: Text(
+                                              "I have Received Full Payment")),
+                                      Radio(
+                                          activeColor:
+                                              Theme.of(context).primaryColor,
+                                          value: 2,
+                                          groupValue: receivedPayment,
+                                          onChanged: (e) {})
+                                    ],
                                   ),
-                                  PrimaryButton(
-                                    buttonText: _isLoading
-                                        ? LoaderLight()
-                                        : Text("RECORD PAYMENT",
+                                ),
+                                onTap: () {
+                                  setState(() {
+                                    receivedPayment = 2;
+                                  });
+                                },
+                              ),
+                              SizedBox(
+                                height: 40,
+                              ),
+                              PrimaryButton(
+                                buttonText: _isLoading
+                                    ? LoaderLight()
+                                    : Text("RECORD PAYMENT",
                                         style: TextStyle(
                                             fontSize: 16, color: Colors.white)),
-                                    onPressed: () {
-                                      if (_fbKey.currentState.saveAndValidate()) {
-                                        _previewReceipt(businessId, userId, state.readyInvoice, state.businessCustomers);
-                                      }
-                                    },
-                                  ),
-                                  SizedBox(
-                                    height: 10,
-                                  ),
-                                ],
-                              )),
+                                onPressed: () {
+                                  if (_fbKey.currentState.saveAndValidate()) {
+                                    _previewReceipt(
+                                        businessId,
+                                        userId,
+                                        state.readyInvoice,
+                                        state.businessCustomers);
+                                  }
+                                },
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                            ],
+                          )),
                         ),
                       ],
                     ),
                   );
                 })));
   }
-  void _previewReceipt(businessId, userId, Invoice invoice, List<Customer> customers) async {
-    print(invoice.id);
-    print(customers);
-    Customer invoiceCustomer = Invoice.getInvoiceCustomer(invoice.customerId, customers);
-    print(invoiceCustomer);
-    Receipt _receipt  = Receipt("0", _receiptName.text, _amountPaid.text, paymentDate, methodOfPayment, paymentType, "Done", invoice.id, businessId, invoice.customerId, userId);
+
+  void _previewReceipt(
+      businessId, userId, Invoice invoice, List<Customer> customers) async {
+    AlertSnackBarError alert = AlertSnackBarError();
+    Customer invoiceCustomer =
+        Invoice.getInvoiceCustomer(invoice.customerId, customers);
+
+    if (paymentDate.isEmpty) {
+      _scaffoldState.currentState
+          .showSnackBar(alert.showSnackBar("Receipt payment date not set"));
+      return;
+    }
+    Receipt _receipt = Receipt(
+        "0",
+        _receiptName.text,
+        _amountPaid.text,
+        paymentDate,
+        methodOfPayment,
+        paymentType,
+        "Done",
+        invoice.id,
+        businessId,
+        invoice.customerId,
+        userId);
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => ReceiptPreview(receipt: _receipt,customer: invoiceCustomer,)),
+      MaterialPageRoute(
+          builder: (context) => ReceiptPreview(
+                receipt: _receipt,
+                customer: invoiceCustomer,
+              )),
     );
   }
+
   _pickDueDate() {
     var maxTime = DateTime.now().year + 10;
     DatePicker.showDatePicker(context,
@@ -288,15 +320,16 @@ class _RecordPaymentState extends State<RecordPayment> {
         minTime: DateTime(2018, 3, 5),
         maxTime: DateTime(maxTime, 6, 7),
         onChanged: (date) {}, onConfirm: (date) {
-          String day = date.day.toString();
-          String month = date.month.toString();
-          String year = date.year.toString();
+      String day = date.day.toString();
+      String month = date.month.toString();
+      String year = date.year.toString();
 
-          setState(() {
-            paymentDate = "$year-$month-$day";
-          });
-        }, currentTime: DateTime.now(), locale: LocaleType.en);
+      setState(() {
+        paymentDate = "$year-$month-$day";
+      });
+    }, currentTime: DateTime.now(), locale: LocaleType.en);
   }
+
   final Widget pickDate = new SvgPicture.asset(
     SVGFiles.pick_date,
     semanticsLabel: 'Akount-book',
@@ -307,5 +340,4 @@ class _RecordPaymentState extends State<RecordPayment> {
     semanticsLabel: 'Akount-book',
     allowDrawingOutsideViewBox: true,
   );
-
 }
