@@ -1,4 +1,4 @@
-import 'package:akount_books/Api/BusinessPage/add_business.dart';
+import 'package:akount_books/Api/BusinessPage/create_business.dart';
 import 'package:akount_books/Graphql/graphql_config.dart';
 import 'package:akount_books/Graphql/queries.dart';
 import 'package:akount_books/Widgets/Input_styles.dart';
@@ -42,84 +42,89 @@ class _OTPVerificationState extends State<OTPVerification> {
               .primaryColor),
         ),
         body: SingleChildScrollView(
-          child: new Center(
-              child: FormBuilder(
-                key: _fbKey,
-                initialValue: {
-                  'date': DateTime.now(),
-                  'accept_terms': false,
-                },
-                autovalidate: false,
-                child: Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Column(
-                        children: <Widget>[
-                          svg,
-                          SizedBox(
-                            height: 30,
-                          ),
-                          Text(
-                            "2-Step Verification",
-                            style: TextStyle(
-                              fontSize: 25,
-                              fontWeight: FontWeight.bold,
+          child: Container(
+            decoration: BoxDecoration(
+                border: Border(top: BorderSide(width: 2, color: Theme.of(context).accentColor))
+            ),
+            child: new Center(
+                child: FormBuilder(
+                  key: _fbKey,
+                  initialValue: {
+                    'date': DateTime.now(),
+                    'accept_terms': false,
+                  },
+                  autovalidate: false,
+                  child: Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Column(
+                          children: <Widget>[
+                            svg,
+                            SizedBox(
+                              height: 30,
                             ),
-                          ),
-                          SizedBox(
-                            height: 60,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(18.0),
-                            child: Text(
-                              "Enter the verification code sent to your email address/phone number",
-                              textAlign: TextAlign.center,
+                            Text(
+                              "2-Step Verification",
+                              style: TextStyle(
+                                fontSize: 25,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 30,
-                      ),
-                      _hasErrors
-                          ? RequestError(errorText: requestErrors)
-                          : Container(),
-                      Container(
-                        decoration: BoxDecoration(
-                            boxShadow: [inputStyles.boxShadowMain(context)]),
-                        child: FormBuilderTextField(
-                          keyboardType: TextInputType.number,
-                          attribute: "otp",
-                          decoration: inputStyles.inputMain("Enter your OTP"),
-                          validators: [
-                            FormBuilderValidators.required(
-                                errorText: "Cannot be Empty")
+                            SizedBox(
+                              height: 60,
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(18.0),
+                              child: Text(
+                                "Enter the verification code sent to your email address/phone number",
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
                           ],
-                          controller: _otp,
                         ),
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      PrimaryButton(
-                        buttonText: _isLoading
-                            ? LoaderLight()
-                            : Text("SUBMIT",
-                            style:
-                            TextStyle(fontSize: 16, color: Colors.white)),
-                        onPressed: () {
-                          if (_fbKey.currentState.saveAndValidate()) {
-                            _otpVerification();
-                          }
-                        },
-                      ),
-                    ],
+                        SizedBox(
+                          height: 30,
+                        ),
+                        _hasErrors
+                            ? RequestError(errorText: requestErrors)
+                            : Container(),
+                        Container(
+                          decoration: BoxDecoration(
+                              boxShadow: [inputStyles.boxShadowMain(context)]),
+                          child: FormBuilderTextField(
+                            keyboardType: TextInputType.number,
+                            attribute: "otp",
+                            decoration: inputStyles.inputMain("Enter your OTP"),
+                            validators: [
+                              FormBuilderValidators.required(
+                                  errorText: "Cannot be Empty")
+                            ],
+                            controller: _otp,
+                          ),
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        PrimaryButton(
+                          buttonText: _isLoading
+                              ? LoaderLight()
+                              : Text("SUBMIT",
+                              style:
+                              TextStyle(fontSize: 16, color: Colors.white)),
+                          onPressed: () {
+                            if (_fbKey.currentState.saveAndValidate()) {
+                              _otpVerification();
+                            }
+                          },
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              )),
+                )),
+          ),
         ));
   }
 
@@ -131,7 +136,7 @@ class _OTPVerificationState extends State<OTPVerification> {
     GqlConfig graphQLConfiguration = GqlConfig();
 
     Queries queries = Queries();
-    QueryResult result = await graphQLConfiguration.getGraphql().query(
+    QueryResult result = await graphQLConfiguration.getGraphql(context).query(
       QueryOptions(
           document: queries.getOTP,
           variables: <String, dynamic>{"otp": _otp.text}),

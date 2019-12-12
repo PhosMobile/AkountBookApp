@@ -6,6 +6,7 @@ import 'package:akount_books/Widgets/Input_styles.dart';
 import 'package:akount_books/Widgets/buttons.dart';
 import 'package:akount_books/Widgets/error.dart';
 import 'package:akount_books/Widgets/loader_widget.dart';
+import 'package:akount_books/Widgets/loading_snack_bar.dart';
 import 'package:akount_books/Widgets/logo_avatar.dart';
 import 'package:akount_books/Widgets/social_sign_up.dart';
 import 'package:flutter/material.dart';
@@ -16,10 +17,11 @@ import 'package:localstorage/localstorage.dart';
 
 class Login extends StatefulWidget {
   @override
-  _loginState createState() => _loginState();
+  _LoginState createState() => _LoginState();
 }
 
-class _loginState extends State<Login> {
+class _LoginState extends State<Login> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   final GlobalKey<FormBuilderState> _fbKey = GlobalKey<FormBuilderState>();
   String requestErrors;
   InputStyles inputStyles = new InputStyles();
@@ -28,7 +30,6 @@ class _loginState extends State<Login> {
   ImageAvatars logo = new ImageAvatars();
   bool _isLoading = false;
   bool _hasErrors = false;
-
   bool error = false;
 
   @override
@@ -36,6 +37,7 @@ class _loginState extends State<Login> {
     // TODO: implement build
 
     return new Scaffold(
+      key: _scaffoldKey,
         body: SingleChildScrollView(
             padding: EdgeInsets.only(top: 120),
             child: StoreConnector<AppState, AppState>(
@@ -113,6 +115,7 @@ class _loginState extends State<Login> {
                                               FormBuilderValidators.required()
                                             ],
                                             controller: _password,
+
                                           ),
                                         ),
                                       ),
@@ -161,7 +164,7 @@ class _loginState extends State<Login> {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: <Widget>[
                                     Text(
-                                      "Already ave an account?",
+                                      "Already have an account?",
                                       style: TextStyle(fontSize: 16),
                                     ),
                                     SizedBox(
@@ -200,7 +203,7 @@ class _loginState extends State<Login> {
     });
     GqlConfig graphQLConfiguration = GqlConfig();
     Mutations login = new Mutations();
-    QueryResult result = await graphQLConfiguration.getGraphql().mutate(
+    QueryResult result = await graphQLConfiguration.getGraphql(context).mutate(
       MutationOptions(document: login.login(_email.text, _password.text)),
     );
     if (!result.hasErrors) {
@@ -208,13 +211,15 @@ class _loginState extends State<Login> {
         _isLoading = false;
         _hasErrors = false;
       });
+      _scaffoldKey.currentState.showSnackBar(
+          LoadingSnackBar().loader("Loading data", context));
       storage.deleteItem("access_token");
-      var access_token = result.data["login"];
-      storage.setItem("access_token", access_token);
-      LoggedInUser().fetchLoggedInUser(context, "login");
+      var accessToken = result.data["login"];
+      storage.setItem("access_token", accessToken);
+      await LoggedInUser().fetchLoggedInUser(context, "login");
     } else {
       setState(() {
-        requestErrors = result.errors.toString().substring(10, 36);
+        requestErrors = result.errors.toString();
         _isLoading = false;
         _hasErrors = true;
       });

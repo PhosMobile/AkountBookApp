@@ -2,12 +2,14 @@ import 'package:akount_books/AppState/actions/customer_actions.dart';
 import 'package:akount_books/AppState/actions/expense_actions.dart';
 import 'package:akount_books/AppState/actions/invoice_actions.dart';
 import 'package:akount_books/AppState/actions/item_actions.dart';
+import 'package:akount_books/AppState/actions/receipt_actions.dart';
 import 'package:akount_books/AppState/app_state.dart';
 import 'package:akount_books/Graphql/queries.dart';
 import 'package:akount_books/Models/Expense.dart';
 import 'package:akount_books/Models/customer.dart';
 import 'package:akount_books/Models/invoice.dart';
 import 'package:akount_books/Models/item.dart';
+import 'package:akount_books/Models/receipt.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
@@ -21,19 +23,21 @@ class CurrentBusinessData extends StatelessWidget {
   dynamic getBusinessData(context, id) async {
     GqlConfig graphQLConfiguration = GqlConfig();
     Queries queries = Queries();
-    QueryResult result = await graphQLConfiguration.getGraphql().query(
+    QueryResult result = await graphQLConfiguration.getGraphql(context).query(
           QueryOptions(
               document: queries.getCurrentBusinessData, variables: {"id": id}),
         );
     if (!result.hasErrors) {
       var customers = result.data["get_business"]["customers"];
-      var items = result.data["get_business"]["customers"];
+      var items = result.data["get_business"]["items"];
       var invoices = result.data["get_business"]["invoices"];
       var expenses = result.data["get_business"]["expenses"];
+      var receipts = result.data["get_business"]["receipts"];
       saveInvoices(context, invoices);
       saveCustomers(context, customers);
       saveExpenses(context, expenses);
       saveItems(context, items);
+      saveReceipts(context, receipts);
       Navigator.pop(context);
     } else {
       print(result.errors);
@@ -60,11 +64,13 @@ saveInvoices(context, data) {
         item["footer"],
         item["customer_id"],
         item["business_id"],
-        item["user_id"]);
+        item["user_id"],
+
+    );
     invoices.add(invoice);
   }
   final saveInvoice = StoreProvider.of<AppState>(context);
-  saveInvoice.dispatch(AddInvoice(payload: invoices));
+  saveInvoice.dispatch(FetchUserInvoice(payload: invoices));
 }
 
 saveCustomers(context, data) {
@@ -103,7 +109,6 @@ saveExpenses(context, data) {
   final saveExpense = StoreProvider.of<AppState>(context);
   saveExpense.dispatch(AddExpense(payload: expenses));
 }
-
 saveItems(context, data) {
   List<Item> businessItems = [];
   for (var item in data) {
@@ -113,4 +118,25 @@ saveItems(context, data) {
   }
   final saveItem = StoreProvider.of<AppState>(context);
   saveItem.dispatch(AddBusinessItem(payload: businessItems));
+}
+
+saveReceipts(context, data){
+  List<Receipt> receipts = [];
+  for (var item in data) {
+    Receipt receipt = Receipt(
+        item["id"],
+        item["name"],
+        item["amount_paid"],
+        item["payment_date"],
+        item["payment_method"],
+        item["payment_type"],
+        item["status"],
+        item["invoice_id"],
+        item["business_id"],
+        item["customerId"],
+        item["user_id"]);
+    receipts.add(receipt);
+  }
+  final saveReceipt = StoreProvider.of<AppState>(context);
+  saveReceipt.dispatch(AddBusinessReceipt(payload: receipts));
 }

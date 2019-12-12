@@ -1,8 +1,13 @@
 import 'package:akount_books/Api/BusinessPage/create_customer.dart';
 import 'package:akount_books/AppState/app_state.dart';
 import 'package:akount_books/Models/customer.dart';
+import 'package:akount_books/Screens/BusinessPage/customer_summary.dart';
+import 'package:akount_books/Widgets/customer_card.dart';
+import 'package:akount_books/Widgets/empty.dart';
+import 'package:akount_books/utilities/svg_files.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class Customers extends StatefulWidget {
   @override
@@ -10,6 +15,11 @@ class Customers extends StatefulWidget {
 }
 
 class _CustomersState extends State<Customers> {
+  final Widget addCustomer = new SvgPicture.asset(
+    SVGFiles.add_customer,
+    semanticsLabel: 'Akount-book',
+    allowDrawingOutsideViewBox: true,
+  );
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -19,7 +29,7 @@ class _CustomersState extends State<Customers> {
             if (businessCustomers.length == 0) {
               return Container(
                 child: Center(
-                  child: Text("No Customers"),
+                  child: Empty(text: "No Customers"),
                 ),
               );
             } else {
@@ -31,43 +41,22 @@ class _CustomersState extends State<Customers> {
                         child: ListView.builder(
                             itemCount: businessCustomers.length,
                             itemBuilder: (BuildContext context, int index) {
-                              return Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Container(
-                                  padding: EdgeInsets.all(10.0),
-                                  decoration: BoxDecoration(
-                                      border: Border.all(
-                                          width: 3,
-                                          color: Theme.of(context)
-                                              .primaryColorLight,
-                                          style: BorderStyle.solid)),
-                                  child: Row(
-                                    children: <Widget>[
-                                      Padding(
-                                          padding: const EdgeInsets.only(
-                                              right: 15.0),
-                                          child: CircleAvatar(
-                                              backgroundColor: Color.fromRGBO(
-                                                  200, 228, 253, 0.4),
-                                              child: Icon(
-                                                Icons.business,
-                                                color: Colors.blueGrey,
-                                                size: 25,
-                                              ))),
-                                      Expanded(
-                                          child: Text(
-                                        businessCustomers[index].name,
-                                        style: TextStyle(
-                                            color: Colors.blueGrey[20]),
-                                      )),
-                                    ],
-                                  ),
+                              return InkWell(
+                                child: Padding(
+                                    padding: const EdgeInsets.only(top:4.0,bottom: 4.0),
+                                    child: CustomerCard(customer: businessCustomers[index])
                                 ),
+                                onTap: (){
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => CustomerSummary(customer:businessCustomers[index])),
+                                  );
+                                },
                               );
                             }),
                       ),
                     ),
-                    SizedBox(height: 20),
+                    SizedBox(height:80)
                   ],
                 ),
               );
@@ -82,7 +71,7 @@ class _CustomersState extends State<Customers> {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => AddCustomer()),
+                MaterialPageRoute(builder: (context) => AddCustomer(direct: true,)),
               );
             }));
   }

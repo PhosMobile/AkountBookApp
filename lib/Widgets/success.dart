@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class RequestSuccess extends StatelessWidget {
-  String successText;
+  final String successText;
 
   RequestSuccess({@required this.successText});
 

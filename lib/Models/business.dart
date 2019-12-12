@@ -1,8 +1,8 @@
 class Business {
-  String id, name, email, description, address, currency, image_url, user_id;
+  String id, name, email, description, address, currency, imageUrl, userId;
 
   Business(this.id, this.name, this.email, this.description, this.address,
-      this.currency, this.image_url, this.user_id);
+      this.currency, this.imageUrl, this.userId);
 
   Business.fromJson(Map<String, dynamic> jsonObject) {
     this.id = jsonObject['id'];
@@ -11,7 +11,7 @@ class Business {
     this.description = jsonObject['description'];
     this.address = jsonObject['address'];
     this.currency = jsonObject['currency'];
-    this.image_url = jsonObject['image_url'];
-    this.user_id = jsonObject['user_id'];
+    this.imageUrl = jsonObject['image_url'];
+    this.userId = jsonObject['user_id'];
   }
 }

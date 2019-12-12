@@ -5,12 +5,12 @@ class Customer {
       phone,
       address,
       currency,
-      image_url,
-      business_id,
-      user_id;
+      imageUrl,
+      businessId,
+      userId;
 
   Customer(this.id, this.name, this.email, this.phone, this.address,
-      this.currency, this.image_url, this.business_id, this.user_id);
+      this.currency, this.imageUrl, this.businessId, this.userId);
 
   Customer.fromJson(Map<String, dynamic> jsonObject) {
     this.id = jsonObject['id'];
@@ -19,8 +19,9 @@ class Customer {
     this.phone = jsonObject['phone'];
     this.address = jsonObject['address'];
     this.currency = jsonObject['currency'];
-    this.image_url = jsonObject['image_url'];
-    this.business_id = jsonObject['business_id'];
-    this.user_id = jsonObject['user_id'];
+    this.imageUrl = jsonObject['image_url'];
+    this.businessId = jsonObject['business_id'];
+    this.userId = jsonObject['user_id'];
   }
+
 }

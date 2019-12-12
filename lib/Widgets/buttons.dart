@@ -121,6 +121,33 @@ class DeleteButton extends StatelessWidget {
   }
 }
 
+class CancelButton extends StatelessWidget {
+  final Widget buttonText;
+
+  CancelButton({@required this.onPressed, @required this.buttonText});
+
+  final GestureTapCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: MediaQuery.of(context).size.width - 40,
+      child: InkWell(
+        splashColor: Color.fromRGBO(183, 4, 4, 1),
+        child: Center(
+          child: Padding(
+            padding: EdgeInsets.all(10.0),
+            child: buttonText,
+          ),
+        ),
+        onTap: onPressed,
+      ),
+    );
+  }
+}
+
+
+
 class DeleteMiniButton extends StatelessWidget {
   final Widget buttonText;
 
@@ -131,11 +158,11 @@ class DeleteMiniButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: MediaQuery.of(context).size.width / 2,
+      width: MediaQuery.of(context).size.width / 2-40,
       child: RaisedButton(
-        color: Theme.of(context).primaryColor,
+        color: Color.fromRGBO(255, 219, 219, 1),
         splashColor: Color.fromRGBO(183, 4, 4, .5),
-        child: Padding(padding: EdgeInsets.all(20.0), child: buttonText),
+        child: Padding(padding: EdgeInsets.only(top:20.0,bottom: 20.0), child: buttonText),
         onPressed: onPressed,
       ),
     );
@@ -174,7 +201,38 @@ class DatePickerButton extends StatelessWidget {
     );
   }
 }
+class DatePickerButtonLarge extends StatelessWidget {
+  final Widget buttonText;
+  final dynamic icon;
 
+  DatePickerButtonLarge(
+      {@required this.onPressed,
+        @required this.buttonText,
+        @required this.icon});
+
+  final GestureTapCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: MediaQuery
+          .of(context)
+          .size
+          .width,
+      child: RaisedButton(
+        color: Colors.white,
+        splashColor: Theme.of(context).accentColor,
+        child: Padding(
+            padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[buttonText, icon],
+            )),
+        onPressed: onPressed,
+      ),
+    );
+  }
+}
 class DatePickerButtonFull extends StatelessWidget {
   final Widget buttonText;
   final Icon icon;

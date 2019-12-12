@@ -1,6 +1,8 @@
 import 'package:akount_books/Api/BusinessPage/create_invoice.dart';
 import 'package:akount_books/AppState/app_state.dart';
 import 'package:akount_books/Models/invoice.dart';
+import 'package:akount_books/Widgets/empty.dart';
+import 'package:akount_books/Widgets/invoice_list_builder.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
@@ -12,131 +14,78 @@ class Invoices extends StatefulWidget {
 class _InvoicesState extends State<Invoices> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: StoreConnector<AppState, AppState>(
-        builder: (context, state) {
-          List<Invoice> businessInvoice = state.businessInvoices;
-          if (businessInvoice.length == 0) {
-            return Container(
-              child: Center(
-                child: Text("No Invoice"),
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
+        body: SingleChildScrollView(
+          child: Column(
+            children: <Widget>[
+              Container(
+                color: Color.fromRGBO(233, 237, 240, 1),
+                child: TabBar(
+                    labelColor: Theme.of(context).primaryColor,
+                    indicatorColor: Theme.of(context).primaryColor,
+                    tabs: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.all(20.0),
+                        child: Text(
+                          "SENT",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(20.0),
+                        child: Text("DRAFT"),
+                      )
+                    ]),
               ),
-            );
-          } else {
-            return Container(
-              child: Column(
-                children: <Widget>[
-                  Expanded(
-                    child: Container(
-                      child: ListView.builder(
-                          itemCount: businessInvoice.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            return Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Container(
-                                padding: EdgeInsets.all(10.0),
-                                decoration: BoxDecoration(
-                                    border: Border.all(
-                                        width: 3,
-                                        color:
-                                            Theme.of(context).primaryColorLight,
-                                        style: BorderStyle.solid)),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: <Widget>[
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: <Widget>[
-                                        Container(
-                                            child: Card(
-                                          child: Container(
-                                            width: MediaQuery.of(context)
-                                                        .size
-                                                        .width /
-                                                    2 +
-                                                50,
-                                            child: Text(
-                                              businessInvoice[index].summary,
-                                              softWrap: true,
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Theme.of(context)
-                                                      .primaryColor),
-                                            ),
-                                          ),
-                                          elevation: 0.0,
-                                        )),
-                                        Container(
-                                            child: Card(
-                                          child: Container(
-                                            child: RaisedButton(
-                                                color: Colors.lightGreen,
-                                                child: Text(
-                                                    businessInvoice[index]
-                                                        .status),
-                                                onPressed: () {}),
-                                          ),
-                                          elevation: 0.0,
-                                        ))
-                                      ],
-                                    ),
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.end,
-                                      children: <Widget>[
-                                        Container(
-                                            child: Card(
-                                          child: Container(
-                                            child: Text(
-                                              businessInvoice[index]
-                                                  .number
-                                                  .toString(),
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Theme.of(context)
-                                                      .primaryColor),
-                                            ),
-                                          ),
-                                          elevation: 0.0,
-                                        )),
-                                        Container(
-                                            child: Card(
-                                          child: Container(
-                                            child: Text(businessInvoice[index]
-                                                .po_so_number
-                                                .toString()),
-                                          ),
-                                          elevation: 0.0,
-                                        )),
-                                      ],
-                                    )
-                                  ],
-                                ),
+              StoreConnector<AppState, AppState>(
+                builder: (context, state) {
+                  List<Invoice> businessInvoice = state.businessInvoices;
+                  List<Invoice> draftInvoice =
+                      Invoice.draftInvoices(businessInvoice);
+                  List<Invoice> sentInvoice =
+                      Invoice.sentInvoices(businessInvoice);
+                    return Container(
+                      height: MediaQuery.of(context).size.height - 200,
+                      child: Column(
+                        children: <Widget>[
+                          Expanded(
+                            child: TabBarView(
+                              children: [
+                                sentInvoice.length != 0? InvoiceListBuilder(invoices: sentInvoice, draft:false):Container(
+                                child: Center(
+                                child: Empty(text: "No Sent Invoice"),
                               ),
-                            );
-                          }),
-                    ),
-                  ),
-                  SizedBox(height: 20),
-                ],
+                              ),
+                                draftInvoice.length != 0 ? InvoiceListBuilder(invoices: draftInvoice, draft:true):Container(
+                                  child: Center(
+                                    child:  Empty(text: "No Draft Invoice"),
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                },
+                converter: (store) => store.state,
               ),
-            );
-          }
-        },
-        converter: (store) => store.state,
+            ],
+          ),
+        ),
+        floatingActionButton: FloatingActionButton(
+            backgroundColor: Theme.of(context).primaryColor,
+            child: Icon(Icons.add),
+            foregroundColor: Colors.white,
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => AddInvoice()),
+              );
+            }),
       ),
-      floatingActionButton: FloatingActionButton(
-          backgroundColor: Theme.of(context).primaryColor,
-          child: Icon(Icons.add),
-          foregroundColor: Colors.white,
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => AddInvoice()),
-            );
-          }),
     );
   }
 }

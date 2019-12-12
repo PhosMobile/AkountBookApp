@@ -10,6 +10,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 class Dashboard extends StatefulWidget {
+  final int currentTab;
+  const Dashboard({@required this.currentTab});
   @override
   _DashboardState createState() => _DashboardState();
 }
@@ -22,6 +24,12 @@ class _DashboardState extends State<Dashboard> {
     Expenses(),
     Reports()
   ];
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _selectedIndex = widget.currentTab;
+  }
 
   final Widget svg = new SvgPicture.asset(
     SVGFiles.success_icon,
@@ -36,7 +44,6 @@ class _DashboardState extends State<Dashboard> {
       _selectedIndex = index;
     });
   }
-
   @override
   Widget build(BuildContext context) {
     MenuList menu = new MenuList();
@@ -44,9 +51,7 @@ class _DashboardState extends State<Dashboard> {
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.white,
-          title: Text(_title[_selectedIndex], style: TextStyle(color: Theme
-              .of(context)
-              .primaryColor),),
+          title: Text(_title[_selectedIndex], style: TextStyle(color: Colors.black,fontSize: 14),),
           elevation: 0.0,
           iconTheme: IconThemeData(
               color: Theme
@@ -54,7 +59,12 @@ class _DashboardState extends State<Dashboard> {
                   .primaryColor
           ),
         ),
-        body: _children[_selectedIndex],
+        body: Container(
+          decoration: BoxDecoration(
+            border: Border(top: BorderSide(width: 2, color: Theme.of(context).accentColor))
+          ),
+          child: _children[_selectedIndex],
+        ),
         drawer: SizedBox(
           width: size.width,
           child: Drawer(
