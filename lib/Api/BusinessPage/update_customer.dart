@@ -3,9 +3,8 @@ import 'package:akount_books/AppState/app_state.dart';
 import 'package:akount_books/Graphql/graphql_config.dart';
 import 'package:akount_books/Graphql/mutations.dart';
 import 'package:akount_books/Models/customer.dart';
-import 'package:akount_books/Models/user_phone_contact.dart';
 import 'package:akount_books/Screens/BusinessPage/contact_list.dart';
-import 'package:akount_books/Screens/customer_created.dart';
+import 'package:akount_books/Screens/UserPage/dasboard.dart';
 import 'package:akount_books/Widgets/HeaderTitle.dart';
 import 'package:akount_books/Widgets/error.dart';
 import 'package:akount_books/Widgets/loader_widget.dart';
@@ -16,15 +15,15 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:akount_books/Widgets/Input_styles.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
-class AddCustomer extends StatefulWidget {
-  final bool direct;
-  const AddCustomer({@required this.direct});
+class UpdateCustomer extends StatefulWidget {
+  final Customer customer;
+  const UpdateCustomer({@required this.customer});
 
   @override
-  _AddCustomerState createState() => _AddCustomerState();
+  _UpdateCustomerState createState() => _UpdateCustomerState();
 }
 
-class _AddCustomerState extends State<AddCustomer> {
+class _UpdateCustomerState extends State<UpdateCustomer> {
   final GlobalKey<FormBuilderState> _fbKey = GlobalKey<FormBuilderState>();
   InputStyles inputStyles = new InputStyles();
   ImageAvatars logo = new ImageAvatars();
@@ -56,16 +55,13 @@ class _AddCustomerState extends State<AddCustomer> {
             child: StoreConnector<AppState, AppState>(
               converter: (store) => store.state,
               onInitialBuild: (state){
-
-                if(state.customerFromContact != null){
-                  UserPhoneContact contact = state.customerFromContact;
                   setState(() {
-                    _customerName.text = contact.displayName;
-                    _email.text =contact.email;
-                    _phone.text  = contact.phone;
-                    _address.text = contact.address;
+                    _customerName.text = widget.customer.name;
+                    _email.text =widget.customer.email;
+                    _phone.text  = widget.customer.phone;
+                    _address.text = widget.customer.address;
                   });
-                }
+
               },
               builder: (context, state) {
                 String businessId = state.currentBusiness.id;
@@ -201,17 +197,62 @@ class _AddCustomerState extends State<AddCustomer> {
                                 SizedBox(
                                   height: 40,
                                 ),
-                                PrimaryButton(
-                                  buttonText: _isLoading
-                                      ? LoaderLight()
-                                      : Text("ADD CUSTOMER",
-                                      style: TextStyle(
-                                          fontSize: 16, color: Colors.white)),
-                                  onPressed: () {
-                                    if (_fbKey.currentState.saveAndValidate()) {
-                                      _addCustomer(businessId, userId);
-                                    }
-                                  },
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: <Widget>[
+                                    PrimaryMiniButton(
+                                      buttonText: Text("UPDATE CUSTOMER ",
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.w100,
+                                              fontSize: 14,
+                                              color: Colors.white)),
+                                      onPressed: () {
+                                        if (_fbKey.currentState.saveAndValidate()) {
+                                          _saveCustomerUpdate();
+                                        }
+                                      },
+                                    ),
+                                    DeleteMiniButton(
+                                      buttonText: _isLoading
+                                          ? LoaderLight()
+                                          : Text("DELETE CUSTOMER",
+                                          style: TextStyle(
+                                              fontSize: 16, color: Color.fromRGBO(133, 2, 2, 1))),
+                                      onPressed: () async {
+                                        setState(() {
+                                          _isLoading = true;
+                                        });
+                                        final store = StoreProvider.of<AppState>(context);
+                                        GqlConfig graphQLConfiguration = GqlConfig();
+                                        Mutations deleteCustomer = new Mutations();
+                                        QueryResult result = await graphQLConfiguration.getGraphql(context).mutate(
+                                            MutationOptions(
+                                                document: deleteCustomer.deleteCustomer(
+                                                    widget.customer.id
+                                                )));
+                                        if(result.hasErrors){
+                                        }else{
+                                          dynamic customer = result.data["delete_customer"];
+                                          Customer _customer = Customer(
+                                              customer["id"],
+                                              customer["name"],
+                                              customer["email"],
+                                              customer["phone"],
+                                              customer["address"],
+                                              customer["currency"],
+                                              customer["image_url"],
+                                              customer["business_id"],
+                                              customer["user_id"]);
+                                          store.dispatch(DeleteCustomer(payload: _customer));
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) => Dashboard(currentTab: 1)),
+                                          );
+                                        }
+                                      },
+                                    ),
+                                  ],
                                 ),
                                 SizedBox(
                                   height: 10,
@@ -225,25 +266,25 @@ class _AddCustomerState extends State<AddCustomer> {
               },
             )));
   }
-  void _addCustomer(businessId, userId) async {
+  void _saveCustomerUpdate() async {
     setState(() {
       _isLoading = true;
     });
-    final addCustomer = StoreProvider.of<AppState>(context);
+    final store = StoreProvider.of<AppState>(context);
+
     GqlConfig graphQLConfiguration = GqlConfig();
-    Mutations createCustomer = new Mutations();
+    Mutations updateCustomer = new Mutations();
     QueryResult result = await graphQLConfiguration.getGraphql(context).mutate(
         MutationOptions(
-            document: createCustomer.createCustomer(
+            document: updateCustomer.updateCustomer(
+                widget.customer.id,
                 _customerName.text,
                 _email.text,
                 _phone.text,
                 _address.text,
-                businessId,
-                userId,
                 null)));
     if (!result.hasErrors) {
-      var resultData = result.data["create_customer"];
+      var resultData = result.data["update_customer"];
       Customer _customer = Customer(
           resultData["id"],
           resultData["name"],
@@ -254,18 +295,13 @@ class _AddCustomerState extends State<AddCustomer> {
           resultData["image_url"],
           resultData["business_id"],
           resultData["user_id"]);
-      addCustomer.dispatch(UpdateBusinessCustomers(payload: _customer));
-      setState(() {
-        _isLoading = false;
-      });
-      if(widget.direct){
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => CustomerCreated(customer:_customer)),
-        );
-      }else{
-        Navigator.pop(context);
-      }
+      store.dispatch(UpdateEditedCustomer(payload: _customer));
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => Dashboard(currentTab: 1)),
+      );
+
     } else {
       print(result.errors);
       setState(() {

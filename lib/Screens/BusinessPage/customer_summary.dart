@@ -1,5 +1,6 @@
 import 'package:akount_books/Api/BusinessPage/create_invoice.dart';
 import 'package:akount_books/Api/BusinessPage/record_payment.dart';
+import 'package:akount_books/Api/BusinessPage/update_customer.dart';
 import 'package:akount_books/AppState/actions/customer_actions.dart';
 import 'package:akount_books/AppState/actions/invoice_actions.dart';
 import 'package:akount_books/AppState/app_state.dart';
@@ -46,7 +47,13 @@ class _CustomerSummaryState extends State<CustomerSummary> {
                 ),
                 InkWell(
                   child: Icon(MdiIcons.dotsVertical),
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => UpdateCustomer(customer: widget.customer,)),
+                    );
+                  },
                 )
               ],
             )

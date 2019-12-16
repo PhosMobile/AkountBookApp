@@ -10,7 +10,6 @@ void main(){
     initialState: AppState(),
     middleware: [],
   );
-
   var configuredApp = AppConfig(
     appTitle: "Akount Book Development",
     buildFlavor: "Development",

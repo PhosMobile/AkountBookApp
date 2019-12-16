@@ -106,6 +106,7 @@ class _LoginState extends State<Login> {
                                       ]),
                                           child: FormBuilderTextField(
                                             obscureText: true,
+                                            maxLines: 1,
                                             attribute: "password",
                                             decoration:
                                             inputStyles.inputMain("Password"),
@@ -195,7 +196,6 @@ class _LoginState extends State<Login> {
                   );
                 })));
   }
-
   void _loginUser() async {
     final LocalStorage storage = new LocalStorage('some_key');
     setState(() {

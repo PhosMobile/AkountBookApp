@@ -44,7 +44,8 @@
 	<key>NSPhotoLibraryUsageDescription</key>
 	<key>NSCameraUsageDescription</key>
 	<key>NSMicrophoneUsageDescription</key>
-
+    <key>NSContactsUsageDescription</key>
+    <string>This app requires contacts access to function properly.</string>
 	<false/>
 </dict>
 </plist>

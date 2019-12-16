@@ -1,4 +1,5 @@
 import 'package:akount_books/Api/BusinessPage/create_customer.dart';
+import 'package:akount_books/AppState/actions/user_phone_contacts_actions.dart';
 import 'package:akount_books/AppState/app_state.dart';
 import 'package:akount_books/Models/customer.dart';
 import 'package:akount_books/Screens/BusinessPage/customer_summary.dart';
@@ -20,49 +21,115 @@ class _CustomersState extends State<Customers> {
     semanticsLabel: 'Akount-book',
     allowDrawingOutsideViewBox: true,
   );
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: StoreConnector<AppState, AppState>(
-          builder: (context, state) {
-            List<Customer> businessCustomers = state.businessCustomers;
-            if (businessCustomers.length == 0) {
-              return Container(
-                child: Center(
-                  child: Empty(text: "No Customers"),
-                ),
-              );
-            } else {
-              return Container(
-                child: Column(
-                  children: <Widget>[
-                    Expanded(
-                      child: Container(
+        body: SingleChildScrollView(
+          child: StoreConnector<AppState, AppState>(
+            builder: (context, state) {
+              List<Customer> businessCustomers = state.businessCustomers;
+              if (businessCustomers.length == 0) {
+                return Container(
+                  child: Center(
+                    child: Empty(text: "No Customers"),
+                  ),
+                );
+              } else {
+                return Container(
+                  height: MediaQuery.of(context).size.height,
+                  child: Column(
+                    children: <Widget>[
+                      Expanded(
                         child: ListView.builder(
                             itemCount: businessCustomers.length,
                             itemBuilder: (BuildContext context, int index) {
                               return InkWell(
                                 child: Padding(
-                                    padding: const EdgeInsets.only(top:4.0,bottom: 4.0),
-                                    child: CustomerCard(customer: businessCustomers[index])
-                                ),
-                                onTap: (){
+                                    padding: const EdgeInsets.only(
+                                        top: 4.0, bottom: 4.0),
+                                    child: CustomerCard(
+                                        customer: businessCustomers[index])),
+                                onTap: () {
                                   Navigator.push(
                                     context,
-                                    MaterialPageRoute(builder: (context) => CustomerSummary(customer:businessCustomers[index])),
+                                    MaterialPageRoute(
+                                        builder: (context) => CustomerSummary(
+                                            customer:
+                                            businessCustomers[index])),
                                   );
                                 },
                               );
                             }),
+
                       ),
-                    ),
-                    SizedBox(height:80)
-                  ],
-                ),
-              );
-            }
-          },
-          converter: (store) => store.state,
+                      Container(
+                        color: Theme.of(context).accentColor,
+                        width: MediaQuery.of(context).size.width,
+                        padding: EdgeInsets.only(top: 15,bottom: 15, left: 30),
+                        child: Text("Phone Contacts", style: TextStyle(color: Theme.of(context).primaryColor)),
+                      ),
+                      Expanded(
+                        child: ListView.builder(
+                            itemCount: state.userContacts.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              return InkWell(
+                                child: Padding(
+                                    padding: const EdgeInsets.only(
+                                        top: 4.0, bottom: 4.0),
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                          color:  Color.fromRGBO(248, 248, 248, 1)
+                                      ),
+                                      padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(left:20.0),
+                                        child: Row(
+                                          children: <Widget>[
+                                            Padding(
+                                                padding: const EdgeInsets.only(
+                                                    right: 15.0),
+                                                child: (state.userContacts[index].avatar != null && state.userContacts[index].avatar.length > 0)
+                                                    ? CircleAvatar(
+                                                  backgroundImage: MemoryImage(state.userContacts[index].avatar),
+                                                )
+                                                    : CircleAvatar(child: Text(state.userContacts[index].displayName[0].toUpperCase()))),
+                                            Expanded(
+                                                child: Text(
+                                                  state.userContacts[index].displayName,
+                                                  style: TextStyle(
+                                                      color: Colors.blueGrey[20]),
+                                                )),
+                                          ],
+                                        ),
+                                      ),
+                                    )),
+                                onTap: () {
+                                  final contact = StoreProvider.of<AppState>(context);
+                                  contact.dispatch(AddCustomerFromContact(payload: state.userContacts[index]));
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => AddCustomer(direct: true), ),
+                                  );
+                                },
+                              );
+                            }),
+                      )
+                    ],
+                  ),
+                );
+              }
+            },
+            converter: (store) => store.state,
+          ),
         ),
         floatingActionButton: FloatingActionButton(
             backgroundColor: Theme.of(context).primaryColor,
@@ -71,7 +138,10 @@ class _CustomersState extends State<Customers> {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => AddCustomer(direct: true,)),
+                MaterialPageRoute(
+                    builder: (context) => AddCustomer(
+                          direct: true,
+                        )),
               );
             }));
   }

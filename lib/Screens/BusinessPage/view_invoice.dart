@@ -9,6 +9,7 @@ import 'package:akount_books/Models/invoice.dart';
 import 'package:akount_books/Models/item.dart';
 import 'package:akount_books/Widgets/buttons.dart';
 import 'package:akount_books/Widgets/view_invoice_field_card.dart';
+import 'package:akount_books/dart.dart';
 import 'package:akount_books/utilities/currency_convert.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -42,6 +43,9 @@ class ViewInvoice extends StatelessWidget {
                     "DOWNLOAD",
                     style: TextStyle(color: Theme.of(context).primaryColor),
                   ),
+                  onTap: (){
+                    DownloadPdf().downloadPdf(context);
+                  },
                 ),
                 InkWell(
                   child: Icon(MdiIcons.dotsVertical),

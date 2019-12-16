@@ -6,6 +6,7 @@ import 'package:akount_books/AppState/app_state.dart';
 import 'package:akount_books/Graphql/graphql_config.dart';
 import 'package:akount_books/Graphql/mutations.dart';
 import 'package:akount_books/Models/business.dart';
+import 'package:akount_books/Screens/BusinessPage/fetch_user_contacts.dart';
 import 'package:akount_books/Widgets/HeaderTitle.dart';
 import 'package:akount_books/Widgets/buttons.dart';
 import 'package:akount_books/Widgets/loading_snack_bar.dart';
@@ -216,7 +217,7 @@ class _SwitchBusinessState extends State<SwitchBusiness> {
                       width: MediaQuery.of(context).size.width,
                       color: Colors.red,
                       child: PrimaryButton(
-                          onPressed: () {
+                          onPressed: () async {
                             final business =
                                 StoreProvider.of<AppState>(context);
                             business.dispatch(
@@ -224,6 +225,9 @@ class _SwitchBusinessState extends State<SwitchBusiness> {
                             _scaffoldKey.currentState.showSnackBar(
                                 LoadingSnackBar().loader(
                                     "  Getting Business Data...", context));
+                            if(StoreProvider.of<AppState>(context).state.userContacts.length == 0){
+                              await FetchUserData().fetchContacts(context);
+                            }
                             CurrentBusinessData()
                                 .getBusinessData(context, currentBusiness.id);
                           },

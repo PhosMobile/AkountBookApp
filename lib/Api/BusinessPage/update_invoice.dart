@@ -1,4 +1,4 @@
-import 'package:akount_books/Api/BusinessPage/InvoiceItems.dart';
+import 'package:akount_books/Api/BusinessPage/invoice_items.dart';
 import 'package:akount_books/Api/BusinessPage/edit_invoice_name.dart';
 import 'package:akount_books/AppState/actions/invoice_actions.dart';
 import 'package:akount_books/Graphql/graphql_config.dart';

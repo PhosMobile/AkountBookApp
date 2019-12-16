@@ -25,7 +25,6 @@ class SVGFiles {
   static const selected = "images/selected.svg";
   static const attach_invoice = "images/attach_invoice.svg";
 
-
   static const send_via_whatsApp_selected = "images/send_via_whatsapp_selected.svg";
   static const send_via_whatsApp_unselected = "images/send_via_whatsapp_unselected.svg";
   static const send_via_email_selected = "images/send_via_email_selected.svg";

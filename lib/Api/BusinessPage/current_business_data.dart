@@ -10,6 +10,7 @@ import 'package:akount_books/Models/customer.dart';
 import 'package:akount_books/Models/invoice.dart';
 import 'package:akount_books/Models/item.dart';
 import 'package:akount_books/Models/receipt.dart';
+import 'package:akount_books/Screens/BusinessPage/fetch_user_contacts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
@@ -45,7 +46,6 @@ class CurrentBusinessData extends StatelessWidget {
     }
   }
 }
-
 saveInvoices(context, data) {
   List<Invoice> invoices = [];
   for (var item in data) {
@@ -91,7 +91,6 @@ saveCustomers(context, data) {
   final saveCustomer = StoreProvider.of<AppState>(context);
   saveCustomer.dispatch(AddCustomer(payload: customers));
 }
-
 saveExpenses(context, data) {
   List<Expense> expenses = [];
   for (var item in data) {
@@ -99,16 +98,17 @@ saveExpenses(context, data) {
         item["id"],
         item["name"],
         item["description"],
-        item["quantity"],
+        int.parse(item["quantity"]),
         item["price"],
         item["date"],
         item["business_id"],
         item["user_id"]);
-    expenses.add(expense);
+    expenses.insert(0,expense);
   }
   final saveExpense = StoreProvider.of<AppState>(context);
   saveExpense.dispatch(AddExpense(payload: expenses));
 }
+
 saveItems(context, data) {
   List<Item> businessItems = [];
   for (var item in data) {

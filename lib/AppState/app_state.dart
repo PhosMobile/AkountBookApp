@@ -9,6 +9,7 @@ import 'package:akount_books/Models/invoice.dart';
 import 'package:akount_books/Models/item.dart';
 import 'package:akount_books/Models/payment.dart';
 import 'package:akount_books/Models/receipt.dart';
+import 'package:akount_books/Models/user_phone_contact.dart';
 class AppState {
   User loggedInUser;
   List<Business> userBusinesses = [];
@@ -19,6 +20,7 @@ class AppState {
   List<Payment> businessPayments = [];
   List<Receipt> businessReceipts = [];
   List<Invoice> businessInvoices = [];
+  List<UserPhoneContact> userContacts = [];
 
   InvoiceName invoiceName;
   List<Item> invoiceItems = [];
@@ -27,5 +29,7 @@ class AppState {
   Invoice readyInvoice;
   Receipt invoiceReceipt;
   EditInvoice editInvoice;
+
+  UserPhoneContact customerFromContact;
 
 }

@@ -125,6 +125,7 @@ class _RegisterState extends State<Register> {
                                   child: FormBuilderTextField(
                                     attribute: "password",
                                     obscureText: true,
+                                    maxLines: 1,
                                     decoration: inputStyles.inputMain(
                                         "Password"),
                                     validators: [

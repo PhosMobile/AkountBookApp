@@ -30,3 +30,9 @@ class EditInvoiceCustomer {
 
   EditInvoiceCustomer({@required this.payload});
 }
+
+class UpdateEditedCustomer {
+  final Customer payload;
+
+  UpdateEditedCustomer({@required this.payload});
+}

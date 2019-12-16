@@ -17,7 +17,6 @@ class InvoiceReducers{
   editInvoiceItems(List<Item> items, AppState state){
     state.editInvoice.invoiceItem = items;
   }
-
   updateBusinessInvoice(Invoice invoice, AppState state){
     state.businessInvoices.forEach((singleInvoice){
       if(singleInvoice.id == invoice.id){
