@@ -1,6 +1,6 @@
 
-import 'package:akount_books/Graphql/graphql_config.dart';
-import 'package:akount_books/Graphql/queries.dart';
+import 'package:akaunt/Graphql/graphql_config.dart';
+import 'package:akaunt/Graphql/queries.dart';
 
 import 'package:graphql_flutter/graphql_flutter.dart';
 

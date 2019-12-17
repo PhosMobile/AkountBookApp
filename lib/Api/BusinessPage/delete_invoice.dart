@@ -1,13 +1,13 @@
 
-import 'package:akount_books/Api/BusinessPage/current_business_data.dart';
-import 'package:akount_books/AppState/app_state.dart';
-import 'package:akount_books/Graphql/graphql_config.dart';
-import 'package:akount_books/Graphql/mutations.dart';
-import 'package:akount_books/Screens/UserPage/dasboard.dart';
-import 'package:akount_books/Widgets/buttons.dart';
-import 'package:akount_books/Widgets/delete_success.dart';
-import 'package:akount_books/Widgets/loading_snack_bar.dart';
-import 'package:akount_books/utilities/svg_files.dart';
+import 'package:akaunt/Api/BusinessPage/current_business_data.dart';
+import 'package:akaunt/AppState/app_state.dart';
+import 'package:akaunt/Graphql/graphql_config.dart';
+import 'package:akaunt/Graphql/mutations.dart';
+import 'package:akaunt/Screens/UserPage/dasboard.dart';
+import 'package:akaunt/Widgets/buttons.dart';
+import 'package:akaunt/Widgets/delete_success.dart';
+import 'package:akaunt/Widgets/loading_snack_bar.dart';
+import 'package:akaunt/utilities/svg_files.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_svg/svg.dart';
@@ -16,7 +16,7 @@ import 'package:localstorage/localstorage.dart';
 
 final Widget svg = new SvgPicture.asset(
   SVGFiles.delete,
-  semanticsLabel: 'Akount-book',
+  semanticsLabel: 'Akaunt-book',
   allowDrawingOutsideViewBox: true,
 );
 class DeleteAnInvoice extends StatefulWidget {
@@ -101,7 +101,7 @@ class _DeleteAnInvoiceState extends State<DeleteAnInvoice> {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) =>
-                                        DeleteSuccess(message: "You have successfully deleted invoice",nextScreen: Dashboard(currentTab: 0,),)),
+                                        DeleteSuccess(message: "You have successfully deleted invoice",nextScreen: Dashboard(currentTab: 0,),nextScreenText: "INVOICE",)),
                               );
                             }
                           }),

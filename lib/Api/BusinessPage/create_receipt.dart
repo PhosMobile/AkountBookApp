@@ -1,18 +1,18 @@
-import 'package:akount_books/AppState/actions/receipt_actions.dart';
-import 'package:akount_books/AppState/app_state.dart';
-import 'package:akount_books/Models/receipt.dart';
-import 'package:akount_books/Widgets/HeaderTitle.dart';
-import 'package:akount_books/Widgets/error.dart';
-import 'package:akount_books/Widgets/loader_widget.dart';
-import 'package:akount_books/Widgets/buttons.dart';
-import 'package:akount_books/utilities/svg_files.dart';
+import 'package:akaunt/AppState/actions/receipt_actions.dart';
+import 'package:akaunt/AppState/app_state.dart';
+import 'package:akaunt/Models/receipt.dart';
+import 'package:akaunt/Widgets/HeaderTitle.dart';
+import 'package:akaunt/Widgets/error.dart';
+import 'package:akaunt/Widgets/loader_widget.dart';
+import 'package:akaunt/Widgets/buttons.dart';
+import 'package:akaunt/utilities/svg_files.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:akount_books/Widgets/Input_styles.dart';
+import 'package:akaunt/Widgets/Input_styles.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:akount_books/Widgets/AlertSnackBar.dart';
+import 'package:akaunt/Widgets/AlertSnackBar.dart';
 
 class AddReceipt extends StatefulWidget {
   final int invoicePrice;
@@ -224,7 +224,7 @@ class _AddReceiptState extends State<AddReceipt> {
 
   final Widget pickDate = new SvgPicture.asset(
     SVGFiles.pick_date,
-    semanticsLabel: 'Akount-book',
+    semanticsLabel: 'Akaunt-book',
     allowDrawingOutsideViewBox: true,
   );
 

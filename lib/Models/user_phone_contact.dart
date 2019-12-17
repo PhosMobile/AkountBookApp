@@ -1,7 +1,5 @@
 import 'dart:typed_data';
 
-import 'package:contacts_service/contacts_service.dart';
-
 class UserPhoneContact {
   String displayName, otherName,email,phone;
   String address;

@@ -1,5 +1,5 @@
-import 'package:akount_books/AppState/app_state.dart';
-import 'package:akount_books/Models/Expense.dart';
+import 'package:akaunt/AppState/app_state.dart';
+import 'package:akaunt/Models/Expense.dart';
 
 class ExpenseReducers {
   updateEditedExpense(Expense expense, AppState state) {

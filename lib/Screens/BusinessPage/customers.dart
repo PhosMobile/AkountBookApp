@@ -1,11 +1,11 @@
-import 'package:akount_books/Api/BusinessPage/create_customer.dart';
-import 'package:akount_books/AppState/actions/user_phone_contacts_actions.dart';
-import 'package:akount_books/AppState/app_state.dart';
-import 'package:akount_books/Models/customer.dart';
-import 'package:akount_books/Screens/BusinessPage/customer_summary.dart';
-import 'package:akount_books/Widgets/customer_card.dart';
-import 'package:akount_books/Widgets/empty.dart';
-import 'package:akount_books/utilities/svg_files.dart';
+import 'package:akaunt/Api/BusinessPage/create_customer.dart';
+import 'package:akaunt/AppState/actions/user_phone_contacts_actions.dart';
+import 'package:akaunt/AppState/app_state.dart';
+import 'package:akaunt/Models/customer.dart';
+import 'package:akaunt/Screens/BusinessPage/customer_summary.dart';
+import 'package:akaunt/Widgets/customer_card.dart';
+import 'package:akaunt/Widgets/empty.dart';
+import 'package:akaunt/utilities/svg_files.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -18,7 +18,7 @@ class Customers extends StatefulWidget {
 class _CustomersState extends State<Customers> {
   final Widget addCustomer = new SvgPicture.asset(
     SVGFiles.add_customer,
-    semanticsLabel: 'Akount-book',
+    semanticsLabel: 'Akaunt-book',
     allowDrawingOutsideViewBox: true,
   );
 
@@ -26,9 +26,6 @@ class _CustomersState extends State<Customers> {
   void initState() {
     super.initState();
   }
-
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,8 +35,9 @@ class _CustomersState extends State<Customers> {
               List<Customer> businessCustomers = state.businessCustomers;
               if (businessCustomers.length == 0) {
                 return Container(
+                  height: MediaQuery.of(context).size.height,
                   child: Center(
-                    child: Empty(text: "No Customers"),
+                    child: Empty(text: "No Customer"),
                   ),
                 );
               } else {
@@ -68,7 +66,6 @@ class _CustomersState extends State<Customers> {
                                 },
                               );
                             }),
-
                       ),
                       Container(
                         color: Theme.of(context).accentColor,

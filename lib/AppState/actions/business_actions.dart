@@ -1,4 +1,4 @@
-import 'package:akount_books/Models/business.dart';
+import 'package:akaunt/Models/business.dart';
 import 'package:flutter/cupertino.dart';
 class SaveUserBusinesses {
   final List<Business> payload;

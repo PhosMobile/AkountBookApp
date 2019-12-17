@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:akount_books/utilities/view_pdf.dart';
+import 'package:akaunt/utilities/view_pdf.dart';
 import 'package:flutter/material.dart'  as material;
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';

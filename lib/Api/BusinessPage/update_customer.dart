@@ -1,18 +1,19 @@
-import 'package:akount_books/AppState/actions/customer_actions.dart';
-import 'package:akount_books/AppState/app_state.dart';
-import 'package:akount_books/Graphql/graphql_config.dart';
-import 'package:akount_books/Graphql/mutations.dart';
-import 'package:akount_books/Models/customer.dart';
-import 'package:akount_books/Screens/BusinessPage/contact_list.dart';
-import 'package:akount_books/Screens/UserPage/dasboard.dart';
-import 'package:akount_books/Widgets/HeaderTitle.dart';
-import 'package:akount_books/Widgets/error.dart';
-import 'package:akount_books/Widgets/loader_widget.dart';
-import 'package:akount_books/Widgets/logo_avatar.dart';
-import 'package:akount_books/Widgets/buttons.dart';
+import 'package:akaunt/Api/BusinessPage/delete_business_customer.dart';
+import 'package:akaunt/AppState/actions/customer_actions.dart';
+import 'package:akaunt/AppState/app_state.dart';
+import 'package:akaunt/Graphql/graphql_config.dart';
+import 'package:akaunt/Graphql/mutations.dart';
+import 'package:akaunt/Models/customer.dart';
+import 'package:akaunt/Screens/BusinessPage/contact_list.dart';
+import 'package:akaunt/Screens/UserPage/dasboard.dart';
+import 'package:akaunt/Widgets/HeaderTitle.dart';
+import 'package:akaunt/Widgets/error.dart';
+import 'package:akaunt/Widgets/loader_widget.dart';
+import 'package:akaunt/Widgets/logo_avatar.dart';
+import 'package:akaunt/Widgets/buttons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:akount_books/Widgets/Input_styles.dart';
+import 'package:akaunt/Widgets/Input_styles.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 class UpdateCustomer extends StatefulWidget {
@@ -22,7 +23,6 @@ class UpdateCustomer extends StatefulWidget {
   @override
   _UpdateCustomerState createState() => _UpdateCustomerState();
 }
-
 class _UpdateCustomerState extends State<UpdateCustomer> {
   final GlobalKey<FormBuilderState> _fbKey = GlobalKey<FormBuilderState>();
   InputStyles inputStyles = new InputStyles();
@@ -41,7 +41,6 @@ class _UpdateCustomerState extends State<UpdateCustomer> {
     }
     return null;
   }
-
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
@@ -64,8 +63,6 @@ class _UpdateCustomerState extends State<UpdateCustomer> {
 
               },
               builder: (context, state) {
-                String businessId = state.currentBusiness.id;
-                String userId = state.loggedInUser.userId;
                 print(state.customerFromContact);
                 return Container(
                   decoration: BoxDecoration(
@@ -219,37 +216,11 @@ class _UpdateCustomerState extends State<UpdateCustomer> {
                                           style: TextStyle(
                                               fontSize: 16, color: Color.fromRGBO(133, 2, 2, 1))),
                                       onPressed: () async {
-                                        setState(() {
-                                          _isLoading = true;
-                                        });
-                                        final store = StoreProvider.of<AppState>(context);
-                                        GqlConfig graphQLConfiguration = GqlConfig();
-                                        Mutations deleteCustomer = new Mutations();
-                                        QueryResult result = await graphQLConfiguration.getGraphql(context).mutate(
-                                            MutationOptions(
-                                                document: deleteCustomer.deleteCustomer(
-                                                    widget.customer.id
-                                                )));
-                                        if(result.hasErrors){
-                                        }else{
-                                          dynamic customer = result.data["delete_customer"];
-                                          Customer _customer = Customer(
-                                              customer["id"],
-                                              customer["name"],
-                                              customer["email"],
-                                              customer["phone"],
-                                              customer["address"],
-                                              customer["currency"],
-                                              customer["image_url"],
-                                              customer["business_id"],
-                                              customer["user_id"]);
-                                          store.dispatch(DeleteCustomer(payload: _customer));
                                           Navigator.push(
                                             context,
                                             MaterialPageRoute(
-                                                builder: (context) => Dashboard(currentTab: 1)),
+                                                builder: (context) => DeleteBusinessCustomer(customer: widget.customer)),
                                           );
-                                        }
                                       },
                                     ),
                                   ],

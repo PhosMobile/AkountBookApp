@@ -1,33 +1,33 @@
-import 'package:akount_books/Api/BusinessPage/invoice_items.dart';
-import 'package:akount_books/Api/BusinessPage/send_invoice.dart';
-import 'package:akount_books/AppState/actions/discount_actions.dart';
-import 'package:akount_books/AppState/actions/invoice_actions.dart';
-import 'package:akount_books/Graphql/graphql_config.dart';
-import 'package:akount_books/Graphql/mutations.dart';
-import 'package:akount_books/Models/customer.dart';
-import 'package:akount_books/Models/discount.dart';
-import 'package:akount_books/Models/invoice.dart';
-import 'package:akount_books/Models/invoice_name.dart';
-import 'package:akount_books/Models/item.dart';
-import 'package:akount_books/Screens/BusinessPage/add_customers_list.dart';
-import 'package:akount_books/Api/BusinessPage/create_invoice_name.dart';
-import 'package:akount_books/Screens/BusinessPage/draft_saved.dart';
-import 'package:akount_books/Screens/BusinessPage/add_item_list.dart';
-import 'package:akount_books/Widgets/AlertSnackBar.dart';
-import 'package:akount_books/Widgets/HeaderTitle.dart';
-import 'package:akount_books/Widgets/error.dart';
-import 'package:akount_books/Widgets/invoice_item_card.dart';
-import 'package:akount_books/Widgets/loader_widget.dart';
-import 'package:akount_books/Widgets/buttons.dart';
-import 'package:akount_books/utilities/currency_convert.dart';
-import 'package:akount_books/utilities/current_date.dart';
-import 'package:akount_books/utilities/svg_files.dart';
-import 'package:akount_books/utilities/total_and_sub_total.dart';
+import 'package:akaunt/Api/BusinessPage/invoice_items.dart';
+import 'package:akaunt/Api/BusinessPage/send_invoice.dart';
+import 'package:akaunt/AppState/actions/discount_actions.dart';
+import 'package:akaunt/AppState/actions/invoice_actions.dart';
+import 'package:akaunt/Graphql/graphql_config.dart';
+import 'package:akaunt/Graphql/mutations.dart';
+import 'package:akaunt/Models/customer.dart';
+import 'package:akaunt/Models/discount.dart';
+import 'package:akaunt/Models/invoice.dart';
+import 'package:akaunt/Models/invoice_name.dart';
+import 'package:akaunt/Models/item.dart';
+import 'package:akaunt/Screens/BusinessPage/add_customers_list.dart';
+import 'package:akaunt/Api/BusinessPage/create_invoice_name.dart';
+import 'package:akaunt/Screens/BusinessPage/draft_saved.dart';
+import 'package:akaunt/Screens/BusinessPage/add_item_list.dart';
+import 'package:akaunt/Widgets/AlertSnackBar.dart';
+import 'package:akaunt/Widgets/HeaderTitle.dart';
+import 'package:akaunt/Widgets/error.dart';
+import 'package:akaunt/Widgets/invoice_item_card.dart';
+import 'package:akaunt/Widgets/loader_widget.dart';
+import 'package:akaunt/Widgets/buttons.dart';
+import 'package:akaunt/utilities/currency_convert.dart';
+import 'package:akaunt/utilities/current_date.dart';
+import 'package:akaunt/utilities/svg_files.dart';
+import 'package:akaunt/utilities/total_and_sub_total.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:akount_books/Widgets/Input_styles.dart';
+import 'package:akaunt/Widgets/Input_styles.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
@@ -588,17 +588,17 @@ class _AddInvoiceState extends State<AddInvoice> {
 
   final Widget pickDate = new SvgPicture.asset(
     SVGFiles.pick_date,
-    semanticsLabel: 'Akount-book',
+    semanticsLabel: 'Akaunt-book',
     allowDrawingOutsideViewBox: true,
   );
   final Widget addCustomer = new SvgPicture.asset(
     SVGFiles.add_customer,
-    semanticsLabel: 'Akount-book',
+    semanticsLabel: 'Akaunt-book',
     allowDrawingOutsideViewBox: true,
   );
   final Widget addItem = new SvgPicture.asset(
     SVGFiles.add_item,
-    semanticsLabel: 'Akount-book',
+    semanticsLabel: 'Akaunt-book',
     allowDrawingOutsideViewBox: true,
   );
 
@@ -665,6 +665,7 @@ class _AddInvoiceState extends State<AddInvoice> {
                   businessId,
                   userId)));
       if (!result.hasErrors) {
+        print("done");
         InvoiceItems().saveInvoiceItems(addInvoice.state.invoiceItems,
             result.data["create_invoice"]["id"], context);
         setState(() {
@@ -689,16 +690,23 @@ class _AddInvoiceState extends State<AddInvoice> {
             userId);
         addInvoice.dispatch(AddBusinessInvoice(payload: _invoice));
 
+        if(_children.length >0){
+          for(var discount in _children){
+            QueryResult discountResult = await graphQLConfiguration
+                .getGraphql(context)
+                .mutate(MutationOptions(
+                document: cInvoice.createDiscount(discount["description"], discount["amount"], discount["type"], result.data["create_invoice"]["id"], businessId, userId)));
+            if(!discountResult.hasErrors){
+              print("done");
+              Discount _invoiceDiscount = new Discount("0", discount["description"], discount["amount"], discount["type"], addInvoice.state.currentBusiness.id,"0",addInvoice.state.loggedInUser.userId);
+              addInvoice.dispatch(CreateDiscount(payload: _invoiceDiscount));
 
-        for(var discount in _children){
-        QueryResult discountResult = await graphQLConfiguration
-            .getGraphql(context)
-            .mutate(MutationOptions(
-            document: cInvoice.createDiscount(discount["description"], discount["amount"], discount["type"], result.data["create_invoice"]["id"], businessId, userId)));
-        if(!discountResult.hasErrors){
-          Discount _invoiceDiscount = new Discount("0", discount["description"], discount["amount"], discount["type"], addInvoice.state.currentBusiness.id,"0",addInvoice.state.loggedInUser.userId);
-          addInvoice.dispatch(CreateDiscount(payload: _invoiceDiscount));
 
+            }else{
+              print(discountResult.errors);
+            }
+          }
+        }else{
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
@@ -708,13 +716,11 @@ class _AddInvoiceState extends State<AddInvoice> {
                   customer: customer,
                 )),
           );
-        }else{
-          print(discountResult.errors);
-        }
         }
 
+
       } else {
-        print(result.source);
+        print(result.errors);
         setState(() {
           _isDraftLoading = false;
           _isSendLoading = false;

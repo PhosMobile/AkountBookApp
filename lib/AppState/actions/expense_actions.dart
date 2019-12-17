@@ -1,4 +1,4 @@
-import 'package:akount_books/Models/Expense.dart';
+import 'package:akaunt/Models/Expense.dart';
 import 'package:flutter/material.dart';
 
 class AddExpense {

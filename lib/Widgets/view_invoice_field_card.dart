@@ -9,26 +9,22 @@ class ViewInvoiceFieldCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.only(top: 10, bottom: 10, right: 20),
-      decoration: BoxDecoration(
-          border: Border(
-              bottom: BorderSide(
-                  color: Theme.of(context).primaryColor, width: 1.0))),
+      padding: EdgeInsets.only(top: 10, right: 20),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
-          Text(
-            title,
-            style: TextStyle(color: Colors.grey[800]),
-          ),
           Container(
-            width: MediaQuery.of(context).size.width / 2,
+            width: MediaQuery.of(context).size.width / 2-50,
             child: Text(
-              value,
-              textAlign: TextAlign.right,
-              style: TextStyle(color: Theme.of(context).primaryColor),
+              title,
+              style: TextStyle(fontSize:16, color: Colors.black),
             ),
-          )
+          ),
+          Text(
+            value,
+            textAlign: TextAlign.left,
+            style: TextStyle(fontSize:16, color: title == "Amount Due"? Color.fromRGBO(243, 139, 54, 1):Colors.black),
+          ),
         ],
       ),
     );

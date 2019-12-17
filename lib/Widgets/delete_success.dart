@@ -1,19 +1,20 @@
-import 'package:akount_books/Widgets/buttons.dart';
-import 'package:akount_books/utilities/svg_files.dart';
+import 'package:akaunt/Widgets/buttons.dart';
+import 'package:akaunt/utilities/svg_files.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 final Widget svg = new SvgPicture.asset(
   SVGFiles.success_icon,
-  semanticsLabel: 'Akount-book',
+  semanticsLabel: 'Akaunt-book',
   allowDrawingOutsideViewBox: true,
 );
 
 class DeleteSuccess extends StatelessWidget {
   final String message;
+  final String nextScreenText;
   final Widget nextScreen;
 
-  const DeleteSuccess({Key key, this.message, this.nextScreen}) : super(key: key);
+  const DeleteSuccess({Key key, this.message, this.nextScreen, @required this.nextScreenText}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +59,7 @@ class DeleteSuccess extends StatelessWidget {
                     ],
                   ),
                   CancelButton(
-                      buttonText: Text("BACK TO INVOICE PAGE",
+                      buttonText: Text("BACK TO $nextScreenText PAGE",
                           style: TextStyle(fontSize: 16, color: Theme.of(context).primaryColor)),
                       onPressed: () {
                         Navigator.push(

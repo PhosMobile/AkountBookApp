@@ -1,4 +1,4 @@
-import 'package:akount_books/Models/discount.dart';
+import 'package:akaunt/Models/discount.dart';
 import 'package:flutter/material.dart';
 
 class CreateDiscount {

@@ -1,15 +1,15 @@
-import 'package:akount_books/Graphql/graphql_config.dart';
+import 'package:akaunt/Graphql/graphql_config.dart';
 import 'package:otp/otp.dart';
-import 'package:akount_books/Graphql/mutations.dart';
-import 'package:akount_books/Widgets/error.dart';
-import 'package:akount_books/Widgets/loader_widget.dart';
-import 'package:akount_books/Widgets/logo_avatar.dart';
-import 'package:akount_books/Widgets/buttons.dart';
-import 'package:akount_books/Widgets/social_sign_up.dart';
+import 'package:akaunt/Graphql/mutations.dart';
+import 'package:akaunt/Widgets/error.dart';
+import 'package:akaunt/Widgets/loader_widget.dart';
+import 'package:akaunt/Widgets/logo_avatar.dart';
+import 'package:akaunt/Widgets/buttons.dart';
+import 'package:akaunt/Widgets/social_sign_up.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:akount_books/Widgets/Input_styles.dart';
+import 'package:akaunt/Widgets/Input_styles.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -238,7 +238,7 @@ class _RegisterState extends State<Register> {
           _hasErrors = true;
         });
       } else if (emailRegex.hasMatch(_phoneEmail.text.trim())) {
-        var url = "https://akount-book.herokuapp.com/api/verify_otp_email";
+        var url = "https://akaunt-book.herokuapp.com/api/verify_otp_email";
         response =
         await http.post(
             url, body: {"email": this.email, "otp": otp.toString()});

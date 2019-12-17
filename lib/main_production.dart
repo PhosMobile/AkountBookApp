@@ -1,7 +1,7 @@
-import 'package:akount_books/AppState/app_state.dart';
-import 'package:akount_books/AppState/reducers/app_reducer.dart';
-import 'package:akount_books/Resources/app_config.dart';
-import 'package:akount_books/main.dart';
+import 'package:akaunt/AppState/app_state.dart';
+import 'package:akaunt/AppState/reducers/app_reducer.dart';
+import 'package:akaunt/Resources/app_config.dart';
+import 'package:akaunt/main.dart';
 import 'package:flutter/material.dart';
 import 'package:redux/redux.dart';
 void main(){
@@ -12,9 +12,9 @@ void main(){
   );
 
   var configuredApp = AppConfig(
-    appTitle: "Akount Book",
+    appTitle: "Akaunt Book",
     buildFlavor: "Production",
-    graphqlAPI: 'https://akount-book.herokuapp.com',
+    graphqlAPI: 'https://akaunt-book.herokuapp.com',
     child: MyApp(store: store),
   );
   return runApp(configuredApp);

@@ -1,4 +1,4 @@
-import 'package:akount_books/Models/user.dart';
+import 'package:akaunt/Models/user.dart';
 import 'package:flutter/cupertino.dart';
 
 class AddUser {

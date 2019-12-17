@@ -1,4 +1,4 @@
-import 'package:akount_books/Resources/app_config.dart';
+import 'package:akaunt/Resources/app_config.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:graphql/client.dart';
 

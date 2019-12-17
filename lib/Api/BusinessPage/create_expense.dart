@@ -1,19 +1,19 @@
-import 'package:akount_books/AppState/actions/expense_actions.dart';
-import 'package:akount_books/AppState/app_state.dart';
-import 'package:akount_books/Graphql/graphql_config.dart';
-import 'package:akount_books/Graphql/mutations.dart';
-import 'package:akount_books/Models/Expense.dart';
-import 'package:akount_books/Screens/UserPage/dasboard.dart';
-import 'package:akount_books/Widgets/HeaderTitle.dart';
-import 'package:akount_books/Widgets/error.dart';
-import 'package:akount_books/Widgets/loader_widget.dart';
-import 'package:akount_books/Widgets/logo_avatar.dart';
-import 'package:akount_books/Widgets/buttons.dart';
-import 'package:akount_books/utilities/svg_files.dart';
+import 'package:akaunt/AppState/actions/expense_actions.dart';
+import 'package:akaunt/AppState/app_state.dart';
+import 'package:akaunt/Graphql/graphql_config.dart';
+import 'package:akaunt/Graphql/mutations.dart';
+import 'package:akaunt/Models/Expense.dart';
+import 'package:akaunt/Screens/UserPage/dasboard.dart';
+import 'package:akaunt/Widgets/HeaderTitle.dart';
+import 'package:akaunt/Widgets/error.dart';
+import 'package:akaunt/Widgets/loader_widget.dart';
+import 'package:akaunt/Widgets/logo_avatar.dart';
+import 'package:akaunt/Widgets/buttons.dart';
+import 'package:akaunt/utilities/svg_files.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:akount_books/Widgets/Input_styles.dart';
+import 'package:akaunt/Widgets/Input_styles.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
@@ -259,7 +259,7 @@ class _AddExpensesState extends State<AddExpenses> {
   }
   final Widget pickDate = new SvgPicture.asset(
     SVGFiles.pick_date,
-    semanticsLabel: 'Akount-book',
+    semanticsLabel: 'Akaunt-book',
     allowDrawingOutsideViewBox: true,
   );
 }

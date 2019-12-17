@@ -1,13 +1,13 @@
-import 'package:akount_books/AppState/actions/invoice_actions.dart';
-import 'package:akount_books/Models/edit_invoice.dart';
-import 'package:akount_books/Models/invoice_name.dart';
-import 'package:akount_books/Widgets/HeaderTitle.dart';
-import 'package:akount_books/Widgets/error.dart';
-import 'package:akount_books/Widgets/loader_widget.dart';
-import 'package:akount_books/Widgets/buttons.dart';
+import 'package:akaunt/AppState/actions/invoice_actions.dart';
+import 'package:akaunt/Models/edit_invoice.dart';
+import 'package:akaunt/Models/invoice_name.dart';
+import 'package:akaunt/Widgets/HeaderTitle.dart';
+import 'package:akaunt/Widgets/error.dart';
+import 'package:akaunt/Widgets/loader_widget.dart';
+import 'package:akaunt/Widgets/buttons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:akount_books/Widgets/Input_styles.dart';
+import 'package:akaunt/Widgets/Input_styles.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
 import '../../AppState/app_state.dart';

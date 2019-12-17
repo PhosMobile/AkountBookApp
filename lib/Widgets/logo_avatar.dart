@@ -1,11 +1,11 @@
-import 'package:akount_books/utilities/svg_files.dart';
+import 'package:akaunt/utilities/svg_files.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 class ImageAvatars extends StatelessWidget {
   final Widget attachsvg = new SvgPicture.asset(
     SVGFiles.attach_picture,
-    semanticsLabel: 'Akount-book',
+    semanticsLabel: 'Akaunt-book',
     allowDrawingOutsideViewBox: true,
   );
 
@@ -15,19 +15,33 @@ class ImageAvatars extends StatelessWidget {
   }
 
   Widget largeLogoAvatar() {
-    return CircleAvatar(
-      radius: 70,
-      backgroundImage: AssetImage("images/akount_book_logo.png"),
+    return Container(
+      width: 2000,
+      height: 2000,
+      decoration: BoxDecoration(
+        shape: BoxShape.rectangle,
+        image: DecorationImage(
+          image: AssetImage("images/akaunt_logo.png"),
+          fit: BoxFit.fill,
+        ),
+      ),
     );
   }
 
   Widget miniLogoAvatar() {
-    return CircleAvatar(
-      radius: 40,
-      backgroundImage: AssetImage("images/akount_book_logo.png"),
+    return Container(
+      height: 100,
+      width: 150,
+      decoration: BoxDecoration(
+        shape: BoxShape.rectangle,
+        image: DecorationImage(
+          image: AssetImage("images/akaunt_logo.png"),
+          fit: BoxFit.fitWidth,
+        ),
+      ),
     );
-  }
 
+  }
   Widget attachImage() {
     return attachsvg;
   }

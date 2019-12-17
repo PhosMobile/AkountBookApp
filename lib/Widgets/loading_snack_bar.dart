@@ -4,7 +4,7 @@ class LoadingSnackBar{
   SnackBar loader(text, context){
     return SnackBar(
       backgroundColor: Theme.of(context).accentColor,
-      duration: new Duration(seconds: 10),
+      duration: new Duration(hours: 1),
       content: Container(
         child: new Row(
           mainAxisAlignment: MainAxisAlignment.center,

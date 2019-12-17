@@ -1,6 +1,6 @@
-import 'package:akount_books/AppState/actions/user_phone_contacts_actions.dart';
-import 'package:akount_books/AppState/app_state.dart';
-import 'package:akount_books/Models/user_phone_contact.dart';
+import 'package:akaunt/AppState/actions/user_phone_contacts_actions.dart';
+import 'package:akaunt/AppState/app_state.dart';
+import 'package:akaunt/Models/user_phone_contact.dart';
 import 'package:contacts_service/contacts_service.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -9,6 +9,7 @@ import 'package:permission_handler/permission_handler.dart';
 
 class FetchUserData {
   fetchContacts(context) async {
+    print("getting data");
     final business = StoreProvider.of<AppState>(context);
     PermissionStatus permissionStatus = await _getPermission();
     List<UserPhoneContact> userContacts = [];

@@ -1,5 +1,5 @@
-import 'package:akount_books/Widgets/buttons.dart';
-import 'package:akount_books/utilities/svg_files.dart';
+import 'package:akaunt/Widgets/buttons.dart';
+import 'package:akaunt/utilities/svg_files.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -10,7 +10,7 @@ class Logout extends StatefulWidget {
 
 final Widget svg = new SvgPicture.asset(
   SVGFiles.success_icon,
-  semanticsLabel: 'Akount-book',
+  semanticsLabel: 'Akaunt-book',
   allowDrawingOutsideViewBox: true,
 );
 

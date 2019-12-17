@@ -1,4 +1,4 @@
-import 'package:akount_books/AppState/app_state.dart';
+import 'package:akaunt/AppState/app_state.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
 class TotalAndSubTotal{

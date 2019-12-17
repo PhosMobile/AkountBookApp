@@ -1,15 +1,15 @@
-import 'package:akount_books/Models/Expense.dart';
-import 'package:akount_books/Models/discount.dart';
-import 'package:akount_books/Models/edit_invoice.dart';
-import 'package:akount_books/Models/invoice_name.dart';
-import 'package:akount_books/Models/user.dart';
-import 'package:akount_books/Models/business.dart';
-import 'package:akount_books/Models/customer.dart';
-import 'package:akount_books/Models/invoice.dart';
-import 'package:akount_books/Models/item.dart';
-import 'package:akount_books/Models/payment.dart';
-import 'package:akount_books/Models/receipt.dart';
-import 'package:akount_books/Models/user_phone_contact.dart';
+import 'package:akaunt/Models/Expense.dart';
+import 'package:akaunt/Models/discount.dart';
+import 'package:akaunt/Models/edit_invoice.dart';
+import 'package:akaunt/Models/invoice_name.dart';
+import 'package:akaunt/Models/user.dart';
+import 'package:akaunt/Models/business.dart';
+import 'package:akaunt/Models/customer.dart';
+import 'package:akaunt/Models/invoice.dart';
+import 'package:akaunt/Models/item.dart';
+import 'package:akaunt/Models/payment.dart';
+import 'package:akaunt/Models/receipt.dart';
+import 'package:akaunt/Models/user_phone_contact.dart';
 class AppState {
   User loggedInUser;
   List<Business> userBusinesses = [];

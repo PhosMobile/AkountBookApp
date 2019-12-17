@@ -68,7 +68,7 @@ class Invoice {
  static List<Invoice> sentInvoices(List<Invoice> invoices){
     List<Invoice> draftInvoices = [];
     invoices.forEach((invoice){
-      if(invoice.status.toLowerCase() == "sent"){
+      if(invoice.status.toLowerCase() == "sent" || invoice.status.toLowerCase() == "paid" || invoice.status.toLowerCase() == "due"){
         draftInvoices.add(invoice);
       }
     });
@@ -78,7 +78,7 @@ class Invoice {
   static List<Invoice> customerInvoices(List<Invoice> invoices, customerId){
     List<Invoice> customerInvoices = [];
     invoices.forEach((invoice){
-      if(invoice.customerId == customerId){
+      if(invoice.customerId == customerId && invoice.status.toLowerCase() != "draft"){
         customerInvoices.add(invoice);
       }
     });

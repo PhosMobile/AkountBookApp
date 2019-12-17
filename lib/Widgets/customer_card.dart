@@ -1,4 +1,4 @@
-import 'package:akount_books/Models/customer.dart';
+import 'package:akaunt/Models/customer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -7,7 +7,7 @@ import '../utilities/svg_files.dart';
 class CustomerCard extends StatelessWidget{
   final Widget addCustomer = new SvgPicture.asset(
     SVGFiles.add_customer,
-    semanticsLabel: 'Akount-book',
+    semanticsLabel: 'Akaunt-book',
     allowDrawingOutsideViewBox: true,
   );
   final Customer customer;

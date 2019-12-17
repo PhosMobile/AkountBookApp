@@ -1,8 +1,8 @@
-import 'package:akount_books/AppState/app_state.dart';
-import 'package:akount_books/Models/customer.dart';
-import 'package:akount_books/Models/invoice.dart';
-import 'package:akount_books/Models/invoice_name.dart';
-import 'package:akount_books/Models/item.dart';
+import 'package:akaunt/AppState/app_state.dart';
+import 'package:akaunt/Models/customer.dart';
+import 'package:akaunt/Models/invoice.dart';
+import 'package:akaunt/Models/invoice_name.dart';
+import 'package:akaunt/Models/item.dart';
 
 class InvoiceReducers{
   updateEditInvoiceName(InvoiceName iName, AppState state){

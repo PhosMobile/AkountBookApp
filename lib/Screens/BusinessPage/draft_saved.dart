@@ -1,20 +1,20 @@
-import 'package:akount_books/Api/BusinessPage/update_invoice.dart';
-import 'package:akount_books/AppState/actions/invoice_actions.dart';
-import 'package:akount_books/AppState/app_state.dart';
-import 'package:akount_books/Models/customer.dart';
-import 'package:akount_books/Models/edit_invoice.dart';
-import 'package:akount_books/Models/invoice.dart';
-import 'package:akount_books/Models/item.dart';
-import 'package:akount_books/Screens/UserPage/dasboard.dart';
-import 'package:akount_books/Widgets/buttons.dart';
-import 'package:akount_books/utilities/svg_files.dart';
+import 'package:akaunt/Api/BusinessPage/update_invoice.dart';
+import 'package:akaunt/AppState/actions/invoice_actions.dart';
+import 'package:akaunt/AppState/app_state.dart';
+import 'package:akaunt/Models/customer.dart';
+import 'package:akaunt/Models/edit_invoice.dart';
+import 'package:akaunt/Models/invoice.dart';
+import 'package:akaunt/Models/item.dart';
+import 'package:akaunt/Screens/UserPage/dasboard.dart';
+import 'package:akaunt/Widgets/buttons.dart';
+import 'package:akaunt/utilities/svg_files.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_svg/svg.dart';
 
 final Widget svg = new SvgPicture.asset(
   SVGFiles.success_icon,
-  semanticsLabel: 'Akount-book',
+  semanticsLabel: 'Akaunt-book',
   allowDrawingOutsideViewBox: true,
 );
 class DraftSaved extends StatelessWidget {

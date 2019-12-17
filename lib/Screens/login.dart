@@ -1,14 +1,14 @@
-import 'package:akount_books/Api/UserAcount/logged_in_user.dart';
-import 'package:akount_books/AppState/app_state.dart';
-import 'package:akount_books/Graphql/graphql_config.dart';
-import 'package:akount_books/Graphql/mutations.dart';
-import 'package:akount_books/Widgets/Input_styles.dart';
-import 'package:akount_books/Widgets/buttons.dart';
-import 'package:akount_books/Widgets/error.dart';
-import 'package:akount_books/Widgets/loader_widget.dart';
-import 'package:akount_books/Widgets/loading_snack_bar.dart';
-import 'package:akount_books/Widgets/logo_avatar.dart';
-import 'package:akount_books/Widgets/social_sign_up.dart';
+import 'package:akaunt/Api/UserAcount/logged_in_user.dart';
+import 'package:akaunt/AppState/app_state.dart';
+import 'package:akaunt/Graphql/graphql_config.dart';
+import 'package:akaunt/Graphql/mutations.dart';
+import 'package:akaunt/Widgets/Input_styles.dart';
+import 'package:akaunt/Widgets/buttons.dart';
+import 'package:akaunt/Widgets/error.dart';
+import 'package:akaunt/Widgets/loader_widget.dart';
+import 'package:akaunt/Widgets/loading_snack_bar.dart';
+import 'package:akaunt/Widgets/logo_avatar.dart';
+import 'package:akaunt/Widgets/social_sign_up.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -212,7 +212,7 @@ class _LoginState extends State<Login> {
         _hasErrors = false;
       });
       _scaffoldKey.currentState.showSnackBar(
-          LoadingSnackBar().loader("Loading data", context));
+          LoadingSnackBar().loader("Loading data", context),);
       storage.deleteItem("access_token");
       var accessToken = result.data["login"];
       storage.setItem("access_token", accessToken);

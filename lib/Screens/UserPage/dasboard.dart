@@ -1,10 +1,10 @@
-import 'package:akount_books/Models/menu_item.dart';
-import 'package:akount_books/Screens/BusinessPage/Expenses.dart';
-import 'package:akount_books/Screens/BusinessPage/Invoices.dart';
-import 'package:akount_books/Screens/BusinessPage/Reports.dart';
-import 'package:akount_books/Screens/BusinessPage/customers.dart';
-import 'package:akount_books/Widgets/logo_avatar.dart';
-import 'package:akount_books/utilities/svg_files.dart';
+import 'package:akaunt/Models/menu_item.dart';
+import 'package:akaunt/Screens/BusinessPage/Expenses.dart';
+import 'package:akaunt/Screens/BusinessPage/Invoices.dart';
+import 'package:akaunt/Screens/BusinessPage/Reports.dart';
+import 'package:akaunt/Screens/BusinessPage/customers.dart';
+import 'package:akaunt/Widgets/logo_avatar.dart';
+import 'package:akaunt/utilities/svg_files.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -33,7 +33,7 @@ class _DashboardState extends State<Dashboard> {
 
   final Widget svg = new SvgPicture.asset(
     SVGFiles.success_icon,
-    semanticsLabel: 'Akount-book',
+    semanticsLabel: 'Akaunt-book',
     allowDrawingOutsideViewBox: true,
   );
 

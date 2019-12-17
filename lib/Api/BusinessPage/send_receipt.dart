@@ -1,15 +1,15 @@
-import 'package:akount_books/AppState/app_state.dart';
-import 'package:akount_books/Models/customer.dart';
-import 'package:akount_books/Models/invoice.dart';
-import 'package:akount_books/Models/receipt.dart';
-import 'package:akount_books/Screens/BusinessPage/receipt_sent.dart';
-import 'package:akount_books/Widgets/HeaderTitle.dart';
-import 'package:akount_books/Widgets/buttons.dart';
-import 'package:akount_books/utilities/currency_convert.dart';
-import 'package:akount_books/utilities/svg_files.dart';
+import 'package:akaunt/AppState/app_state.dart';
+import 'package:akaunt/Models/customer.dart';
+import 'package:akaunt/Models/invoice.dart';
+import 'package:akaunt/Models/receipt.dart';
+import 'package:akaunt/Screens/BusinessPage/receipt_sent.dart';
+import 'package:akaunt/Widgets/HeaderTitle.dart';
+import 'package:akaunt/Widgets/buttons.dart';
+import 'package:akaunt/utilities/currency_convert.dart';
+import 'package:akaunt/utilities/svg_files.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:akount_books/Widgets/Input_styles.dart';
+import 'package:akaunt/Widgets/Input_styles.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 

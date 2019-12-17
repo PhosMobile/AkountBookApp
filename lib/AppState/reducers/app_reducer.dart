@@ -1,17 +1,17 @@
-import 'package:akount_books/AppState/actions/business_actions.dart';
-import 'package:akount_books/AppState/actions/customer_actions.dart';
-import 'package:akount_books/AppState/actions/discount_actions.dart';
-import 'package:akount_books/AppState/actions/expense_actions.dart';
-import 'package:akount_books/AppState/actions/invoice_actions.dart';
-import 'package:akount_books/AppState/actions/item_actions.dart';
-import 'package:akount_books/AppState/actions/receipt_actions.dart';
-import 'package:akount_books/AppState/actions/user_actions.dart';
-import 'package:akount_books/AppState/actions/user_phone_contacts_actions.dart';
-import 'package:akount_books/AppState/app_state.dart';
-import 'package:akount_books/AppState/reducers/business_reducers.dart';
-import 'package:akount_books/AppState/reducers/customer_reducers.dart';
-import 'package:akount_books/AppState/reducers/expense_reducers.dart';
-import 'package:akount_books/AppState/reducers/invoice_reducers.dart';
+import 'package:akaunt/AppState/actions/business_actions.dart';
+import 'package:akaunt/AppState/actions/customer_actions.dart';
+import 'package:akaunt/AppState/actions/discount_actions.dart';
+import 'package:akaunt/AppState/actions/expense_actions.dart';
+import 'package:akaunt/AppState/actions/invoice_actions.dart';
+import 'package:akaunt/AppState/actions/item_actions.dart';
+import 'package:akaunt/AppState/actions/receipt_actions.dart';
+import 'package:akaunt/AppState/actions/user_actions.dart';
+import 'package:akaunt/AppState/actions/user_phone_contacts_actions.dart';
+import 'package:akaunt/AppState/app_state.dart';
+import 'package:akaunt/AppState/reducers/business_reducers.dart';
+import 'package:akaunt/AppState/reducers/customer_reducers.dart';
+import 'package:akaunt/AppState/reducers/expense_reducers.dart';
+import 'package:akaunt/AppState/reducers/invoice_reducers.dart';
 
 AppState appReducer(AppState prevState, dynamic action) {
   AppState newAppState = prevState;

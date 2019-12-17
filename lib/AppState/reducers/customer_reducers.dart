@@ -1,5 +1,5 @@
-import 'package:akount_books/AppState/app_state.dart';
-import 'package:akount_books/Models/customer.dart';
+import 'package:akaunt/AppState/app_state.dart';
+import 'package:akaunt/Models/customer.dart';
 
 class CustomerReducers{
   updateEditedCustomer(Customer customer, AppState state) {

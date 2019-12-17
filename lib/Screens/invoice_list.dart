@@ -1,11 +1,11 @@
-import 'package:akount_books/Api/BusinessPage/attach_new_invoice.dart';
-import 'package:akount_books/AppState/actions/invoice_actions.dart';
-import 'package:akount_books/AppState/app_state.dart';
-import 'package:akount_books/Models/customer.dart';
-import 'package:akount_books/Models/invoice.dart';
-import 'package:akount_books/Widgets/HeaderTitle.dart';
-import 'package:akount_books/Widgets/buttons.dart';
-import 'package:akount_books/utilities/currency_convert.dart';
+import 'package:akaunt/Api/BusinessPage/attach_new_invoice.dart';
+import 'package:akaunt/AppState/actions/invoice_actions.dart';
+import 'package:akaunt/AppState/app_state.dart';
+import 'package:akaunt/Models/customer.dart';
+import 'package:akaunt/Models/invoice.dart';
+import 'package:akaunt/Widgets/HeaderTitle.dart';
+import 'package:akaunt/Widgets/buttons.dart';
+import 'package:akaunt/utilities/currency_convert.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 

@@ -1,4 +1,4 @@
-import 'package:akount_books/Models/customer.dart';
+import 'package:akaunt/Models/customer.dart';
 import 'package:flutter/material.dart';
 
 class AddCustomer {

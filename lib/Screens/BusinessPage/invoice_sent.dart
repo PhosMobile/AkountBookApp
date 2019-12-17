@@ -1,15 +1,15 @@
-import 'package:akount_books/Api/BusinessPage/create_invoice.dart';
-import 'package:akount_books/Api/BusinessPage/record_payment.dart';
-import 'package:akount_books/Models/customer.dart';
-import 'package:akount_books/Screens/UserPage/dasboard.dart';
-import 'package:akount_books/Widgets/buttons.dart';
-import 'package:akount_books/utilities/svg_files.dart';
+import 'package:akaunt/Api/BusinessPage/create_invoice.dart';
+import 'package:akaunt/Api/BusinessPage/record_payment.dart';
+import 'package:akaunt/Models/customer.dart';
+import 'package:akaunt/Screens/UserPage/dasboard.dart';
+import 'package:akaunt/Widgets/buttons.dart';
+import 'package:akaunt/utilities/svg_files.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 final Widget svg = new SvgPicture.asset(
   SVGFiles.success_icon,
-  semanticsLabel: 'Akount-book',
+  semanticsLabel: 'Akaunt-book',
   allowDrawingOutsideViewBox: true,
 );
 
