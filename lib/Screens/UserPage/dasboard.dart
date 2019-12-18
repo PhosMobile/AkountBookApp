@@ -1,3 +1,4 @@
+import 'package:akaunt/AppState/app_state.dart';
 import 'package:akaunt/Models/menu_item.dart';
 import 'package:akaunt/Screens/BusinessPage/Expenses.dart';
 import 'package:akaunt/Screens/BusinessPage/Invoices.dart';
@@ -6,6 +7,7 @@ import 'package:akaunt/Screens/BusinessPage/customers.dart';
 import 'package:akaunt/Widgets/logo_avatar.dart';
 import 'package:akaunt/utilities/svg_files.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
@@ -70,32 +72,32 @@ class _DashboardState extends State<Dashboard> {
           child: Drawer(
             child: Container(
                 color: Theme.of(context).primaryColor,
-                child: Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: SafeArea(
-                    child: Column(
-                      children: <Widget>[
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            ImageAvatars().miniLogoAvatar(),
-                            InkWell(
-                              child: Icon(
-                                Icons.close,
-                                color: Colors.white,
-                                size: 30,
-                              ),
-                              onTap: () {
-                                Navigator.of(context).pop();
-                              },
-                            )
-                          ],
-                        ),
-                        Expanded(
-                          child: menuView(menu.menuList),
-                        )
-                      ],
-                    ),
+                child: SafeArea(
+                  child: Column(
+                    children: <Widget>[
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.only(left:15.0),
+                            child: ImageAvatars().miniLogoAvatar(),
+                          ),
+                          InkWell(
+                            child: Icon(
+                              Icons.close,
+                              color: Colors.white,
+                              size: 30,
+                            ),
+                            onTap: () {
+                              Navigator.of(context).pop();
+                            },
+                          )
+                        ],
+                      ),
+                      Expanded(
+                        child: menuView(menu.menuList),
+                      )
+                    ],
                   ),
                 )),
           ),
@@ -149,38 +151,74 @@ class _DashboardState extends State<Dashboard> {
   }
 
   Widget menuView(List<MenuItem> menuList) {
-    return Container(
-      child: Padding(
-        padding: const EdgeInsets.only(top: 30.0),
-        child: ListView.builder(
-            itemCount: menuList.length,
-            itemBuilder: (BuildContext context, int position) {
-              return Padding(
-                padding: EdgeInsets.only(top: 15.0),
+    return StoreConnector<AppState, AppState>(
+      converter: (store)=>store.state,
+      builder: (context, state){
+        print(state.currentBusiness.imageUrl);
+        return Container(
+          child: Column(
+            children: <Widget>[
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 30.0, left: 15),
+                  child: ListView.builder(
+                      itemCount: menuList.length,
+                      itemBuilder: (BuildContext context, int position) {
+                        return Padding(
+                          padding: EdgeInsets.only(top: 15.0),
+                          child: Column(
+                            children: <Widget>[
+                              InkWell(
+                                child: ListTile(
+                                  contentPadding: EdgeInsets.only(right: 40),
+                                  leading: CircleAvatar(
+                                      radius: 20,
+                                      backgroundColor: Colors.white,
+                                      child: menuList[position].icon),
+                                  title: Text(
+                                    menuList[position].title,
+                                    style: TextStyle(color: Colors.white, fontSize: 20),
+                                  ),
+                                ),
+                                onTap: () {
+                                  Navigator.pop(context);
+                                  Navigator.pushNamed(context, menuList[position].link);
+                                },
+                              ),
+                            ],
+                          ),
+                        );
+                      }),
+                ),
+              ),
+              Container(
+                width: MediaQuery.of(context).size.width,
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
-                    InkWell(
-                      child: ListTile(
-                        contentPadding: EdgeInsets.only(right: 40),
-                        leading: CircleAvatar(
-                            radius: 20,
-                            backgroundColor: Colors.white,
-                            child: menuList[position].icon),
-                        title: Text(
-                          menuList[position].title,
-                          style: TextStyle(color: Colors.white, fontSize: 20),
-                        ),
-                      ),
-                      onTap: () {
-                        Navigator.pop(context);
-                        Navigator.pushNamed(context, menuList[position].link);
-                      },
+                    Padding(
+                      padding: const EdgeInsets.only(bottom:10.0),
+                      child: Text("Active Business", style: TextStyle(color: Colors.black87,fontWeight: FontWeight.bold),),
                     ),
+                    Row(children: <Widget>[
+                      CircleAvatar(
+                        child: Image.network(state.currentBusiness.imageUrl),
+                      ),
+                      SizedBox(width: 10,),
+                      Text("${state.currentBusiness.name}")
+                    ],)
                   ],
                 ),
-              );
-            }),
-      ),
+                padding: EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                ),
+              ),
+            ],
+          ),
+        );
+      }
     );
   }
 }

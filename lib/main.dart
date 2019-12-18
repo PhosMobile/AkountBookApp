@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         title: "Akaunt Book",
         theme: ThemeData(
-          primaryColor: Color.fromRGBO(4, 100, 183, 1),
+          primaryColor: Color.fromRGBO(0, 174, 239, 1),
           accentColor: Color.fromRGBO(200, 228, 253, 1),
           primaryColorLight: Color.fromRGBO(200, 228, 253, 0.5),
           cardColor: Colors.transparent,

@@ -21,7 +21,7 @@ class InvoiceItemCard extends StatelessWidget{
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-          color:  Color.fromRGBO(250, 253, 25, 1),
+          color:  Colors.white,
         border: Border.all(width: 0.5, color: Colors.blueGrey)
       ),
       padding: EdgeInsets.all(20.0),

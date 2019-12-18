@@ -89,28 +89,32 @@ class InvoiceListBuilder extends StatelessWidget {
                                 SizedBox(
                                   width: 20,
                                 ),
-                                Column(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: <Widget>[
-                                    Text(
-                                      "$cName",
-                                      style: TextStyle(
-                                          fontSize: 16,
-                                          color:
-                                              Theme.of(context).primaryColor),
-                                    ),
-                                    SizedBox(
-                                      height: 10,
-                                    ),
-                                    Text(
-                                      "$invoiceTitle",
-                                      style: TextStyle(
-                                          fontSize: 12,
-                                          color:
-                                              Color.fromRGBO(106, 117, 139, 1)),
-                                    )
-                                  ],
+                                Container(
+                                  width: MediaQuery.of(context).size.width/2,
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: <Widget>[
+                                      Text(
+                                        "$cName",
+                                        style: TextStyle(
+                                            fontSize: 16,
+                                            color:
+                                                Theme.of(context).primaryColor),
+                                      ),
+                                      SizedBox(
+                                        height: 10,
+                                      ),
+                                      Text(
+                                        "$invoiceTitle",
+                                        style: TextStyle(
+                                            fontSize: 12,
+                                            color:
+                                                Color.fromRGBO(106, 117, 139, 1)),
+                                      )
+                                    ],
+                                  ),
                                 )
                               ],
                             ),

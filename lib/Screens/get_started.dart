@@ -51,6 +51,7 @@
 //}
 import 'dart:async';
 
+import 'package:akaunt/Widgets/logo_avatar.dart';
 import 'package:akaunt/Widgets/slide_dots.dart';
 import 'package:akaunt/Widgets/slide_item.dart';
 import 'package:flutter/material.dart';
@@ -64,6 +65,7 @@ class GetStarted extends StatefulWidget {
 class _GetStartedState extends State<GetStarted> {
   int _currentPage = 0;
   final PageController _pageController = PageController(initialPage: 0);
+  ImageAvatars logo = new ImageAvatars();
 
   @override
   void initState() {
@@ -104,6 +106,7 @@ class _GetStartedState extends State<GetStarted> {
           padding: const EdgeInsets.all(20),
           child: Column(
             children: <Widget>[
+              logo.miniLogoAvatar(),
               Expanded(
                 child: Stack(
                   alignment: AlignmentDirectional.bottomCenter,
@@ -140,53 +143,36 @@ class _GetStartedState extends State<GetStarted> {
               SizedBox(
                 height: 20,
               ),
-              _currentPage == 0?Text("Swipe to learn more"):SizedBox(),
+              _currentPage == 2?SizedBox():Text("Swipe to learn more", style: TextStyle(color: Theme.of(context).primaryColor),),
               SizedBox(
                 height: 20,
               ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: <Widget>[
-                  FlatButton(
-                    child: Text(
-                      'Getting Started',
-                      style: TextStyle(
-                        fontSize: 18,
-                      ),
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                    padding: const EdgeInsets.all(15),
-                    color: Theme
-                        .of(context)
-                        .primaryColor,
-                    textColor: Colors.white,
-                    onPressed: () {
-                      Navigator.of(context).pushNamed("/register");
-                    },
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Text(
-                        'Have an account?',
+              Container(
+                width: MediaQuery.of(context).size.width/2,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: <Widget>[
+                    FlatButton(
+                      child: Text(
+                        'Start Now',
                         style: TextStyle(
-                          fontSize: 18,
+                          fontSize: 16,
                         ),
                       ),
-                      FlatButton(
-                        child: Text(
-                          'Login',
-                          style: TextStyle(fontSize: 18),
-                        ),
-                        onPressed: () {
-                          Navigator.of(context).pushNamed("/login");
-                        },
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(7),
                       ),
-                    ],
-                  ),
-                ],
+                      padding: const EdgeInsets.all(15),
+                      color: Theme
+                          .of(context)
+                          .primaryColor,
+                      textColor: Colors.white,
+                      onPressed: () {
+                        Navigator.of(context).pushNamed("/register");
+                      },
+                    )
+                  ],
+                ),
               )
             ],
           ),

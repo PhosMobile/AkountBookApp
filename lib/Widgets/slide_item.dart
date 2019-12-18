@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 class SlideItem extends StatelessWidget {
   final int index;
   SlideItem(this.index);
-  ImageAvatars logo = new ImageAvatars();
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +13,6 @@ class SlideItem extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
-        logo.miniLogoAvatar(),
         SizedBox(height: 20,),
         Container(
           width: 300,
