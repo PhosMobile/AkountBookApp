@@ -50,7 +50,6 @@
 //  }
 //}
 import 'dart:async';
-
 import 'package:akaunt/Widgets/logo_avatar.dart';
 import 'package:akaunt/Widgets/slide_dots.dart';
 import 'package:akaunt/Widgets/slide_item.dart';
@@ -108,15 +107,19 @@ class _GetStartedState extends State<GetStarted> {
             children: <Widget>[
               logo.miniLogoAvatar(),
               Expanded(
-                child: Stack(
-                  alignment: AlignmentDirectional.bottomCenter,
+                child: Column(
                   children: <Widget>[
-                    PageView.builder(
-                      scrollDirection: Axis.horizontal,
-                      controller: _pageController,
-                      onPageChanged: _onPageChanged,
-                      itemCount: slideList.length,
-                      itemBuilder: (ctx, i) => SlideItem(i),
+                    Expanded(
+                      child: PageView.builder(
+                        scrollDirection: Axis.horizontal,
+                        controller: _pageController,
+                        onPageChanged: _onPageChanged,
+                        itemCount: slideList.length,
+                        itemBuilder: (ctx, i) => SlideItem(i),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 20,
                     ),
                     Stack(
                       alignment: AlignmentDirectional.topStart,
@@ -143,7 +146,7 @@ class _GetStartedState extends State<GetStarted> {
               SizedBox(
                 height: 20,
               ),
-              _currentPage == 2?SizedBox():Text("Swipe to learn more", style: TextStyle(color: Theme.of(context).primaryColor),),
+              _currentPage == 2 ?SizedBox(height: 20,):Container(height:20,child: Text("Swipe to learn more", style: TextStyle(color: Theme.of(context).primaryColor),)),
               SizedBox(
                 height: 20,
               ),

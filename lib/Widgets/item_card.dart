@@ -22,12 +22,18 @@ class ItemCard extends StatelessWidget {
     width: 10,
     height: 10,
   );
+  final Widget selectIcon = new SvgPicture.asset(
+    SVGFiles.select,
+    semanticsLabel: 'Akaunt-book',
+    allowDrawingOutsideViewBox: true,
+    width: 10,
+    height: 10,
+  );
 
   ItemCard(
       {@required this.item,
       @required this.businessCurrency,
       @required this.selected});
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -61,14 +67,13 @@ class ItemCard extends StatelessWidget {
               width: MediaQuery.of(context).size.width / 4-50,
               child: Text(
                 CurrencyConverter()
-                    .formatPrice(int.parse(item.price), businessCurrency),
+                    .formatPrice(int.parse(item.price)*int.parse(item.quantity), businessCurrency),
                 style: TextStyle(color: Colors.blueGrey[20]),
               ),
             ),
-            Container(width:20, height: 20, child: selected ? selectedIcon : SizedBox())
+            Container(width:20, height: 20, child: selected ? selectedIcon : selectIcon)
           ],
         ),
-
     );
   }
 }

@@ -162,7 +162,7 @@ class _RegisterState extends State<Register> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
                             Text(
-                              "Already ave an account?",
+                              "Already have an account?",
                               style: TextStyle(fontSize: 16),
                             ),
                             SizedBox(

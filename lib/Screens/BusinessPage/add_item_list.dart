@@ -106,7 +106,7 @@ class _AddItemListState extends State<AddItemList> {
                           width: MediaQuery.of(context).size.width-4,
                           padding: EdgeInsets.only(top: 10,bottom: 5,left: 20),
                             child: Text(
-                              "Item List",
+                              "Select item from item list",
                               textAlign: TextAlign.left,
                             )
                             ),

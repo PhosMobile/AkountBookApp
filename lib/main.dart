@@ -6,7 +6,6 @@ import 'package:akaunt/Screens/email_sent.dart';
 import 'package:akaunt/screens/get_started.dart';
 import 'package:akaunt/screens/otpVerification.dart';
 import 'package:flutter/material.dart';
-import 'package:akaunt/screens/home.dart';
 import 'package:akaunt/screens/login.dart';
 import 'package:akaunt/screens/register.dart';
 import 'package:redux/redux.dart';

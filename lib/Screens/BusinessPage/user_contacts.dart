@@ -71,12 +71,12 @@ class _AccessContactsState extends State<AccessContacts> {
           if(c.emails.isNotEmpty) {
             email = c.emails.first.value;
           }else{
-            phone = "";
+            email = "";
           }
           if(c.postalAddresses.isNotEmpty) {
             address = " ${c.postalAddresses.first.street } ${c.postalAddresses.first.city} ${c.postalAddresses.first.country }";
           }else{
-            phone = "";
+            address = "";
           }
 
           return ListTile(
