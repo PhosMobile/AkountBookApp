@@ -1,4 +1,4 @@
-import 'package:akount_books/Models/Expense.dart';
+import 'package:akaunt/Models/Expense.dart';
 import 'package:flutter/material.dart';
 
 class AddExpense {
@@ -7,14 +7,20 @@ class AddExpense {
   AddExpense({@required this.payload});
 }
 
-class UpdateExpense {
+class CreateExpense {
   final Expense payload;
-
-  UpdateExpense({@required this.payload});
+  CreateExpense({@required this.payload});
 }
 
 class DeleteExpense {
   final Expense payload;
 
   DeleteExpense({@required this.payload});
+}
+
+
+
+class EditExpense {
+  final Expense payload;
+  EditExpense({@required this.payload});
 }

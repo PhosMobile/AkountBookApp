@@ -1,8 +1,8 @@
-import 'package:akount_books/Api/BusinessPage/create_invoice.dart';
-import 'package:akount_books/AppState/app_state.dart';
-import 'package:akount_books/Models/invoice.dart';
-import 'package:akount_books/Widgets/empty.dart';
-import 'package:akount_books/Widgets/invoice_list_builder.dart';
+import 'package:akaunt/Api/BusinessPage/create_invoice.dart';
+import 'package:akaunt/AppState/app_state.dart';
+import 'package:akaunt/Models/invoice.dart';
+import 'package:akaunt/Widgets/empty.dart';
+import 'package:akaunt/Widgets/invoice_list_builder.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 

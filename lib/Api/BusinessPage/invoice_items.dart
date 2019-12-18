@@ -1,7 +1,7 @@
-import 'package:akount_books/Api/BusinessPage/get_invoice_items.dart';
-import 'package:akount_books/Graphql/graphql_config.dart';
-import 'package:akount_books/Graphql/mutations.dart';
-import 'package:akount_books/Models/item.dart';
+import 'package:akaunt/Api/BusinessPage/get_invoice_items.dart';
+import 'package:akaunt/Graphql/graphql_config.dart';
+import 'package:akaunt/Graphql/mutations.dart';
+import 'package:akaunt/Models/item.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
 class InvoiceItems {

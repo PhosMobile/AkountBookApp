@@ -1,10 +1,10 @@
-import 'package:akount_books/Api/BusinessPage/create_customer.dart';
-import 'package:akount_books/AppState/actions/customer_actions.dart' as customerAction;
-import 'package:akount_books/AppState/app_state.dart';
-import 'package:akount_books/Models/customer.dart';
-import 'package:akount_books/Widgets/HeaderTitle.dart';
-import 'package:akount_books/Widgets/buttons.dart';
-import 'package:akount_books/Widgets/customer_card.dart';
+import 'package:akaunt/Api/BusinessPage/create_customer.dart';
+import 'package:akaunt/AppState/actions/customer_actions.dart' as customerAction;
+import 'package:akaunt/AppState/app_state.dart';
+import 'package:akaunt/Models/customer.dart';
+import 'package:akaunt/Widgets/HeaderTitle.dart';
+import 'package:akaunt/Widgets/buttons.dart';
+import 'package:akaunt/Widgets/customer_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -16,7 +16,7 @@ class AddCustomerList extends StatelessWidget {
 
   final Widget addCustomer = new SvgPicture.asset(
     SVGFiles.add_customer,
-    semanticsLabel: 'Akount-book',
+    semanticsLabel: 'Akaunt-book',
     allowDrawingOutsideViewBox: true,
   );
 

@@ -1,5 +1,5 @@
-import 'package:akount_books/AppState/app_state.dart';
-import 'package:akount_books/Models/business.dart';
+import 'package:akaunt/AppState/app_state.dart';
+import 'package:akaunt/Models/business.dart';
 
 class BusinessReducers {
   updateEditedBusiness(Business business, AppState state) {

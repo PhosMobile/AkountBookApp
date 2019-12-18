@@ -1,4 +1,4 @@
-import 'package:akount_books/Models/item.dart';
+import 'package:akaunt/Models/item.dart';
 import 'package:flutter/material.dart';
 class AddBusinessItem {
   final List<Item> payload;

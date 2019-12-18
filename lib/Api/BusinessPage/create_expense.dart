@@ -1,12 +1,22 @@
-import 'package:akount_books/Widgets/HeaderTitle.dart';
-import 'package:akount_books/Widgets/error.dart';
-import 'package:akount_books/Widgets/loader_widget.dart';
-import 'package:akount_books/Widgets/logo_avatar.dart';
-import 'package:akount_books/Widgets/buttons.dart';
+import 'package:akaunt/AppState/actions/expense_actions.dart';
+import 'package:akaunt/AppState/app_state.dart';
+import 'package:akaunt/Graphql/graphql_config.dart';
+import 'package:akaunt/Graphql/mutations.dart';
+import 'package:akaunt/Models/Expense.dart';
+import 'package:akaunt/Screens/UserPage/dasboard.dart';
+import 'package:akaunt/Widgets/HeaderTitle.dart';
+import 'package:akaunt/Widgets/error.dart';
+import 'package:akaunt/Widgets/loader_widget.dart';
+import 'package:akaunt/Widgets/logo_avatar.dart';
+import 'package:akaunt/Widgets/buttons.dart';
+import 'package:akaunt/utilities/svg_files.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:akount_books/Widgets/Input_styles.dart';
+import 'package:akaunt/Widgets/Input_styles.dart';
+import 'package:flutter_redux/flutter_redux.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
 
 class AddExpenses extends StatefulWidget {
   @override
@@ -24,9 +34,10 @@ class _AddExpensesState extends State<AddExpenses> {
   String email;
   TextEditingController _expenseName = new TextEditingController();
   TextEditingController _quantity = new TextEditingController();
-  TextEditingController _businessDescription = new TextEditingController();
+  TextEditingController _expenseDescription = new TextEditingController();
   TextEditingController _price = new TextEditingController();
   String currency = "NGN";
+  String expenseDate = "";
 
   validate(value, errorText) {
     if (value.isEmpty) {
@@ -37,7 +48,7 @@ class _AddExpensesState extends State<AddExpenses> {
 
   @override
   Widget build(BuildContext context) {
-    return  Scaffold(
+    return Scaffold(
         appBar: AppBar(
             backgroundColor: Colors.white,
             iconTheme: IconThemeData(color: Theme.of(context).primaryColor),
@@ -46,12 +57,12 @@ class _AddExpensesState extends State<AddExpenses> {
           padding: EdgeInsets.only(top: 0),
           child: Container(
             decoration: BoxDecoration(
-                border: Border(top: BorderSide(width: 2, color: Theme.of(context).accentColor))
-            ),
+                border: Border(
+                    top: BorderSide(
+                        width: 2, color: Theme.of(context).accentColor))),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                SizedBox(height: 20),
                 Container(
                   padding: EdgeInsets.all(30),
                   child: Center(
@@ -64,7 +75,7 @@ class _AddExpensesState extends State<AddExpenses> {
                           'date': DateTime.now(),
                           'accept_terms': false,
                         },
-                        autovalidate: true,
+                        autovalidate: false,
                         child: Column(
                           children: <Widget>[
                             _hasErrors
@@ -83,7 +94,9 @@ class _AddExpensesState extends State<AddExpenses> {
                                   attribute: "expense_name",
                                   decoration:
                                       inputStyles.inputMain("Expense Name"),
-                                  validators: [FormBuilderValidators.required()],
+                                  validators: [
+                                    FormBuilderValidators.required()
+                                  ],
                                   controller: _expenseName,
                                 ),
                               ),
@@ -92,15 +105,16 @@ class _AddExpensesState extends State<AddExpenses> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: <Widget>[
                                 Container(
-                                  width:
-                                      MediaQuery.of(context).size.width / 2 - 50,
+                                  width: MediaQuery.of(context).size.width / 2 -
+                                      50,
                                   decoration: BoxDecoration(boxShadow: [
                                     inputStyles.boxShadowMain(context)
                                   ]),
                                   child: FormBuilderTextField(
                                     keyboardType: TextInputType.number,
                                     attribute: "quantity",
-                                    decoration: inputStyles.inputMain("Quantity"),
+                                    decoration:
+                                        inputStyles.inputMain("Quantity"),
                                     validators: [
                                       FormBuilderValidators.required()
                                     ],
@@ -108,8 +122,8 @@ class _AddExpensesState extends State<AddExpenses> {
                                   ),
                                 ),
                                 Container(
-                                  width:
-                                      MediaQuery.of(context).size.width / 2 - 50,
+                                  width: MediaQuery.of(context).size.width / 2 -
+                                      50,
                                   decoration: BoxDecoration(boxShadow: [
                                     inputStyles.boxShadowMain(context)
                                   ]),
@@ -141,19 +155,22 @@ class _AddExpensesState extends State<AddExpenses> {
                                             "Business can not be short than 30 character"),
                                     FormBuilderValidators.required()
                                   ],
-                                  controller: _businessDescription,
+                                  controller: _expenseDescription,
                                 ),
                               ),
                             ),
                           ],
                         ),
                       ),
-                      DatePickerButtonFull(
+                      DatePickerButtonLarge(
                           onPressed: () {
                             _pickExpenseDate();
                           },
-                          buttonText: Text("Date"),
-                          icon: Icon(Icons.date_range)),
+                          buttonText: Text(
+                              expenseDate == "" ? "Payment Date" : expenseDate,
+                              style: TextStyle(
+                                  color: Theme.of(context).primaryColor)),
+                          icon: pickDate),
                       SizedBox(
                         height: 40,
                       ),
@@ -161,11 +178,11 @@ class _AddExpensesState extends State<AddExpenses> {
                         buttonText: _isLoading
                             ? LoaderLight()
                             : Text("ADD EXPENSE",
-                                style:
-                                    TextStyle(fontSize: 16, color: Colors.white)),
+                                style: TextStyle(
+                                    fontSize: 16, color: Colors.white)),
                         onPressed: () {
                           if (_fbKey.currentState.saveAndValidate()) {
-                            _registerUser();
+                            _saveExpense(context);
                           }
                         },
                       ),
@@ -181,20 +198,68 @@ class _AddExpensesState extends State<AddExpenses> {
         ));
   }
 
-  _pickExpenseDate() {
-    DatePicker.showDatePicker(context,
-        showTitleActions: true,
-        minTime: DateTime(2018, 3, 5),
-        maxTime: DateTime(2019, 6, 7), onChanged: (date) {
-      print('change $date');
-    }, onConfirm: (date) {
-      print('confirm $date');
-    }, currentTime: DateTime.now(), locale: LocaleType.en);
-  }
-
-  void _registerUser() async {
+  _saveExpense(context) async {
+    GqlConfig graphQLConfiguration = GqlConfig();
+    final state = StoreProvider.of<AppState>(context).state;
+    final store = StoreProvider.of<AppState>(context);
     setState(() {
       _isLoading = true;
     });
+    Mutations createExpense = new Mutations();
+    QueryResult result = await graphQLConfiguration.getGraphql(context).mutate(
+        MutationOptions(
+            document: createExpense.createExpense(
+                _expenseName.text,
+                _expenseDescription.text,
+                int.parse(_quantity.text),
+                int.parse(_price.text),
+                expenseDate,
+                state.currentBusiness.id,
+                state.loggedInUser.userId)));
+
+    if(result.hasErrors){
+      print(result.errors);
+    }else{
+            dynamic expense = result.data["create_expense"];
+        Expense newExpense = Expense(
+          expense["id"],
+          expense["name"],
+          expense["description"],
+          int.parse(expense["quantity"]),
+          expense["price"],
+          expense["date"],
+          expense["business_id"],
+          expense["user_id"]);
+
+      store.dispatch(CreateExpense(payload:newExpense));
+
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+            builder: (context) => Dashboard(currentTab: 2,)),
+      );
+    }
   }
+
+  _pickExpenseDate() {
+    var maxTime = DateTime.now().year + 10;
+    DatePicker.showDatePicker(context,
+        showTitleActions: true,
+        minTime: DateTime(2018, 3, 5),
+        maxTime: DateTime(maxTime, 6, 7),
+        onChanged: (date) {}, onConfirm: (date) {
+      String day = date.day.toString();
+      String month = date.month.toString();
+      String year = date.year.toString();
+
+      setState(() {
+        expenseDate = "$year-$month-$day";
+      });
+    }, currentTime: DateTime.now(), locale: LocaleType.en);
+  }
+  final Widget pickDate = new SvgPicture.asset(
+    SVGFiles.pick_date,
+    semanticsLabel: 'Akaunt-book',
+    allowDrawingOutsideViewBox: true,
+  );
 }

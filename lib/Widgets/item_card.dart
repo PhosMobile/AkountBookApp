@@ -1,4 +1,4 @@
-import 'package:akount_books/utilities/currency_convert.dart';
+import 'package:akaunt/utilities/currency_convert.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -8,7 +8,7 @@ import '../utilities/svg_files.dart';
 class ItemCard extends StatelessWidget {
   final Widget addItem = new SvgPicture.asset(
     SVGFiles.add_item,
-    semanticsLabel: 'Akount-book',
+    semanticsLabel: 'Akaunt-book',
     allowDrawingOutsideViewBox: true,
   );
   final Item item;
@@ -17,7 +17,7 @@ class ItemCard extends StatelessWidget {
 
   final Widget selectedIcon = new SvgPicture.asset(
     SVGFiles.selected,
-    semanticsLabel: 'Akount-book',
+    semanticsLabel: 'Akaunt-book',
     allowDrawingOutsideViewBox: true,
     width: 10,
     height: 10,

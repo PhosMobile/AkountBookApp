@@ -1,4 +1,4 @@
-import 'package:akount_books/Models/customer.dart';
+import 'package:akaunt/Models/customer.dart';
 import 'package:flutter/material.dart';
 
 class AddCustomer {
@@ -29,4 +29,10 @@ class EditInvoiceCustomer {
   final Customer payload;
 
   EditInvoiceCustomer({@required this.payload});
+}
+
+class UpdateEditedCustomer {
+  final Customer payload;
+
+  UpdateEditedCustomer({@required this.payload});
 }

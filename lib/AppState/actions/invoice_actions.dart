@@ -1,6 +1,6 @@
-import 'package:akount_books/Models/edit_invoice.dart';
-import 'package:akount_books/Models/invoice.dart';
-import 'package:akount_books/Models/invoice_name.dart';
+import 'package:akaunt/Models/edit_invoice.dart';
+import 'package:akaunt/Models/invoice.dart';
+import 'package:akaunt/Models/invoice_name.dart';
 import 'package:flutter/material.dart';
 
 class FetchUserInvoice {

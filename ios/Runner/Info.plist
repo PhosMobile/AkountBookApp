@@ -11,7 +11,7 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>akount_books</string>
+	<string>akaunt</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
@@ -44,7 +44,8 @@
 	<key>NSPhotoLibraryUsageDescription</key>
 	<key>NSCameraUsageDescription</key>
 	<key>NSMicrophoneUsageDescription</key>
-
+    <key>NSContactsUsageDescription</key>
+    <string>This app requires contacts access to function properly.</string>
 	<false/>
 </dict>
 </plist>

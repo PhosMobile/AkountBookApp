@@ -88,11 +88,15 @@ class Queries {
             user_id
             }
             expenses{
+              id
               name
               description
               quantity
               price
               date
+              business_id
+              user_id
+              
             }
                               }
                             }

@@ -1,15 +1,17 @@
-import 'package:akount_books/Api/BusinessPage/record_payment.dart';
-import 'package:akount_books/Api/BusinessPage/update_invoice.dart';
-import 'package:akount_books/AppState/actions/invoice_actions.dart';
-import 'package:akount_books/AppState/actions/item_actions.dart';
-import 'package:akount_books/AppState/app_state.dart';
-import 'package:akount_books/Models/customer.dart';
-import 'package:akount_books/Models/edit_invoice.dart';
-import 'package:akount_books/Models/invoice.dart';
-import 'package:akount_books/Models/item.dart';
-import 'package:akount_books/Widgets/buttons.dart';
-import 'package:akount_books/Widgets/view_invoice_field_card.dart';
-import 'package:akount_books/utilities/currency_convert.dart';
+import 'package:akaunt/Api/BusinessPage/record_payment.dart';
+import 'package:akaunt/Api/BusinessPage/update_invoice.dart';
+import 'package:akaunt/AppState/actions/invoice_actions.dart';
+import 'package:akaunt/AppState/actions/item_actions.dart';
+import 'package:akaunt/AppState/app_state.dart';
+import 'package:akaunt/Models/customer.dart';
+import 'package:akaunt/Models/edit_invoice.dart';
+import 'package:akaunt/Models/invoice.dart';
+import 'package:akaunt/Models/item.dart';
+import 'package:akaunt/Widgets/buttons.dart';
+import 'package:akaunt/Widgets/invoice_header.dart';
+import 'package:akaunt/Widgets/view_invoice_field_card.dart';
+import 'package:akaunt/dart.dart';
+import 'package:akaunt/utilities/currency_convert.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -42,6 +44,9 @@ class ViewInvoice extends StatelessWidget {
                     "DOWNLOAD",
                     style: TextStyle(color: Theme.of(context).primaryColor),
                   ),
+                  onTap: (){
+                    DownloadPdf().downloadPdf(context);
+                  },
                 ),
                 InkWell(
                   child: Icon(MdiIcons.dotsVertical),
@@ -85,94 +90,189 @@ class ViewInvoice extends StatelessWidget {
               return SingleChildScrollView(
                 child: Container(
                   decoration: BoxDecoration(
+                    color: Colors.white,
                       border: Border(
                           top: BorderSide(
                               width: 2, color: Theme.of(context).accentColor))),
                   child: new Center(
                     child: Padding(
-                      padding: const EdgeInsets.all(20.0),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: <Widget>[
-                          ViewInvoiceFieldCard(
-                              title: "Customer Name:", value: customer.name),
-                          ViewInvoiceFieldCard(
-                              title: "Invoice Name:", value: invoice.title),
-                          ViewInvoiceFieldCard(
-                              title: "Invoice Date:", value: invoice.issueDate),
-                          ViewInvoiceFieldCard(
-                              title: "Due Date:", value: invoice.dueDate),
-                          SizedBox(
-                            height: 30,
-                          ),
-                          Container(
-                            padding:
-                                EdgeInsets.only(top: 10, bottom: 10, left: 5),
-                            color: Theme.of(context).accentColor,
-                            child: Row(
-                              children: <Widget>[
-                                Text("Items: "),
-                              ],
+                      padding: const EdgeInsets.all(10.0),
+                      child: Container(
+                        decoration: BoxDecoration(
+                            boxShadow: [
+                              BoxShadow(
+                                blurRadius: 10,
+                                color: Color.fromRGBO(0, 0, 0, 0.2), // has the effect of softening the shadow
+                                spreadRadius: 1.0, // has the effect of extending the shadow
+                                offset: Offset(
+                                  0.0, // horizontal, move right 10
+                                  0.0, // vertical, move down 10
+                                ),
+                              )
+                            ],
+                          color: Colors.white
+                           ),
+                        padding: EdgeInsets.all(15),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: <Widget>[
+                            InvoiceHeader(status: invoice.status),
+                            Divider(thickness: 2,color: Theme.of(context).accentColor,height: 30,),
+                            ViewInvoiceFieldCard(
+                                title: "Invoice Name:", value: invoice.title),
+                            ViewInvoiceFieldCard(
+                                title: "Invoice Date:", value: invoice.issueDate),
+                            ViewInvoiceFieldCard(
+                                title: "Due Date:", value: invoice.dueDate),
+                            ViewInvoiceFieldCard(
+                                title: "Amount Due",
+                                value: CurrencyConverter()
+                                    .formatPrice(invoice.totalAmount, "NGN")),
+                            ViewInvoiceFieldCard(
+                                title: "Customer Name:", value: customer.name),
+
+//                        Column(
+//                          children: <Widget>[
+//                            Row(
+//                              children: <Widget>[
+//                                Text("Invoice"),
+//                                Text("${invoice.number}"),
+//                              ],
+//                            )
+//                          ],
+//                        ),
+                            SizedBox(
+                              height: 30,
                             ),
-                          ),
-                          for (var item in invoiceItem)
+                            Container(
+                              padding:
+                                  EdgeInsets.only(top: 10, bottom: 10,left: 5, right: 5),
+                              color: Theme.of(context).accentColor,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: <Widget>[
+                                  Container(child: Text("ITEMS"),width: MediaQuery.of(context).size.width/3-30),
+                                  Container(child: Text("QTY "),width: MediaQuery.of(context).size.width/3-30),
+                                  Text("AMOUNT"),
+                                ],
+                              ),
+                            ),
+                            for (var item in invoiceItem)
+                              Container(
+                                width: MediaQuery.of(context).size.width,
+                                padding: EdgeInsets.only(top: 5, bottom: 5,),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: <Widget>[
+                                    Container(child: Text("${item.name}"),width: MediaQuery.of(context).size.width/3-30,),
+                                    Container(child: Text("${item.quantity}"),width: MediaQuery.of(context).size.width/3-30),
+                                    Text(CurrencyConverter().formatPrice(
+                                        int.parse(item.price), state.currentBusiness.currency)),
+                                  ],
+                                ),
+                              ),
+
+                            SizedBox(
+                              height: 30,
+                            ),
+                            Container(
+                                decoration: BoxDecoration(
+                                    border: Border(bottom: BorderSide(width: 2, color: Theme.of(context).accentColor))
+                                ),
+                                padding: EdgeInsets.only(top: 10, bottom: 20),
+                                child:  Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: <Widget>[
+                                    Text("Tax"),
+                                    Text("N 3,000"),
+
+                                  ],
+                                )
+                            ),
+                            Container(
+                                decoration: BoxDecoration(
+                                    border: Border(bottom: BorderSide(width: 2, color: Theme.of(context).accentColor))
+                                ),
+                              padding: EdgeInsets.only(top: 10, bottom: 20),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: <Widget>[
+                                  Text("Total"),
+                                  Text(CurrencyConverter().formatPrice(
+                                      invoice.totalAmount, state.currentBusiness.currency)),
+
+                                ],
+                              ),
+                            ),
+                            SizedBox(
+                              height: 30,
+                            ),
+                            Container(
+                              decoration: BoxDecoration(
+                                  border: Border(bottom: BorderSide(width: 2, color: Theme.of(context).accentColor))
+                              ),
+
+                              padding: EdgeInsets.only(top: 10, bottom: 20),
+                              width: MediaQuery.of(context).size.width,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: <Widget>[
+                                  Text("NOTES"),
+                                  Text("${invoice.notes}"),
+
+                                ],
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                              ),
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
                             Container(
                               width: MediaQuery.of(context).size.width,
+                              padding: EdgeInsets.only(top: 10, bottom: 20),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
-                                  ViewInvoiceFieldCard(
-                                      title: "Item Name:", value: item.name),
-                                  ViewInvoiceFieldCard(
-                                      title: "Quantity:", value: item.quantity),
-                                  ViewInvoiceFieldCard(
-                                      title: "Price Per Quantity",
-                                      value: CurrencyConverter().formatPrice(
-                                          int.parse(item.price), "NGN")),
+                                  Text("FOOTER"),
+                                  Text("${invoice.footer}"),
+
                                 ],
                               ),
-                              padding: EdgeInsets.only(
-                                left: 5,
-                                top: 20,
-                                bottom: 20,
-                              ),
                             ),
-                          ViewInvoiceFieldCard(
-                              title: "Amount Due",
-                              value: CurrencyConverter()
-                                  .formatPrice(invoice.totalAmount, "NGN")),
-                          SizedBox(
-                            height: 30,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-                              PrimaryMiniButton(
-                                buttonText: Text("SEND REMINDER",
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.w100,
-                                        fontSize: 14,
-                                        color: Colors.white)),
-                                onPressed: () {},
-                              ),
-                              SecondaryMiniButton(
-                                buttonText: Text("SEND RECEIPT",
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.w100,
-                                        fontSize: 14,
-                                        color: Theme.of(context).primaryColor)),
-                                onPressed: () {
-                                  StoreProvider.of<AppState>(context).dispatch(CreateInvoice(payload: invoice));
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => RecordPayment()),
-                                  );
-                                },
-                              ),
-                            ],
-                          ),
-                        ],
+                            SizedBox(
+                              height: 30,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                PrimaryMiniButton(
+                                  buttonText: Text("SEND REMINDER",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w100,
+                                          fontSize: 14,
+                                          color: Colors.white)),
+                                  onPressed: () {},
+                                ),
+
+                                SecondaryMiniButton(
+                                  buttonText: Text("SEND RECEIPT",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w100,
+                                          fontSize: 14,
+                                          color: Theme.of(context).primaryColor)),
+                                  onPressed: () {
+                                    StoreProvider.of<AppState>(context).dispatch(CreateInvoice(payload: invoice));
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => RecordPayment()),
+                                    );
+                                  },
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),

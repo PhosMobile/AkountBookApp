@@ -1,4 +1,4 @@
-import 'package:akount_books/Models/receipt.dart';
+import 'package:akaunt/Models/receipt.dart';
 import 'package:flutter/material.dart';
 
 class AddBusinessReceipt {

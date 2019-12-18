@@ -1,19 +1,20 @@
-import 'package:akount_books/AppState/actions/customer_actions.dart';
-import 'package:akount_books/AppState/actions/expense_actions.dart';
-import 'package:akount_books/AppState/actions/invoice_actions.dart';
-import 'package:akount_books/AppState/actions/item_actions.dart';
-import 'package:akount_books/AppState/actions/receipt_actions.dart';
-import 'package:akount_books/AppState/app_state.dart';
-import 'package:akount_books/Graphql/queries.dart';
-import 'package:akount_books/Models/Expense.dart';
-import 'package:akount_books/Models/customer.dart';
-import 'package:akount_books/Models/invoice.dart';
-import 'package:akount_books/Models/item.dart';
-import 'package:akount_books/Models/receipt.dart';
+import 'package:akaunt/AppState/actions/customer_actions.dart';
+import 'package:akaunt/AppState/actions/expense_actions.dart';
+import 'package:akaunt/AppState/actions/invoice_actions.dart';
+import 'package:akaunt/AppState/actions/item_actions.dart';
+import 'package:akaunt/AppState/actions/receipt_actions.dart';
+import 'package:akaunt/AppState/app_state.dart';
+import 'package:akaunt/Graphql/queries.dart';
+import 'package:akaunt/Models/Expense.dart';
+import 'package:akaunt/Models/customer.dart';
+import 'package:akaunt/Models/invoice.dart';
+import 'package:akaunt/Models/item.dart';
+import 'package:akaunt/Models/receipt.dart';
+import 'package:akaunt/Screens/BusinessPage/fetch_user_contacts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
-import 'package:akount_books/Graphql/graphql_config.dart';
+import 'package:akaunt/Graphql/graphql_config.dart';
 
 class CurrentBusinessData extends StatelessWidget {
   @override
@@ -21,6 +22,9 @@ class CurrentBusinessData extends StatelessWidget {
     return Container();
   }
   dynamic getBusinessData(context, id) async {
+    if(StoreProvider.of<AppState>(context).state.userContacts.length == 0){
+      await FetchUserData().fetchContacts(context);
+    }
     GqlConfig graphQLConfiguration = GqlConfig();
     Queries queries = Queries();
     QueryResult result = await graphQLConfiguration.getGraphql(context).query(
@@ -45,7 +49,6 @@ class CurrentBusinessData extends StatelessWidget {
     }
   }
 }
-
 saveInvoices(context, data) {
   List<Invoice> invoices = [];
   for (var item in data) {
@@ -67,7 +70,7 @@ saveInvoices(context, data) {
         item["user_id"],
 
     );
-    invoices.add(invoice);
+    invoices.insert(0,invoice);
   }
   final saveInvoice = StoreProvider.of<AppState>(context);
   saveInvoice.dispatch(FetchUserInvoice(payload: invoices));
@@ -86,12 +89,11 @@ saveCustomers(context, data) {
         item["image_url"],
         item["business_id"],
         item["user_id"]);
-    customers.add(customer);
+    customers.insert(0, customer);
   }
   final saveCustomer = StoreProvider.of<AppState>(context);
   saveCustomer.dispatch(AddCustomer(payload: customers));
 }
-
 saveExpenses(context, data) {
   List<Expense> expenses = [];
   for (var item in data) {
@@ -99,22 +101,23 @@ saveExpenses(context, data) {
         item["id"],
         item["name"],
         item["description"],
-        item["quantity"],
+        int.parse(item["quantity"]),
         item["price"],
         item["date"],
         item["business_id"],
         item["user_id"]);
-    expenses.add(expense);
+    expenses.insert(0,expense);
   }
   final saveExpense = StoreProvider.of<AppState>(context);
   saveExpense.dispatch(AddExpense(payload: expenses));
 }
+
 saveItems(context, data) {
   List<Item> businessItems = [];
   for (var item in data) {
     Item businessItem = Item(item["id"], item["name"], item["description"],
         item["quantity"], item["price"], item["business_id"], item["user_id"]);
-    businessItems.add(businessItem);
+    businessItems.insert(0,businessItem);
   }
   final saveItem = StoreProvider.of<AppState>(context);
   saveItem.dispatch(AddBusinessItem(payload: businessItems));
@@ -135,7 +138,7 @@ saveReceipts(context, data){
         item["business_id"],
         item["customerId"],
         item["user_id"]);
-    receipts.add(receipt);
+    receipts.insert(0,receipt);
   }
   final saveReceipt = StoreProvider.of<AppState>(context);
   saveReceipt.dispatch(AddBusinessReceipt(payload: receipts));

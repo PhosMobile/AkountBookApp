@@ -11,7 +11,6 @@ class SVGFiles {
   static const download = "images/download.svg";
   static const download_primary = "images/download_primary.svg";
   static const edit = "images/edit.svg";
-
   static const edit_business_icon = "images/edit_business_icon.svg";
   static const gear = "images/gear.svg";
   static const logout = "images/logout.svg";
@@ -25,7 +24,6 @@ class SVGFiles {
   static const selected = "images/selected.svg";
   static const attach_invoice = "images/attach_invoice.svg";
 
-
   static const send_via_whatsApp_selected = "images/send_via_whatsapp_selected.svg";
   static const send_via_whatsApp_unselected = "images/send_via_whatsapp_unselected.svg";
   static const send_via_email_selected = "images/send_via_email_selected.svg";
@@ -34,6 +32,5 @@ class SVGFiles {
   static const send_via_sms_unselected = "images/send_via_sms_unselected.svg";
 
   static const switch_business = "images/switch_business.svg";
-
 
 }

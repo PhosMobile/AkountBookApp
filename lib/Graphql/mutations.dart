@@ -16,7 +16,6 @@ class Mutations {
       }
     """;
   }
-
   String forgotPassword(String email) {
     return """
       mutation{
@@ -101,8 +100,6 @@ class Mutations {
       }
     """;
   }
-
-
   String deleteBusiness(String id) {
     return """
       mutation{
@@ -114,9 +111,6 @@ class Mutations {
       }
     """;
   }
-
-
-
 
   String createCustomer(String name, String email, String phone,
       String address, String businessId, String userId, String imageUrl) {
@@ -143,6 +137,53 @@ class Mutations {
       }
     """;
   }
+
+  String updateCustomer(String id, String name, String email, String phone,
+      String address, String imageUrl) {
+    return """
+      mutation{
+          update_customer(
+          id:"$id",
+          name: "$name", 
+          email: "$email", 
+          phone: "$phone", 
+          address:"$address"
+          image_url:"$imageUrl"
+          ){
+          id
+          name
+          email
+          phone
+          address
+          image_url
+          business_id
+          user_id
+          }
+      }
+    """;
+  }
+
+  String deleteCustomer(String id) {
+    return """
+      mutation{
+          delete_customer(
+          id:"$id",
+          ){
+          id
+          name
+          email
+          phone
+          address
+          image_url
+          business_id
+          user_id
+          }
+      }
+    """;
+  }
+
+
+
 
 
   String createItem(String name, String description, int quantity,
@@ -368,6 +409,91 @@ user_id
             business_id
             customer_id
             user_id
+          }
+      }
+    """;
+  }
+
+  String createExpense(
+      String name,
+      String description,
+      int quantity,
+      int price,
+      String date,
+      String businessId,
+      String userId
+      ) {
+    return """
+      mutation{
+          create_expense(
+          name:"$name"
+          description:"$description"
+          quantity:$quantity
+          price:$price
+          date:"$date"
+          business_id:"$businessId"
+          user_id:"$userId"
+          ){
+          id
+          name
+          description
+          quantity
+          price
+          date
+          business_id
+          user_id
+          }
+      }
+    """;
+  }
+
+
+  String updateExpense(
+      String id,
+      String name,
+      String description,
+      int quantity,
+      int price,
+      String date,
+      ) {
+    return """
+      mutation{
+          update_expense(
+          id:"$id",
+          name:"$name"
+          description:"$description"
+          quantity:$quantity
+          price:$price
+          date:"$date"
+          ){
+          id
+          name
+          description
+          quantity
+          price
+          date
+          business_id
+          user_id
+          }
+      }
+    """;
+  }
+  String deleteExpense(
+      String id,
+      ) {
+    return """
+      mutation{
+          delete_expense(
+          id:"$id"
+          ){
+          id
+          name
+          description
+          quantity
+          price
+          date
+          business_id
+          user_id
           }
       }
     """;

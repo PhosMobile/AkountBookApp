@@ -1,15 +1,15 @@
-import 'package:akount_books/Api/BusinessPage/create_business.dart';
-import 'package:akount_books/Api/BusinessPage/current_business_data.dart';
-import 'package:akount_books/Api/BusinessPage/edit_business.dart';
-import 'package:akount_books/AppState/actions/business_actions.dart';
-import 'package:akount_books/AppState/app_state.dart';
-import 'package:akount_books/Graphql/graphql_config.dart';
-import 'package:akount_books/Graphql/mutations.dart';
-import 'package:akount_books/Models/business.dart';
-import 'package:akount_books/Widgets/HeaderTitle.dart';
-import 'package:akount_books/Widgets/buttons.dart';
-import 'package:akount_books/Widgets/loading_snack_bar.dart';
-import 'package:akount_books/utilities/svg_files.dart';
+import 'package:akaunt/Api/BusinessPage/create_business.dart';
+import 'package:akaunt/Api/BusinessPage/current_business_data.dart';
+import 'package:akaunt/Api/BusinessPage/edit_business.dart';
+import 'package:akaunt/AppState/actions/business_actions.dart';
+import 'package:akaunt/AppState/app_state.dart';
+import 'package:akaunt/Graphql/graphql_config.dart';
+import 'package:akaunt/Graphql/mutations.dart';
+import 'package:akaunt/Models/business.dart';
+import 'package:akaunt/Widgets/HeaderTitle.dart';
+import 'package:akaunt/Widgets/buttons.dart';
+import 'package:akaunt/Widgets/loading_snack_bar.dart';
+import 'package:akaunt/utilities/svg_files.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -28,7 +28,7 @@ class _SwitchBusinessState extends State<SwitchBusiness> {
   Business currentBusiness;
   final Widget switchBusiness = new SvgPicture.asset(
     SVGFiles.switch_business,
-    semanticsLabel: 'Akount-book',
+    semanticsLabel: 'Akaunt-book',
     allowDrawingOutsideViewBox: true,
   );
   bool snackActive = false;
@@ -216,7 +216,7 @@ class _SwitchBusinessState extends State<SwitchBusiness> {
                       width: MediaQuery.of(context).size.width,
                       color: Colors.red,
                       child: PrimaryButton(
-                          onPressed: () {
+                          onPressed: () async {
                             final business =
                                 StoreProvider.of<AppState>(context);
                             business.dispatch(

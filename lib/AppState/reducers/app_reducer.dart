@@ -1,14 +1,17 @@
-import 'package:akount_books/AppState/actions/business_actions.dart';
-import 'package:akount_books/AppState/actions/customer_actions.dart';
-import 'package:akount_books/AppState/actions/discount_actions.dart';
-import 'package:akount_books/AppState/actions/expense_actions.dart';
-import 'package:akount_books/AppState/actions/invoice_actions.dart';
-import 'package:akount_books/AppState/actions/item_actions.dart';
-import 'package:akount_books/AppState/actions/receipt_actions.dart';
-import 'package:akount_books/AppState/actions/user_actions.dart';
-import 'package:akount_books/AppState/app_state.dart';
-import 'package:akount_books/AppState/reducers/business_reducers.dart';
-import 'package:akount_books/AppState/reducers/invoice_reducers.dart';
+import 'package:akaunt/AppState/actions/business_actions.dart';
+import 'package:akaunt/AppState/actions/customer_actions.dart';
+import 'package:akaunt/AppState/actions/discount_actions.dart';
+import 'package:akaunt/AppState/actions/expense_actions.dart';
+import 'package:akaunt/AppState/actions/invoice_actions.dart';
+import 'package:akaunt/AppState/actions/item_actions.dart';
+import 'package:akaunt/AppState/actions/receipt_actions.dart';
+import 'package:akaunt/AppState/actions/user_actions.dart';
+import 'package:akaunt/AppState/actions/user_phone_contacts_actions.dart';
+import 'package:akaunt/AppState/app_state.dart';
+import 'package:akaunt/AppState/reducers/business_reducers.dart';
+import 'package:akaunt/AppState/reducers/customer_reducers.dart';
+import 'package:akaunt/AppState/reducers/expense_reducers.dart';
+import 'package:akaunt/AppState/reducers/invoice_reducers.dart';
 
 AppState appReducer(AppState prevState, dynamic action) {
   AppState newAppState = prevState;
@@ -67,7 +70,24 @@ AppState appReducer(AppState prevState, dynamic action) {
     BusinessReducers().removeEditedBusiness(action.payload, newAppState);
   }else if (action is CreateDiscount) {
     newAppState.invoiceDiscount.add(action.payload);
+  }else if (action is AddUserContacts) {
+    action.payload.forEach((contact){
+      newAppState.userContacts.add(contact);
+    });
+  }else if (action is AddCustomerFromContact) {
+    newAppState.customerFromContact = action.payload;
+  }else if (action is CreateExpense) {
+    newAppState.businessExpenses.insert(0, action.payload);
+  }else if (action is EditExpense) {
+    ExpenseReducers().updateEditedExpense(action.payload, newAppState);
+  }else if (action is DeleteExpense) {
+    ExpenseReducers().deleteExpense(action.payload, newAppState);
+  }else if (action is UpdateEditedCustomer) {
+    CustomerReducers().updateEditedCustomer(action.payload, newAppState);
+  }else if (action is DeleteCustomer) {
+    CustomerReducers().deleteCustomer(action.payload, newAppState);
   }
+
   return newAppState;
 
 }

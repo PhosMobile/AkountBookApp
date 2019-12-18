@@ -1,5 +1,5 @@
 
-import 'package:akount_books/utilities/currency_convert.dart';
+import 'package:akaunt/utilities/currency_convert.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../Models/item.dart';
@@ -9,7 +9,7 @@ import '../utilities/svg_files.dart';
 class InvoiceItemCard extends StatelessWidget{
   final Widget addItem = new SvgPicture.asset(
     SVGFiles.add_item,
-    semanticsLabel: 'Akount-book',
+    semanticsLabel: 'Akaunt-book',
     allowDrawingOutsideViewBox: true,
   );
 

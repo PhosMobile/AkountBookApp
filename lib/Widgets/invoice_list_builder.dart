@@ -1,12 +1,13 @@
-import 'package:akount_books/Api/BusinessPage/get_invoice_items.dart';
-import 'package:akount_books/AppState/app_state.dart';
-import 'package:akount_books/Models/customer.dart';
-import 'package:akount_books/Models/invoice.dart';
-import 'package:akount_books/Models/item.dart';
-import 'package:akount_books/Screens/BusinessPage/view_invoice.dart';
-import 'package:akount_books/Screens/BusinessPage/view_invoice_draft.dart';
-import 'package:akount_books/Widgets/loading_snack_bar.dart';
-import 'package:akount_books/utilities/currency_convert.dart';
+import 'package:akaunt/Api/BusinessPage/get_invoice_items.dart';
+import 'package:akaunt/AppState/app_state.dart';
+import 'package:akaunt/Models/customer.dart';
+import 'package:akaunt/Models/invoice.dart';
+import 'package:akaunt/Models/item.dart';
+import 'package:akaunt/Screens/BusinessPage/view_invoice.dart';
+import 'package:akaunt/Screens/BusinessPage/view_invoice_draft.dart';
+import 'package:akaunt/Widgets/invoice_status.dart';
+import 'package:akaunt/Widgets/loading_snack_bar.dart';
+import 'package:akaunt/utilities/currency_convert.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -40,53 +41,105 @@ class InvoiceListBuilder extends StatelessWidget {
                   Invoice invoice = invoices[index];
                   return InkWell(
                     child: Container(
-                      padding: EdgeInsets.all(20.0),
-                      decoration: BoxDecoration(
-                          color: Color.fromRGBO(248, 248, 248, 1),
-                          border: Border(
-                              bottom: BorderSide(
-                                  width: 2,
-                                  color: Color.fromRGBO(233, 237, 240, 1)))),
-                      child: Column(
-                        children: <Widget>[
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-                              Text("$invoiceTitle > $cName"),
-                              Text(
-                                CurrencyConverter()
-                                    .formatPrice(invoice.totalAmount, currency),
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                            ],
-                          ),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-                              Container(
-                                padding: EdgeInsets.only(
-                                    top: 5, bottom: 5, left: 15, right: 15),
-                                decoration: BoxDecoration(
-                                    color: Theme.of(context).accentColor,
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(3))),
-                                child: Text(
-                                  invoice.status,
-                                  style: TextStyle(
-                                      color: Theme.of(context).primaryColor,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 12),
+                        padding: EdgeInsets.all(20.0),
+                        decoration: BoxDecoration(
+                            color: Color.fromRGBO(250, 253, 255, 1),
+                            border: Border(
+                                bottom: BorderSide(
+                                    width: 2,
+                                    color: Color.fromRGBO(198, 228, 255, 1)))),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Row(
+                              children: <Widget>[
+                                invoice.status.toLowerCase() == "due"
+                                    ? InvoiceStatus(
+                                        status: invoice.status,
+                                        avatarBgColor:
+                                            Color.fromRGBO(251, 224, 192, 1),
+                                        textColor:
+                                            Color.fromRGBO(88, 52, 4, 1),
+                                      )
+                                    : SizedBox(),
+                                invoice.status.toLowerCase() == "draft"
+                                    ? InvoiceStatus(
+                                        status: invoice.status,
+                                        avatarBgColor:
+                                            Color.fromRGBO(224, 237, 253, 1),
+                                        textColor:
+                                            Color.fromRGBO(68, 130, 193, 1))
+                                    : SizedBox(),
+                                invoice.status.toLowerCase() == "paid"
+                                    ? InvoiceStatus(
+                                        status: invoice.status,
+                                        avatarBgColor:
+                                            Color.fromRGBO(192, 251, 221, 1),
+                                        textColor:
+                                            Color.fromRGBO(4, 88, 38, 1))
+                                    : SizedBox(),
+                                invoice.status.toLowerCase() == "sent"
+                                    ? InvoiceStatus(
+                                    status: invoice.status,
+                                    avatarBgColor:
+                                    Color.fromRGBO(224, 237, 253, 1),
+                                    textColor:
+                                    Color.fromRGBO(68, 130, 193, 1))
+                                    : SizedBox(),
+                                SizedBox(
+                                  width: 20,
                                 ),
-                              ),
-                              Text(invoice.dueDate)
-                            ],
-                          )
-                        ],
-                      ),
-                    ),
+                                Container(
+                                  width: MediaQuery.of(context).size.width/2,
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: <Widget>[
+                                      Text(
+                                        "$cName",
+                                        style: TextStyle(
+                                            fontSize: 16,
+                                            color:
+                                                Theme.of(context).primaryColor),
+                                      ),
+                                      SizedBox(
+                                        height: 10,
+                                      ),
+                                      Text(
+                                        "$invoiceTitle",
+                                        style: TextStyle(
+                                            fontSize: 12,
+                                            color:
+                                                Color.fromRGBO(106, 117, 139, 1)),
+                                      )
+                                    ],
+                                  ),
+                                )
+                              ],
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: <Widget>[
+                                Text(
+                                    CurrencyConverter().formatPrice(
+                                        invoice.totalAmount, currency),
+                                    style: TextStyle(
+                                        fontSize: 16,
+                                        color: Theme.of(context).primaryColor,
+                                        fontWeight: FontWeight.bold)),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Text(invoice.dueDate,
+                                    style: TextStyle(
+                                        fontSize: 12,
+                                        color:
+                                            Color.fromRGBO(106, 117, 139, 1)))
+                              ],
+                            )
+                          ],
+                        )),
                     onTap: () async {
                       List<Item> allInvoiceItems = [];
                       _scaffoldKey.currentState.showSnackBar(LoadingSnackBar()

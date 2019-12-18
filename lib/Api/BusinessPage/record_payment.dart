@@ -1,18 +1,18 @@
-import 'package:akount_books/AppState/app_state.dart';
-import 'package:akount_books/Models/customer.dart';
-import 'package:akount_books/Models/invoice.dart';
-import 'package:akount_books/Models/receipt.dart';
-import 'package:akount_books/Screens/BusinessPage/preview_receipt.dart';
-import 'package:akount_books/Screens/invoice_list.dart';
-import 'package:akount_books/Widgets/AlertSnackBar.dart';
-import 'package:akount_books/Widgets/HeaderTitle.dart';
-import 'package:akount_books/Widgets/loader_widget.dart';
-import 'package:akount_books/Widgets/buttons.dart';
-import 'package:akount_books/utilities/svg_files.dart';
+import 'package:akaunt/AppState/app_state.dart';
+import 'package:akaunt/Models/customer.dart';
+import 'package:akaunt/Models/invoice.dart';
+import 'package:akaunt/Models/receipt.dart';
+import 'package:akaunt/Screens/BusinessPage/preview_receipt.dart';
+import 'package:akaunt/Screens/invoice_list.dart';
+import 'package:akaunt/Widgets/AlertSnackBar.dart';
+import 'package:akaunt/Widgets/HeaderTitle.dart';
+import 'package:akaunt/Widgets/loader_widget.dart';
+import 'package:akaunt/Widgets/buttons.dart';
+import 'package:akaunt/utilities/svg_files.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:akount_books/Widgets/Input_styles.dart';
+import 'package:akaunt/Widgets/Input_styles.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -332,12 +332,12 @@ class _RecordPaymentState extends State<RecordPayment> {
 
   final Widget pickDate = new SvgPicture.asset(
     SVGFiles.pick_date,
-    semanticsLabel: 'Akount-book',
+    semanticsLabel: 'Akaunt-book',
     allowDrawingOutsideViewBox: true,
   );
   final Widget attachInvoice = new SvgPicture.asset(
     SVGFiles.attach_invoice,
-    semanticsLabel: 'Akount-book',
+    semanticsLabel: 'Akaunt-book',
     allowDrawingOutsideViewBox: true,
   );
 }

@@ -1,11 +1,11 @@
-import 'package:akount_books/Api/BusinessPage/create_item.dart';
-import 'package:akount_books/AppState/actions/item_actions.dart';
-import 'package:akount_books/AppState/app_state.dart';
-import 'package:akount_books/Models/item.dart';
-import 'package:akount_books/Widgets/HeaderTitle.dart';
-import 'package:akount_books/Widgets/buttons.dart';
-import 'package:akount_books/Widgets/item_card.dart';
-import 'package:akount_books/utilities/svg_files.dart';
+import 'package:akaunt/Api/BusinessPage/create_item.dart';
+import 'package:akaunt/AppState/actions/item_actions.dart';
+import 'package:akaunt/AppState/app_state.dart';
+import 'package:akaunt/Models/item.dart';
+import 'package:akaunt/Widgets/HeaderTitle.dart';
+import 'package:akaunt/Widgets/buttons.dart';
+import 'package:akaunt/Widgets/item_card.dart';
+import 'package:akaunt/utilities/svg_files.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -20,7 +20,7 @@ class _AddItemListState extends State<AddItemList> {
   List<Item> selectedItems = [];
   final Widget addItem = new SvgPicture.asset(
     SVGFiles.add_item,
-    semanticsLabel: 'Akount-book',
+    semanticsLabel: 'Akaunt-book',
     allowDrawingOutsideViewBox: true,
   );
 

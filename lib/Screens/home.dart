@@ -1,6 +1,6 @@
-import 'package:akount_books/Widgets/logo_avatar.dart';
+import 'package:akaunt/Widgets/logo_avatar.dart';
 import 'package:flutter/material.dart';
-import 'package:akount_books/Widgets/buttons.dart';
+import 'package:akaunt/Widgets/buttons.dart';
 
 
 class Home extends StatelessWidget {
@@ -20,7 +20,7 @@ class Home extends StatelessWidget {
                     SizedBox(
                       height: 10,
                     ),
-                    Text("AKOUNT BOOK",
+                    Text("AKAUNT BOOK",
                         style: TextStyle(
                           fontSize: 35,
                           fontWeight: FontWeight.w900,
@@ -61,7 +61,7 @@ class Home extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         Text(
-                          "Already ave an account?",
+                          "Already have an account?",
                           style: TextStyle(fontSize: 16),
                         ),
                         SizedBox(

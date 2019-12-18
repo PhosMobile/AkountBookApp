@@ -1,14 +1,14 @@
-import 'package:akount_books/Api/BusinessPage/create_business.dart';
-import 'package:akount_books/Api/BusinessPage/edit_business.dart';
-import 'package:akount_books/Screens/UserPage/dasboard.dart';
-import 'package:akount_books/Screens/UserPage/logout.dart';
-import 'package:akount_books/Screens/email_sent.dart';
-import 'package:akount_books/screens/get_started.dart';
-import 'package:akount_books/screens/otpVerification.dart';
+import 'package:akaunt/Api/BusinessPage/create_business.dart';
+import 'package:akaunt/Api/BusinessPage/edit_business.dart';
+import 'package:akaunt/Screens/UserPage/dasboard.dart';
+import 'package:akaunt/Screens/UserPage/logout.dart';
+import 'package:akaunt/Screens/email_sent.dart';
+import 'package:akaunt/screens/get_started.dart';
+import 'package:akaunt/screens/otpVerification.dart';
 import 'package:flutter/material.dart';
-import 'package:akount_books/screens/home.dart';
-import 'package:akount_books/screens/login.dart';
-import 'package:akount_books/screens/register.dart';
+import 'package:akaunt/screens/home.dart';
+import 'package:akaunt/screens/login.dart';
+import 'package:akaunt/screens/register.dart';
 import 'package:redux/redux.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'AppState/app_state.dart';
@@ -27,9 +27,9 @@ class MyApp extends StatelessWidget {
       store: store,
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        title: "Akount Book",
+        title: "Akaunt Book",
         theme: ThemeData(
-          primaryColor: Color.fromRGBO(4, 100, 183, 1),
+          primaryColor: Color.fromRGBO(0, 174, 239, 1),
           accentColor: Color.fromRGBO(200, 228, 253, 1),
           primaryColorLight: Color.fromRGBO(200, 228, 253, 0.5),
           cardColor: Colors.transparent,
@@ -39,7 +39,6 @@ class MyApp extends StatelessWidget {
         routes: {
           '/register': (context) => Register(),
           '/login': (context) => Login(),
-          '/get-started': (context) => GetStarted(),
           '/otp_verifiy': (context) => OTPVerification(),
           '/complete_registraton': (context) => OTPVerification(),
           '/forgot_password': (context) => ForgotPassword(),
@@ -50,7 +49,7 @@ class MyApp extends StatelessWidget {
           '/update_business': (context) => EditBusiness(business: store.state.currentBusiness,),
           '/logout': (context) => Logout(),
         },
-        home: Home(),
+        home: GetStarted(),
       ),
     );
   }
