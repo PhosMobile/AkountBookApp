@@ -36,8 +36,69 @@ class _CustomersState extends State<Customers> {
               if (businessCustomers.length == 0) {
                 return Container(
                   height: MediaQuery.of(context).size.height,
-                  child: Center(
-                    child: Empty(text: "No Customer"),
+                  child: Column(
+                    children: <Widget>[
+                      Container(
+                        color: Theme.of(context).primaryColor,
+                        width: MediaQuery.of(context).size.width,
+                        padding: EdgeInsets.only(top: 15,bottom: 15, left: 30),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text("YOUR CUSTOMER LIST IS EMPTY", style: TextStyle(color: Colors.black87, fontWeight: FontWeight.bold, fontSize: 14)),
+                            SizedBox(height: 5,),
+                            Text("Add contacts from phone Contacts", style: TextStyle(color: Colors.white))
+                          ],
+                        ),
+                      ),
+                      Expanded(
+                        child: ListView.builder(
+                            itemCount: state.userContacts.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              return InkWell(
+                                child: Padding(
+                                    padding: const EdgeInsets.only(
+                                        top: 4.0, bottom: 4.0),
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                          color:  Color.fromRGBO(248, 248, 248, 1)
+                                      ),
+                                      padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(left:20.0),
+                                        child: Row(
+                                          children: <Widget>[
+                                            Padding(
+                                                padding: const EdgeInsets.only(
+                                                    right: 15.0),
+                                                child: (state.userContacts[index].avatar != null && state.userContacts[index].avatar.length > 0)
+                                                    ? CircleAvatar(
+                                                  backgroundImage: MemoryImage(state.userContacts[index].avatar),
+                                                )
+                                                    : CircleAvatar(child: Text(state.userContacts[index].displayName[0].toUpperCase()))),
+                                            Expanded(
+                                                child: Text(
+                                                  state.userContacts[index].displayName,
+                                                  style: TextStyle(
+                                                      color: Colors.blueGrey[20]),
+                                                )),
+                                          ],
+                                        ),
+                                      ),
+                                    )),
+                                onTap: () {
+                                  final contact = StoreProvider.of<AppState>(context);
+                                  contact.dispatch(AddCustomerFromContact(payload: state.userContacts[index]));
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => AddCustomer(direct: true), ),
+                                  );
+                                },
+                              );
+                            }),
+                      )
+                    ],
                   ),
                 );
               } else {
@@ -71,7 +132,7 @@ class _CustomersState extends State<Customers> {
                         color: Theme.of(context).accentColor,
                         width: MediaQuery.of(context).size.width,
                         padding: EdgeInsets.only(top: 15,bottom: 15, left: 30),
-                        child: Text("Phone Contacts", style: TextStyle(color: Theme.of(context).primaryColor)),
+                        child: Text("Add contacts from phone Contacts", style: TextStyle(color: Colors.black87)),
                       ),
                       Expanded(
                         child: ListView.builder(

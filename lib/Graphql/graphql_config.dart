@@ -11,7 +11,7 @@ class GqlConfig {
 
     final LocalStorage storage = new LocalStorage('some_key');
     final HttpLink _httpLink = HttpLink(
-      uri: AppConfig.of(context).graphqlAPI +'//graphql',
+      uri: AppConfig.of(context).apiEndpoint +'//graphql',
     );
     if (storage.getItem("access_token") != null) {
       tk = storage.getItem("access_token")["access_token"];

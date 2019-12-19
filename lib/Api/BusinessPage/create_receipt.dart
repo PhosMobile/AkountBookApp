@@ -15,7 +15,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:akaunt/Widgets/AlertSnackBar.dart';
 
 class AddReceipt extends StatefulWidget {
-  final int invoicePrice;
+  final double invoicePrice;
 
   const AddReceipt({ this.invoicePrice});
   @override

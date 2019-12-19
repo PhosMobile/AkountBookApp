@@ -45,6 +45,7 @@ class _AddInvoiceState extends State<AddInvoice> {
   String requestErrors;
   bool _isDraftLoading = false;
   bool _isSendLoading = false;
+  bool _discountFormfilled = false;
 
   bool _hasErrors = false;
   TextEditingController _subTotal = new TextEditingController();
@@ -60,6 +61,7 @@ class _AddInvoiceState extends State<AddInvoice> {
   String _invoiceType = "DRAFT";
   String _invoiceDescription = "Project Name / Description";
   String _invoiceNumber = "P.S/S.O Number";
+  String dropdownValue = 'In Percent';
 
   List<Map<String, dynamic>> _children = [];
 
@@ -85,7 +87,6 @@ class _AddInvoiceState extends State<AddInvoice> {
                   _invoiceDescription = invoiceNameData.summary;
                   _invoiceNumber = invoiceNameData.poSoNumber;
                 }
-
                 _subTotal.text = CurrencyConverter().formatPrice(
                     TotalAndSubTotal().getSubTotal(context, isNewInvoice),
                     state.currentBusiness.currency);
@@ -379,25 +380,9 @@ class _AddInvoiceState extends State<AddInvoice> {
                                           Expanded(
                                               child: Text(item["description"])),
                                           SizedBox(width: 10),
-                                          Text(item["amount"]),
+                                          Text(
+                                              "${item["type"] == 1 ? "-" : "+"} ${TotalAndSubTotal().getSubTotal(context, isNewInvoice).round() - calculateTotal().round()}"),
                                           SizedBox(width: 10),
-                                          Container(
-                                            child: item["type"] == 1
-                                                ? Icon(
-                                                    Icons.remove,
-                                                    size: 12,
-                                                    color: Colors.white,
-                                                  )
-                                                : Icon(
-                                                    Icons.add,
-                                                    size: 12,
-                                                    color: Colors.white,
-                                                  ),
-                                            decoration: BoxDecoration(
-                                                color: Theme.of(context)
-                                                    .primaryColor),
-                                            padding: EdgeInsets.all(5),
-                                          ),
                                           SizedBox(width: 10),
                                           InkWell(
                                             child: Container(
@@ -793,7 +778,16 @@ class _AddInvoiceState extends State<AddInvoice> {
   }
 
   void _add() {
+    if (_discountFormfilled) {
+      setState(() {
+        _discountFormfilled = false;
+        _discountDescription.text = "";
+        _discountAmount.text = "";
+      });
+    }
+
     showModalBottomSheet(
+        elevation: 0,
         isScrollControlled: true,
         context: context,
         builder: (context) {
@@ -803,11 +797,12 @@ class _AddInvoiceState extends State<AddInvoice> {
             return Padding(
               padding: MediaQuery.of(context).viewInsets,
               child: Container(
-                height: 300,
+                height: 350,
                 child: Column(
                   children: <Widget>[
                     Column(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Container(
                           child: Row(
@@ -842,6 +837,25 @@ class _AddInvoiceState extends State<AddInvoice> {
                             ],
                           ),
                         ),
+                        Container(
+                          padding: EdgeInsets.only(left: 20),
+                          width: MediaQuery.of(context).size.width / 3,
+                          child: DropdownButton<String>(
+                            value: dropdownValue,
+                            onChanged: (String newValue) {
+                              setState(() {
+                                dropdownValue = newValue;
+                              });
+                            },
+                            items: <String>['In Percent', 'Absolute']
+                                .map<DropdownMenuItem<String>>((String value) {
+                              return DropdownMenuItem<String>(
+                                value: value,
+                                child: Text(value),
+                              );
+                            }).toList(),
+                          ),
+                        ),
                       ],
                     ),
                     Container(
@@ -861,13 +875,28 @@ class _AddInvoiceState extends State<AddInvoice> {
                             ),
                             controller: _discountAmount,
                           ),
-                          SizedBox(
-                            height: 20,
-                          ),
+                          _discountFormfilled
+                              ? Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text(
+                                    "Form not filled properly",
+                                    style: TextStyle(color: Colors.redAccent),
+                                  ),
+                                )
+                              : SizedBox(
+                                  height: 30,
+                                ),
                           PrimaryMiniButton(
                               onPressed: () {
-                                _addDiscount();
-                                Navigator.pop(context);
+                                if (_discountAmount.text == "" &&
+                                    _discountDescription.text == "") {
+                                  setState(() {
+                                    _discountFormfilled = true;
+                                  });
+                                } else {
+                                  _addDiscount();
+                                  Navigator.pop(context);
+                                }
                               },
                               buttonText: Text(
                                 "Add",
@@ -884,7 +913,7 @@ class _AddInvoiceState extends State<AddInvoice> {
         });
   }
 
-  _addDiscount(){
+  _addDiscount() {
     Map<String, dynamic> discountDetail = {
       "description": _discountDescription.text,
       "amount": _discountAmount.text,
@@ -895,18 +924,28 @@ class _AddInvoiceState extends State<AddInvoice> {
     });
   }
 
-  int calculateTotal() {
-    int total = TotalAndSubTotal().getSubTotal(context, isNewInvoice);
+  double calculateTotal() {
+    double total = TotalAndSubTotal().getSubTotal(context, isNewInvoice);
 
     if (_children.length == 0) {
     } else {
-      _children.forEach((item) {
-        if (item["type"] == 2) {
-          total = total + int.parse(item["amount"]);
-        } else {
-          total = total - int.parse(item["amount"]);
-        }
-      });
+      if (dropdownValue == "Absolute") {
+        _children.forEach((item) {
+          if (item["type"] == 2) {
+            total = total + int.parse(item["amount"]);
+          } else {
+            total = total - int.parse(item["amount"]);
+          }
+        });
+      } else {
+        _children.forEach((item) {
+          if (item["type"] == 2) {
+            total = total + int.parse(item["amount"]) / 100 * total;
+          } else {
+            total = total - int.parse(item["amount"]) / 100 * total;
+          }
+        });
+      }
     }
     return total;
   }

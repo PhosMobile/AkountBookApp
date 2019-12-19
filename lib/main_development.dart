@@ -13,7 +13,7 @@ void main(){
   var configuredApp = AppConfig(
     appTitle: "Akaunt Book",
     buildFlavor: "Development",
-    graphqlAPI: 'http://10.0.2.2:8000',
+    apiEndpoint: 'http://10.0.2.2:8000',
     child: MyApp(store: store),
   );
   return runApp(configuredApp);

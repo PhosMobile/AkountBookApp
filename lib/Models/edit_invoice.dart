@@ -15,7 +15,7 @@ class EditInvoice {
       userId,
       poSoNumber;
   int number;
-  int subTotalAmount,totalAmount;
+  double subTotalAmount,totalAmount;
   List<Item> invoiceItem = [];
 
   Customer invoiceCustomer;

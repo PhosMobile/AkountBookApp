@@ -1,5 +1,4 @@
 import 'package:akaunt/Models/slide.dart';
-import 'package:akaunt/Widgets/logo_avatar.dart';
 import 'package:flutter/material.dart';
 
 
