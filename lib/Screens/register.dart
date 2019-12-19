@@ -1,4 +1,5 @@
 import 'package:akaunt/Graphql/graphql_config.dart';
+import 'package:akaunt/Resources/app_config.dart';
 import 'package:otp/otp.dart';
 import 'package:akaunt/Graphql/mutations.dart';
 import 'package:akaunt/Widgets/error.dart';
@@ -162,7 +163,7 @@ class _RegisterState extends State<Register> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
                             Text(
-                              "Already ave an account?",
+                              "Already have an account?",
                               style: TextStyle(fontSize: 16),
                             ),
                             SizedBox(
@@ -238,7 +239,7 @@ class _RegisterState extends State<Register> {
           _hasErrors = true;
         });
       } else if (emailRegex.hasMatch(_phoneEmail.text.trim())) {
-        var url = "https://akaunt-book.herokuapp.com/api/verify_otp_email";
+        var url = "${AppConfig.of(context).apiEndpoint}/api/verify_otp_email";
         response =
         await http.post(
             url, body: {"email": this.email, "otp": otp.toString()});

@@ -9,7 +9,6 @@ import 'package:permission_handler/permission_handler.dart';
 
 class FetchUserData {
   fetchContacts(context) async {
-    print("getting data");
     final business = StoreProvider.of<AppState>(context);
     PermissionStatus permissionStatus = await _getPermission();
     List<UserPhoneContact> userContacts = [];
@@ -27,19 +26,14 @@ class FetchUserData {
         if(contact.emails.isNotEmpty) {
           email = contact.emails.first.value;
         }else{
-          phone = "";
+          email = "";
         }
-        if(contact.emails.isNotEmpty) {
-          email = contact.emails.first.value;
+        if(contact.postalAddresses.isNotEmpty) {
+          address = " ${contact.postalAddresses.first.street } ${contact.postalAddresses.first.city} ${contact.postalAddresses.first.country }";
         }else{
-          phone = "";
+          address = "";
         }
 
-        if(contact.emails.isNotEmpty) {
-          email = contact.emails.first.value;
-        }else{
-          phone = "";
-        }
         UserPhoneContact userContact= new UserPhoneContact(contact.displayName, contact.familyName, email, phone, address, contact.avatar);
         userContacts.add(userContact);
       });

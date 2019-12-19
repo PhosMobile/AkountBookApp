@@ -45,6 +45,7 @@ class _AddInvoiceState extends State<AddInvoice> {
   String requestErrors;
   bool _isDraftLoading = false;
   bool _isSendLoading = false;
+  bool _discountFormfilled = false;
 
   bool _hasErrors = false;
   TextEditingController _subTotal = new TextEditingController();
@@ -60,6 +61,7 @@ class _AddInvoiceState extends State<AddInvoice> {
   String _invoiceType = "DRAFT";
   String _invoiceDescription = "Project Name / Description";
   String _invoiceNumber = "P.S/S.O Number";
+  String dropdownValue = 'In Percent';
 
   List<Map<String, dynamic>> _children = [];
 
@@ -68,7 +70,6 @@ class _AddInvoiceState extends State<AddInvoice> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-        key: _scaffoldState,
         appBar: AppBar(
             backgroundColor: Colors.white,
             iconTheme: IconThemeData(color: Theme.of(context).primaryColor),
@@ -86,16 +87,11 @@ class _AddInvoiceState extends State<AddInvoice> {
                   _invoiceDescription = invoiceNameData.summary;
                   _invoiceNumber = invoiceNameData.poSoNumber;
                 }
-
-                _subTotal.text =
-                    CurrencyConverter().formatPrice(
-                        TotalAndSubTotal()
-                            .getSubTotal(context,isNewInvoice),
-                        state.currentBusiness
-                            .currency);
-                _total.text = CurrencyConverter().formatPrice(calculateTotal(), state.currentBusiness
-                    .currency);
-
+                _subTotal.text = CurrencyConverter().formatPrice(
+                    TotalAndSubTotal().getSubTotal(context, isNewInvoice),
+                    state.currentBusiness.currency);
+                _total.text = CurrencyConverter().formatPrice(
+                    calculateTotal(), state.currentBusiness.currency);
 
                 return Container(
                   decoration: BoxDecoration(
@@ -376,42 +372,31 @@ class _AddInvoiceState extends State<AddInvoice> {
                                   ),
                                   for (var item in _children)
                                     Padding(
-                                     padding: EdgeInsets.all(8),
+                                      padding: EdgeInsets.all(8),
                                       child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
                                         children: <Widget>[
-                                          Expanded(child: Text(item["description"])),
+                                          Expanded(
+                                              child: Text(item["description"])),
                                           SizedBox(width: 10),
-                                          Text(item["amount"]),
+                                          Text(
+                                              "${item["type"] == 1 ? "-" : "+"} ${TotalAndSubTotal().getSubTotal(context, isNewInvoice).round() - calculateTotal().round()}"),
                                           SizedBox(width: 10),
-                                          Container(
-                                            child: item["type"] == 1
-                                                ? Icon(
-                                              Icons.remove,
-                                              size: 12,
-                                              color: Colors.white,
-                                            )
-                                                : Icon(
-                                              Icons.add,
-                                              size: 12,
-                                              color: Colors.white,
-                                            ),
-                                            decoration: BoxDecoration(
-                                                color: Theme.of(context)
-                                                    .primaryColor),
-                                            padding: EdgeInsets.all(5),
-                                          ),
                                           SizedBox(width: 10),
                                           InkWell(
-                                            child: Container(child: Icon(Icons.delete, size: 15,
-                                              color: Colors.redAccent,)),
-                                            onTap: (){
+                                            child: Container(
+                                                child: Icon(
+                                              Icons.delete,
+                                              size: 15,
+                                              color: Colors.redAccent,
+                                            )),
+                                            onTap: () {
                                               setState(() {
                                                 _children.remove(item);
                                               });
                                             },
                                           )
-
                                         ],
                                       ),
                                     ),
@@ -426,7 +411,7 @@ class _AddInvoiceState extends State<AddInvoice> {
                                         width:
                                             MediaQuery.of(context).size.width /
                                                     2 -
-                                                50,
+                                                30,
                                         decoration: BoxDecoration(boxShadow: [
                                           inputStyles.boxShadowMain(context)
                                         ]),
@@ -434,7 +419,8 @@ class _AddInvoiceState extends State<AddInvoice> {
                                           readOnly: true,
                                           keyboardType: TextInputType.number,
                                           attribute: "sub_total",
-                                          decoration: inputStyles.inputMain("Sub Total"),
+                                          decoration: inputStyles
+                                              .inputMain("Sub Total"),
                                           controller: _subTotal,
                                         ),
                                       ),
@@ -442,7 +428,7 @@ class _AddInvoiceState extends State<AddInvoice> {
                                         width:
                                             MediaQuery.of(context).size.width /
                                                     2 -
-                                                50,
+                                                30,
                                         decoration: BoxDecoration(boxShadow: [
                                           inputStyles.boxShadowMain(context)
                                         ]),
@@ -450,7 +436,8 @@ class _AddInvoiceState extends State<AddInvoice> {
                                           readOnly: true,
                                           keyboardType: TextInputType.number,
                                           attribute: "total",
-                                          decoration: inputStyles.inputMain("Total"),
+                                          decoration:
+                                              inputStyles.inputMain("Total"),
                                           controller: _total,
                                         ),
                                       ),
@@ -656,7 +643,7 @@ class _AddInvoiceState extends State<AddInvoice> {
                   summary,
                   _iDate,
                   _dDate,
-                  TotalAndSubTotal().getSubTotal(context,isNewInvoice),
+                  TotalAndSubTotal().getSubTotal(context, isNewInvoice),
                   calculateTotal(),
                   _notes.text,
                   _status,
@@ -680,7 +667,7 @@ class _AddInvoiceState extends State<AddInvoice> {
             summary,
             _iDate,
             _dDate,
-            TotalAndSubTotal().getSubTotal(context,isNewInvoice),
+            TotalAndSubTotal().getSubTotal(context, isNewInvoice),
             calculateTotal(),
             _notes.text,
             _status,
@@ -690,35 +677,44 @@ class _AddInvoiceState extends State<AddInvoice> {
             userId);
         addInvoice.dispatch(AddBusinessInvoice(payload: _invoice));
 
-        if(_children.length >0){
-          for(var discount in _children){
+        if (_children.length > 0) {
+          for (var discount in _children) {
             QueryResult discountResult = await graphQLConfiguration
                 .getGraphql(context)
                 .mutate(MutationOptions(
-                document: cInvoice.createDiscount(discount["description"], discount["amount"], discount["type"], result.data["create_invoice"]["id"], businessId, userId)));
-            if(!discountResult.hasErrors){
+                    document: cInvoice.createDiscount(
+                        discount["description"],
+                        discount["amount"],
+                        discount["type"],
+                        result.data["create_invoice"]["id"],
+                        businessId,
+                        userId)));
+            if (!discountResult.hasErrors) {
               print("done");
-              Discount _invoiceDiscount = new Discount("0", discount["description"], discount["amount"], discount["type"], addInvoice.state.currentBusiness.id,"0",addInvoice.state.loggedInUser.userId);
+              Discount _invoiceDiscount = new Discount(
+                  "0",
+                  discount["description"],
+                  discount["amount"],
+                  discount["type"],
+                  addInvoice.state.currentBusiness.id,
+                  "0",
+                  addInvoice.state.loggedInUser.userId);
               addInvoice.dispatch(CreateDiscount(payload: _invoiceDiscount));
-
-
-            }else{
+            } else {
               print(discountResult.errors);
             }
           }
-        }else{
+        } else {
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
                 builder: (context) => DraftSaved(
-                  invoice: _invoice,
-                  invoiceItem: addInvoice.state.invoiceItems,
-                  customer: customer,
-                )),
+                      invoice: _invoice,
+                      invoiceItem: addInvoice.state.invoiceItems,
+                      customer: customer,
+                    )),
           );
         }
-
-
       } else {
         print(result.errors);
         setState(() {
@@ -753,7 +749,7 @@ class _AddInvoiceState extends State<AddInvoice> {
           invoiceName.summary,
           _iDate,
           _dDate,
-          TotalAndSubTotal().getSubTotal(context,isNewInvoice),
+          TotalAndSubTotal().getSubTotal(context, isNewInvoice),
           calculateTotal(),
           _notes.text,
           _status,
@@ -763,8 +759,15 @@ class _AddInvoiceState extends State<AddInvoice> {
           userId);
       addInvoice.dispatch(CreateInvoice(payload: _invoice));
 
-      for(var discount in _children){
-        Discount _invoiceDiscount = new Discount("0", discount["description"], discount["amount"], discount["type"], addInvoice.state.currentBusiness.id,"0",addInvoice.state.loggedInUser.userId);
+      for (var discount in _children) {
+        Discount _invoiceDiscount = new Discount(
+            "0",
+            discount["description"],
+            discount["amount"],
+            discount["type"],
+            addInvoice.state.currentBusiness.id,
+            "0",
+            addInvoice.state.loggedInUser.userId);
         addInvoice.dispatch(CreateDiscount(payload: _invoiceDiscount));
       }
       Navigator.push(
@@ -775,7 +778,16 @@ class _AddInvoiceState extends State<AddInvoice> {
   }
 
   void _add() {
+    if (_discountFormfilled) {
+      setState(() {
+        _discountFormfilled = false;
+        _discountDescription.text = "";
+        _discountAmount.text = "";
+      });
+    }
+
     showModalBottomSheet(
+        elevation: 0,
         isScrollControlled: true,
         context: context,
         builder: (context) {
@@ -785,11 +797,12 @@ class _AddInvoiceState extends State<AddInvoice> {
             return Padding(
               padding: MediaQuery.of(context).viewInsets,
               child: Container(
-                height: 300,
+                height: 350,
                 child: Column(
                   children: <Widget>[
                     Column(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Container(
                           child: Row(
@@ -824,6 +837,25 @@ class _AddInvoiceState extends State<AddInvoice> {
                             ],
                           ),
                         ),
+                        Container(
+                          padding: EdgeInsets.only(left: 20),
+                          width: MediaQuery.of(context).size.width / 3,
+                          child: DropdownButton<String>(
+                            value: dropdownValue,
+                            onChanged: (String newValue) {
+                              setState(() {
+                                dropdownValue = newValue;
+                              });
+                            },
+                            items: <String>['In Percent', 'Absolute']
+                                .map<DropdownMenuItem<String>>((String value) {
+                              return DropdownMenuItem<String>(
+                                value: value,
+                                child: Text(value),
+                              );
+                            }).toList(),
+                          ),
+                        ),
                       ],
                     ),
                     Container(
@@ -843,20 +875,28 @@ class _AddInvoiceState extends State<AddInvoice> {
                             ),
                             controller: _discountAmount,
                           ),
-                          SizedBox(
-                            height: 20,
-                          ),
+                          _discountFormfilled
+                              ? Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text(
+                                    "Form not filled properly",
+                                    style: TextStyle(color: Colors.redAccent),
+                                  ),
+                                )
+                              : SizedBox(
+                                  height: 30,
+                                ),
                           PrimaryMiniButton(
                               onPressed: () {
-                                Map<String, dynamic> discountDetail = {
-                                  "description": _discountDescription.text,
-                                  "amount": _discountAmount.text,
-                                  "type": discountTax
-                                };
-                                setState(() {
-                                  _children.add(discountDetail);
-                                });
-                                Navigator.pop(context);
+                                if (_discountAmount.text == "" &&
+                                    _discountDescription.text == "") {
+                                  setState(() {
+                                    _discountFormfilled = true;
+                                  });
+                                } else {
+                                  _addDiscount();
+                                  Navigator.pop(context);
+                                }
                               },
                               buttonText: Text(
                                 "Add",
@@ -873,19 +913,39 @@ class _AddInvoiceState extends State<AddInvoice> {
         });
   }
 
-  int calculateTotal() {
-    int total = TotalAndSubTotal().getSubTotal(context,isNewInvoice);
+  _addDiscount() {
+    Map<String, dynamic> discountDetail = {
+      "description": _discountDescription.text,
+      "amount": _discountAmount.text,
+      "type": discountTax
+    };
+    setState(() {
+      _children.add(discountDetail);
+    });
+  }
 
-    if(_children.length == 0){
+  double calculateTotal() {
+    double total = TotalAndSubTotal().getSubTotal(context, isNewInvoice);
 
-    }else{
-      _children.forEach((item){
-        if(item["type"] == 2){
-              total = total + int.parse(item["amount"]);
-        }else{
-          total = total - int.parse(item["amount"]);
-        }
-      });
+    if (_children.length == 0) {
+    } else {
+      if (dropdownValue == "Absolute") {
+        _children.forEach((item) {
+          if (item["type"] == 2) {
+            total = total + int.parse(item["amount"]);
+          } else {
+            total = total - int.parse(item["amount"]);
+          }
+        });
+      } else {
+        _children.forEach((item) {
+          if (item["type"] == 2) {
+            total = total + int.parse(item["amount"]) / 100 * total;
+          } else {
+            total = total - int.parse(item["amount"]) / 100 * total;
+          }
+        });
+      }
     }
     return total;
   }

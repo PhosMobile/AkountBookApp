@@ -82,15 +82,18 @@ class _DashboardState extends State<Dashboard> {
                             padding: const EdgeInsets.only(left:15.0),
                             child: ImageAvatars().miniLogoAvatar(),
                           ),
-                          InkWell(
-                            child: Icon(
-                              Icons.close,
-                              color: Colors.white,
-                              size: 30,
+                          Padding(
+                            padding: const EdgeInsets.only(right: 10),
+                            child: InkWell(
+                              child: Icon(
+                                Icons.close,
+                                color: Colors.white,
+                                size: 30,
+                              ),
+                              onTap: () {
+                                Navigator.of(context).pop();
+                              },
                             ),
-                            onTap: () {
-                              Navigator.of(context).pop();
-                            },
                           )
                         ],
                       ),
@@ -203,7 +206,11 @@ class _DashboardState extends State<Dashboard> {
                     ),
                     Row(children: <Widget>[
                       CircleAvatar(
-                        child: Image.network(state.currentBusiness.imageUrl),
+                        child: Image.network(state.currentBusiness.imageUrl,
+                            width: 30,
+                            height: 30,
+                            fit: BoxFit.cover
+                        ),
                       ),
                       SizedBox(width: 10,),
                       Text("${state.currentBusiness.name}")

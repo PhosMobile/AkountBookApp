@@ -14,7 +14,7 @@ void main(){
   var configuredApp = AppConfig(
     appTitle: "Akaunt Book",
     buildFlavor: "Production",
-    graphqlAPI: 'https://akaunt-book.herokuapp.com',
+    apiEndpoint: 'https://akaunt-book.herokuapp.com',
     child: MyApp(store: store),
   );
   return runApp(configuredApp);

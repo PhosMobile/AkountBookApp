@@ -1,5 +1,4 @@
 import 'package:akaunt/Models/slide.dart';
-import 'package:akaunt/Widgets/logo_avatar.dart';
 import 'package:flutter/material.dart';
 
 
@@ -13,10 +12,9 @@ class SlideItem extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
-        SizedBox(height: 20,),
         Container(
-          width: 300,
-          height: 300,
+          width: 200,
+          height: 200,
           decoration: BoxDecoration(
             shape: BoxShape.rectangle,
             image: DecorationImage(
@@ -26,7 +24,7 @@ class SlideItem extends StatelessWidget {
           ),
         ),
         SizedBox(
-          height: 40,
+          height: 20,
         ),
         Text(
           slideList[index].title,

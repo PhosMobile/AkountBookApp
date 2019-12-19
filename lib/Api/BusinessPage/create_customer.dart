@@ -70,7 +70,6 @@ class _AddCustomerState extends State<AddCustomer> {
               builder: (context, state) {
                 String businessId = state.currentBusiness.id;
                 String userId = state.loggedInUser.userId;
-                print(state.customerFromContact);
                 return Container(
                   decoration: BoxDecoration(
                       border: Border(top: BorderSide(width: 2, color: Theme.of(context).accentColor))

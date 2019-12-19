@@ -766,8 +766,8 @@ class _UpdateDraftState extends State<UpdateDraft> {
               });
         });
   }
-  int calculateTotal() {
-    int total = TotalAndSubTotal().getSubTotal(context, isNewInvoice);
+  double calculateTotal() {
+    double total = TotalAndSubTotal().getSubTotal(context, isNewInvoice);
 
     if(_children.length == 0){
 

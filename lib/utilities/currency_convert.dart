@@ -9,24 +9,24 @@ class CurrencyConverter {
     switch (currency) {
       case "USD":
         {
-          amount = "\$ " + formattedPrice;
+          amount = "\$" + formattedPrice;
           break;
         }
 
       case "NGN":
         {
-          amount = "N " + formattedPrice;
+          amount = "₦" + formattedPrice;
           break;
         }
 
       case "EUR":
         {
-          amount = "£ " + formattedPrice;
+          amount = "£" + formattedPrice;
           break;
         }
       default:
         {
-          amount = "N " + formattedPrice;
+          amount = "₦" + formattedPrice;
         }
     }
 
