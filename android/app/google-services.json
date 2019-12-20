@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "11143740443",
+    "firebase_url": "https://akaunt-book.firebaseio.com",
+    "project_id": "akaunt-book",
+    "storage_bucket": "akaunt-book.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:11143740443:android:5cea4b4739fedd17b48cbe",
+        "android_client_info": {
+          "package_name": "com.example.akaunt"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "11143740443-2n5epg45dk1af3tu3t53q0as2sd8dkpi.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAgsN2EPMc3bTHItoDJULuL_JVGlKDec8s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "11143740443-2n5epg45dk1af3tu3t53q0as2sd8dkpi.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

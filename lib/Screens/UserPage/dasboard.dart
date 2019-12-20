@@ -4,6 +4,7 @@ import 'package:akaunt/Screens/BusinessPage/Expenses.dart';
 import 'package:akaunt/Screens/BusinessPage/Invoices.dart';
 import 'package:akaunt/Screens/BusinessPage/Reports.dart';
 import 'package:akaunt/Screens/BusinessPage/customers.dart';
+import 'package:akaunt/Widgets/DisplayAttachedImage.dart';
 import 'package:akaunt/Widgets/logo_avatar.dart';
 import 'package:akaunt/utilities/svg_files.dart';
 import 'package:flutter/material.dart';
@@ -205,13 +206,7 @@ class _DashboardState extends State<Dashboard> {
                       child: Text("Active Business", style: TextStyle(color: Colors.black87,fontWeight: FontWeight.bold),),
                     ),
                     Row(children: <Widget>[
-                      CircleAvatar(
-                        child: Image.network(state.currentBusiness.imageUrl,
-                            width: 30,
-                            height: 30,
-                            fit: BoxFit.cover
-                        ),
-                      ),
+                      DisplayImage().displayProfileImage(state.currentBusiness.imageUrl),
                       SizedBox(width: 10,),
                       Text("${state.currentBusiness.name}")
                     ],)
