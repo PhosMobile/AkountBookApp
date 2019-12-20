@@ -1,4 +1,6 @@
+import 'dart:io';
 import 'package:akaunt/Api/BusinessPage/current_business_data.dart';
+import 'package:akaunt/Api/BusinessPage/upload_file.dart';
 import 'package:akaunt/Api/UserAcount/logged_in_user.dart';
 import 'package:akaunt/AppState/actions/business_actions.dart';
 import 'package:akaunt/AppState/app_state.dart';
@@ -11,6 +13,7 @@ import 'package:akaunt/Widgets/loader_widget.dart';
 import 'package:akaunt/Widgets/loading_snack_bar.dart';
 import 'package:akaunt/Widgets/logo_avatar.dart';
 import 'package:akaunt/Widgets/buttons.dart';
+import 'package:akaunt/utilities/attach_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:akaunt/Widgets/Input_styles.dart';
@@ -18,6 +21,7 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:akaunt/Widgets/DisplayAttachedImage.dart';
 
 class AddBusiness extends StatefulWidget {
   @override
@@ -27,6 +31,7 @@ class AddBusiness extends StatefulWidget {
 class _AddBusinessState extends State<AddBusiness> {
   final GlobalKey<FormBuilderState> _fbKey = GlobalKey<FormBuilderState>();
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+//  final key = GlobalKey<ImageCropState>();
   InputStyles inputStyles = new InputStyles();
   ImageAvatars logo = new ImageAvatars();
   String requestErrors;
@@ -39,6 +44,8 @@ class _AddBusinessState extends State<AddBusiness> {
   TextEditingController _businessDescription = new TextEditingController();
   TextEditingController _businessAddress = new TextEditingController();
   String currency = "NGN";
+  var  image;
+  AttachImage attachImage = AttachImage();
 
   validate(value, errorText) {
     if (value.isEmpty) {
@@ -90,7 +97,13 @@ class _AddBusinessState extends State<AddBusiness> {
                                       ? RequestError(errorText: requestErrors)
                                       : Container(),
                                   InkWell(
-                                    child: ImageAvatars().attachImage(),
+                                    child: image == null ? ImageAvatars().attachImage(): DisplayImage().displayAttachedProfileImage(image),
+                                    onTap: () async {
+                                     var profileImage = await attachImage.getProfileImage();
+                                     setState(() {
+                                       image = profileImage;
+                                     });
+                                    },
                                   ),
                                   SizedBox(
                                     height: 30,
@@ -234,88 +247,109 @@ class _AddBusinessState extends State<AddBusiness> {
         ));
   }
 
+
   void _addUserBusiness() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+
+    var firebaseRef = await UploadFile().uploadProfileImage(_scaffoldKey, context, image);
+
+    if(firebaseRef == null){
+      _registerBusiness("null");
+    }else{
+      firebaseRef.getDownloadURL().then((fileURL) async{
+        _registerBusiness(fileURL);
+      });
+    }
+  }
+
+  void _registerBusiness(imageUrl) async {
     setState(() {
       _isLoading = true;
     });
     String userId;
     String userEmail;
     String userPassword;
+
     final loggedInUser = StoreProvider.of<AppState>(context);
     final LocalStorage storage = new LocalStorage('some_key');
     final prefs = await SharedPreferences.getInstance();
     final user = prefs.getStringList('user_credentials') ?? [];
-    if (user.length == 0) {
-      userId = loggedInUser.state.loggedInUser.userId;
-    } else {
-      userEmail = user[0];
-      userPassword = user[1];
-      userId = user[2];
-    }
     GqlConfig graphQLConfiguration = GqlConfig();
     Mutations createBusiness = new Mutations();
-    QueryResult result = await graphQLConfiguration.getGraphql(context).mutate(
-        MutationOptions(
-            document: createBusiness.createBusiness(
-                _businessName.text,
-                _businessEmail.text,
-                _businessDescription.text,
-                _businessAddress.text,
-                currency,
-                "null",
-                userId)));
-    if (!result.hasErrors) {
+
       if (user.length == 0) {
-        setState(() {
-          _isLoading = false;
-          _hasErrors = false;
-        });
-        dynamic newBusiness = result.data["create_business"];
-        Business currentBusiness = Business(
-            newBusiness["id"],
-            newBusiness["name"],
-            newBusiness["email"],
-            newBusiness["description"],
-            newBusiness["address"],
-            newBusiness["currency"],
-            newBusiness["image_url"],
-            newBusiness["user_id"]);
-        final business = StoreProvider.of<AppState>(context);
-        business.dispatch(UserCurrentBusiness(payload: currentBusiness));
-        business.dispatch(UpdateUserBusiness(payload: currentBusiness));
-        _scaffoldKey.currentState.showSnackBar(
-            LoadingSnackBar().loader("  Getting Business Data...", context));
-        CurrentBusinessData().getBusinessData(context, currentBusiness.id);
+        userId = loggedInUser.state.loggedInUser.userId;
       } else {
-        GqlConfig graphQLConfiguration = GqlConfig();
-        Mutations login = new Mutations();
-        QueryResult result = await graphQLConfiguration.getGraphql(context).mutate(
-              MutationOptions(document: login.login(userEmail, userPassword)),
-            );
-        if (!result.hasErrors) {
+        userEmail = user[0];
+        userPassword = user[1];
+        userId = user[2];
+      }
+      QueryResult result = await graphQLConfiguration.getGraphql(context).mutate(
+          MutationOptions(
+              document: createBusiness.createBusiness(
+                  _businessName.text,
+                  _businessEmail.text,
+                  _businessDescription.text,
+                  _businessAddress.text,
+                  currency,
+                  imageUrl,
+                  userId)));
+      if (!result.hasErrors) {
+        if (user.length == 0) {
           setState(() {
             _isLoading = false;
             _hasErrors = false;
           });
-          var accessToken = result.data["login"];
-          storage.setItem("access_token", accessToken);
-          await LoggedInUser().fetchLoggedInUser(context, "registeration");
-
+          dynamic newBusiness = result.data["create_business"];
+          Business currentBusiness = Business(
+              newBusiness["id"],
+              newBusiness["name"],
+              newBusiness["email"],
+              newBusiness["description"],
+              newBusiness["address"],
+              newBusiness["currency"],
+              newBusiness["image_url"],
+              newBusiness["user_id"]);
+          final business = StoreProvider.of<AppState>(context);
+          business.dispatch(UserCurrentBusiness(payload: currentBusiness));
+          business.dispatch(UpdateUserBusiness(payload: currentBusiness));
+          _scaffoldKey.currentState.showSnackBar(
+              LoadingSnackBar().loader("  Getting Business Data...", context));
+          CurrentBusinessData().getBusinessData(context, currentBusiness.id);
         } else {
-          setState(() {
-            requestErrors = result.errors.toString().substring(10, 36);
-            _isLoading = false;
-            _hasErrors = true;
-          });
+          GqlConfig graphQLConfiguration = GqlConfig();
+          Mutations login = new Mutations();
+          QueryResult result = await graphQLConfiguration.getGraphql(context).mutate(
+            MutationOptions(document: login.login(userEmail, userPassword)),
+          );
+          if (!result.hasErrors) {
+            setState(() {
+              _isLoading = false;
+              _hasErrors = false;
+            });
+            var accessToken = result.data["login"];
+            storage.setItem("access_token", accessToken);
+            await LoggedInUser().fetchLoggedInUser(context, "registeration");
+
+          } else {
+            setState(() {
+              requestErrors = result.errors.toString().substring(10, 36);
+              _isLoading = false;
+              _hasErrors = true;
+            });
+          }
         }
+      } else {
+        print(result.errors);
+        setState(() {
+          requestErrors = "Error ...pls try again";
+          _isLoading = false;
+          _hasErrors = true;
+        });
       }
-    } else {
-      print(result.errors);
-      setState(() {
-        requestErrors = "Error ...pls try again";
-        _isLoading = false;
-        _hasErrors = true;
-      });
-    }
+
   }
 }

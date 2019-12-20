@@ -6,6 +6,7 @@ import 'package:akaunt/AppState/app_state.dart';
 import 'package:akaunt/Graphql/graphql_config.dart';
 import 'package:akaunt/Graphql/mutations.dart';
 import 'package:akaunt/Models/business.dart';
+import 'package:akaunt/Widgets/DisplayAttachedImage.dart';
 import 'package:akaunt/Widgets/HeaderTitle.dart';
 import 'package:akaunt/Widgets/buttons.dart';
 import 'package:akaunt/Widgets/loading_snack_bar.dart';
@@ -85,8 +86,10 @@ class _SwitchBusinessState extends State<SwitchBusiness> {
                                             padding: const EdgeInsets.only(
                                                 right: 20.0),
                                             child: Container(
-                                                width: 35,
-                                                child: switchBusiness)),
+                                                width: 40,
+                                                child: accountBusinesses[index].imageUrl == null || accountBusinesses[index].imageUrl == "null" ? switchBusiness:
+                                                DisplayImage().displayProfileImage(accountBusinesses[index].imageUrl)
+                                            )),
                                         Expanded(
                                           child: Text(
                                             accountBusinesses[index].name,

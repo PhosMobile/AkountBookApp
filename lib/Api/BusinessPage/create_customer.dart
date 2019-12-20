@@ -1,3 +1,4 @@
+import 'package:akaunt/Api/BusinessPage/upload_file.dart';
 import 'package:akaunt/AppState/actions/customer_actions.dart';
 import 'package:akaunt/AppState/app_state.dart';
 import 'package:akaunt/Graphql/graphql_config.dart';
@@ -6,11 +7,13 @@ import 'package:akaunt/Models/customer.dart';
 import 'package:akaunt/Models/user_phone_contact.dart';
 import 'package:akaunt/Screens/BusinessPage/contact_list.dart';
 import 'package:akaunt/Screens/customer_created.dart';
+import 'package:akaunt/Widgets/DisplayAttachedImage.dart';
 import 'package:akaunt/Widgets/HeaderTitle.dart';
 import 'package:akaunt/Widgets/error.dart';
 import 'package:akaunt/Widgets/loader_widget.dart';
 import 'package:akaunt/Widgets/logo_avatar.dart';
 import 'package:akaunt/Widgets/buttons.dart';
+import 'package:akaunt/utilities/attach_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:akaunt/Widgets/Input_styles.dart';
@@ -26,6 +29,8 @@ class AddCustomer extends StatefulWidget {
 
 class _AddCustomerState extends State<AddCustomer> {
   final GlobalKey<FormBuilderState> _fbKey = GlobalKey<FormBuilderState>();
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+
   InputStyles inputStyles = new InputStyles();
   ImageAvatars logo = new ImageAvatars();
   String requestErrors;
@@ -35,6 +40,8 @@ class _AddCustomerState extends State<AddCustomer> {
   TextEditingController _email = new TextEditingController();
   TextEditingController _phone = new TextEditingController();
   TextEditingController _address = new TextEditingController();
+  var  image;
+  AttachImage attachImage = AttachImage();
 
   validate(value, errorText) {
     if (value.isEmpty) {
@@ -46,6 +53,7 @@ class _AddCustomerState extends State<AddCustomer> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
+      key: _scaffoldKey,
         appBar: AppBar(
             backgroundColor: Colors.white,
             iconTheme: IconThemeData(color: Theme
@@ -117,7 +125,13 @@ class _AddCustomerState extends State<AddCustomer> {
                                           ? RequestError(errorText: requestErrors)
                                           : Container(),
                                       InkWell(
-                                        child: ImageAvatars().attachImage(),
+                                        child: image == null ? ImageAvatars().attachImage(): DisplayImage().displayAttachedProfileImage(image),
+                                        onTap: ()async{
+                                          var profileImage = await attachImage.getProfileImage();
+                                          setState(() {
+                                            image = profileImage;
+                                          });
+                                        },
                                       ),
                                       SizedBox(
                                         height: 30,
@@ -224,7 +238,25 @@ class _AddCustomerState extends State<AddCustomer> {
               },
             )));
   }
+
   void _addCustomer(businessId, userId) async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    var firebaseRef = await UploadFile().uploadProfileImage(_scaffoldKey, context, image);
+
+    if(firebaseRef == null){
+      _registerCustomer("null",businessId, userId);
+    }else{
+      firebaseRef.getDownloadURL().then((fileURL) async{
+        _registerCustomer(fileURL,businessId, userId);
+      });
+    }
+  }
+
+
+  void _registerCustomer(imageUrl, businessId, userId) async {
     setState(() {
       _isLoading = true;
     });
@@ -240,7 +272,7 @@ class _AddCustomerState extends State<AddCustomer> {
                 _address.text,
                 businessId,
                 userId,
-                null)));
+                imageUrl)));
     if (!result.hasErrors) {
       var resultData = result.data["create_customer"];
       Customer _customer = Customer(
