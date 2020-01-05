@@ -1,6 +1,7 @@
+import 'package:akaunt/Api/UserAcount/logged_in_user.dart';
 import 'package:akaunt/AppState/app_state.dart';
 import 'package:akaunt/Models/menu_item.dart';
-import 'package:akaunt/Screens/BusinessPage/Expenses.dart';
+import 'package:akaunt/Screens/BusinessPage/expenses.dart';
 import 'package:akaunt/Screens/BusinessPage/Invoices.dart';
 import 'package:akaunt/Screens/BusinessPage/Reports.dart';
 import 'package:akaunt/Screens/BusinessPage/customers.dart';
@@ -10,7 +11,9 @@ import 'package:akaunt/utilities/svg_files.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:localstorage/localstorage.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Dashboard extends StatefulWidget {
   final int currentTab;
@@ -51,6 +54,7 @@ class _DashboardState extends State<Dashboard> {
   Widget build(BuildContext context) {
     MenuList menu = new MenuList();
     Size size = MediaQuery.of(context).size;
+
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.white,
@@ -62,11 +66,26 @@ class _DashboardState extends State<Dashboard> {
                   .primaryColor
           ),
         ),
-        body: Container(
-          decoration: BoxDecoration(
-            border: Border(top: BorderSide(width: 2, color: Theme.of(context).accentColor))
-          ),
-          child: _children[_selectedIndex],
+        body: StoreConnector<AppState, AppState>(
+          converter: (store)=>store.state,
+          onInitialBuild: (state) async {
+//            if(state.loggedInUser == null){
+//              final prefs = await SharedPreferences.getInstance();
+//              final LocalStorage storage = new LocalStorage('some_key');
+//              String accessToken = prefs.getString("access_token");
+//              storage.setItem("access_token", accessToken);
+//              LoggedInUser().fetchLoggedInUser(context, "");
+//
+//            }
+          },
+          builder: (context, state){
+            return Container(
+              decoration: BoxDecoration(
+                  border: Border(top: BorderSide(width: 2, color: Theme.of(context).accentColor))
+              ),
+              child: _children[_selectedIndex],
+            );
+          }
         ),
         drawer: SizedBox(
           width: size.width,

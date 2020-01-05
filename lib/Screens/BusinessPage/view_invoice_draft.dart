@@ -170,7 +170,6 @@ class ViewInvoiceDraft extends StatelessWidget {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
-                                  Text("FOOTER"),
                                   Text("${invoice.footer}"),
 
                                 ],

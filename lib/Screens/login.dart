@@ -2,6 +2,7 @@ import 'package:akaunt/Api/UserAcount/logged_in_user.dart';
 import 'package:akaunt/AppState/app_state.dart';
 import 'package:akaunt/Graphql/graphql_config.dart';
 import 'package:akaunt/Graphql/mutations.dart';
+import 'package:akaunt/Service/localstorage_service.dart';
 import 'package:akaunt/Widgets/Input_styles.dart';
 import 'package:akaunt/Widgets/buttons.dart';
 import 'package:akaunt/Widgets/error.dart';
@@ -9,11 +10,13 @@ import 'package:akaunt/Widgets/loader_widget.dart';
 import 'package:akaunt/Widgets/loading_snack_bar.dart';
 import 'package:akaunt/Widgets/logo_avatar.dart';
 import 'package:akaunt/Widgets/social_sign_up.dart';
+import 'package:akaunt/service_locator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:localstorage/localstorage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -198,6 +201,7 @@ class _LoginState extends State<Login> {
   }
   void _loginUser() async {
     final LocalStorage storage = new LocalStorage('some_key');
+    final prefs = await SharedPreferences.getInstance();
     setState(() {
       _isLoading = true;
     });
@@ -213,13 +217,15 @@ class _LoginState extends State<Login> {
       });
       _scaffoldKey.currentState.showSnackBar(
           LoadingSnackBar().loader("Loading data", context),);
-      storage.deleteItem("access_token");
+          storage.deleteItem("access_token");
       var accessToken = result.data["login"];
-      storage.setItem("access_token", accessToken);
+      prefs.setString('access_token', accessToken["access_token"]);
+      storage.setItem("access_token", accessToken["access_token"]);
       await LoggedInUser().fetchLoggedInUser(context, "login");
+      locator<LocalStorageService>().hasLoggedIn = true;
     } else {
       setState(() {
-        requestErrors = result.errors.toString();
+        requestErrors = result.errors.toString().split(".")[0].substring(1);
         _isLoading = false;
         _hasErrors = true;
       });

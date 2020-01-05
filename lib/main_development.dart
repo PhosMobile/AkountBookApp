@@ -4,7 +4,9 @@ import 'package:akaunt/Resources/app_config.dart';
 import 'package:akaunt/main.dart';
 import 'package:flutter/material.dart';
 import 'package:redux/redux.dart';
-void main(){
+import 'service_locator.dart';
+Future<void> main() async{
+  WidgetsFlutterBinding.ensureInitialized();
   final Store<AppState> store = Store<AppState>(
     appReducer,
     initialState: AppState(),
@@ -16,5 +18,14 @@ void main(){
     apiEndpoint: 'http://10.0.2.2:8000',
     child: MyApp(store: store),
   );
-  return runApp(configuredApp);
+
+  try {
+    await  setupLocator();
+    return runApp(configuredApp);
+  } catch(error) {
+    print('Locator setup has failed');
+    print(error);
+  }
+//  setupLocator();
+//  return runApp(configuredApp);
 }

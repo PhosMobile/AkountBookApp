@@ -12,18 +12,22 @@ class ViewInvoiceFieldCard extends StatelessWidget {
       padding: EdgeInsets.only(top: 5, right: 20),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Container(
-            width: MediaQuery.of(context).size.width / 2-50,
+            width: MediaQuery.of(context).size.width / 2-30,
             child: Text(
               title,
               style: TextStyle(fontSize:13, color: Colors.black),
             ),
           ),
-          Text(
-            value,
-            textAlign: TextAlign.left,
-            style: TextStyle(fontSize:13, color: title == "Amount Due"? Color.fromRGBO(243, 139, 54, 1):Colors.black),
+          Container(
+            width: MediaQuery.of(context).size.width / 2-30,
+            child: Text(
+              value,
+              textAlign: TextAlign.left,
+              style: TextStyle(fontSize:13, color: title == "Amount Due"? Color.fromRGBO(243, 139, 54, 1):Colors.black),
+            ),
           ),
         ],
       ),

@@ -52,35 +52,7 @@ class _ExpensesState extends State<Expenses> {
                             itemCount: businessExpenses.length,
                             itemBuilder: (BuildContext context, int index) {
                               Expense expense = businessExpenses[index];
-//                              return InkWell(
-//                                child: Container(
-//                                  padding: EdgeInsets.only(left: 15, top: 20, bottom: 20),
-//                                  color: Color.fromRGBO(248, 248, 248, 1),
-//                                  child: Row(
-//                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                                    children: <Widget>[
-//                                      Container(child: Text(expense.name),width: MediaQuery.of(context).size.width/5,),
-//                                      Container(
-//                                          width:
-//                                              MediaQuery.of(context).size.width /
-//                                                  3,
-//                                          child: Text(
-//                                            expense.description,
-//                                            overflow: TextOverflow.ellipsis,
-//                                          )),
-//                                      Container(
-//                                width: MediaQuery.of(context).size.width/4,
-//                                        child: Text(CurrencyConverter().formatPrice(
-//                                            int.parse(expense.price),
-//                                            state.currentBusiness.currency)),
-//                                      )
-//                                    ],
-//                                  ),
-//                                ),
-//                                onTap: (){
-
-//                                },
-//                              );
+                              var amount = int.parse(expense.price) * expense.quantity;
                               return InkWell(
                                 child: Container(
                                     padding: EdgeInsets.all(20.0),
@@ -143,7 +115,7 @@ class _ExpensesState extends State<Expenses> {
                                           children: <Widget>[
                                             Text(
                                                 CurrencyConverter().formatPrice(
-                                                    int.parse(expense.price),
+                                                    amount,
                                                     state.currentBusiness
                                                         .currency),
                                                 style: TextStyle(

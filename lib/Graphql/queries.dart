@@ -111,6 +111,13 @@ class Queries {
                     }
                   """;
 
-
-
+  String getUserEmail = r"""
+                    query GetUserEmail($email : String!){
+                      get_user_email(email:$email){
+                        id
+                        name
+                        email
+                      }
+                    }
+                  """;
 }

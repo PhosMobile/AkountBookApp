@@ -139,6 +139,7 @@ class _AddExpensesState extends State<AddExpenses> {
                                 ),
                               ],
                             ),
+                            SizedBox(height: 10),
                             Padding(
                               padding: const EdgeInsets.only(bottom: 10),
                               child: Container(

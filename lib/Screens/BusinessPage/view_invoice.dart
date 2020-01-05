@@ -260,7 +260,6 @@ class ViewInvoice extends StatelessWidget {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
-                                  Text("FOOTER"),
                                   Text("${invoice.footer}"),
                                 ],
                               ),
@@ -294,7 +293,8 @@ class ViewInvoice extends StatelessWidget {
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) =>
-                                              RecordPayment()),
+                                              RecordPayment()
+                                      ),
                                     );
                                   },
                                 ),

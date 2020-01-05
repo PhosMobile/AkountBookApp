@@ -14,4 +14,16 @@ class User {
     this.phone = jsonObject['phone'];
     this.email = jsonObject['email'];
   }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['userId'] = this.userId;
+    data['name'] = this.name;
+    data['phone'] = this.phone;
+    data['email'] = this.email;
+    return data;
+  }
+
+
 }
+

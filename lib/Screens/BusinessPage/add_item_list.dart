@@ -53,7 +53,7 @@ class _AddItemListState extends State<AddItemList> {
                         child: Container(
                           child: ChooseButton(
                             buttonText: Text(
-                              "Add Item",
+                              "Add more item",
                               style: TextStyle(
                                   color: Theme.of(context).primaryColor),
                             ),
@@ -86,7 +86,7 @@ class _AddItemListState extends State<AddItemList> {
                           child: Container(
                             child: ChooseButton(
                               buttonText: Text(
-                                "Add Items",
+                                "Add more items",
                                 style: TextStyle(
                                     color: Theme.of(context).primaryColor),
                               ),

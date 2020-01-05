@@ -1,5 +1,7 @@
 import 'package:akaunt/Graphql/graphql_config.dart';
 import 'package:akaunt/Resources/app_config.dart';
+import 'package:akaunt/Service/localstorage_service.dart';
+import 'package:akaunt/service_locator.dart';
 import 'package:otp/otp.dart';
 import 'package:akaunt/Graphql/mutations.dart';
 import 'package:akaunt/Widgets/error.dart';
@@ -243,7 +245,6 @@ class _RegisterState extends State<Register> {
         response =
         await http.post(
             url, body: {"email": this.email, "otp": otp.toString()});
-        print(response.body);
 
         if (response.statusCode == 200) {
           final prefs = await SharedPreferences.getInstance();
@@ -259,7 +260,9 @@ class _RegisterState extends State<Register> {
             _hasErrors = false;
           });
           Navigator.pushNamed(context, "/otp_verifiy");
+          locator<LocalStorageService>().hasSignedUp = true;
         } else {
+
           print(response.statusCode);
           setState(() {
             requestErrors =

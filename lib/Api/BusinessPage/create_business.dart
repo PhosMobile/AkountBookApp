@@ -7,12 +7,14 @@ import 'package:akaunt/AppState/app_state.dart';
 import 'package:akaunt/Graphql/graphql_config.dart';
 import 'package:akaunt/Graphql/mutations.dart';
 import 'package:akaunt/Models/business.dart';
+import 'package:akaunt/Service/localstorage_service.dart';
 import 'package:akaunt/Widgets/HeaderTitle.dart';
 import 'package:akaunt/Widgets/error.dart';
 import 'package:akaunt/Widgets/loader_widget.dart';
 import 'package:akaunt/Widgets/loading_snack_bar.dart';
 import 'package:akaunt/Widgets/logo_avatar.dart';
 import 'package:akaunt/Widgets/buttons.dart';
+import 'package:akaunt/service_locator.dart';
 import 'package:akaunt/utilities/attach_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -331,7 +333,9 @@ class _AddBusinessState extends State<AddBusiness> {
               _hasErrors = false;
             });
             var accessToken = result.data["login"];
-            storage.setItem("access_token", accessToken);
+            prefs.setString('access_token', accessToken["access_token"]);
+            storage.setItem("access_token", accessToken["access_token"]);
+            locator<LocalStorageService>().hasLoggedIn = true;
             await LoggedInUser().fetchLoggedInUser(context, "registeration");
 
           } else {

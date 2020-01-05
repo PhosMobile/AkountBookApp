@@ -14,7 +14,7 @@ class GqlConfig {
       uri: AppConfig.of(context).apiEndpoint +'//graphql',
     );
     if (storage.getItem("access_token") != null) {
-      tk = storage.getItem("access_token")["access_token"];
+      tk = storage.getItem("access_token");
       _authLink = AuthLink(
         getToken: () async => 'Bearer $tk',
       );

@@ -4,7 +4,6 @@ import 'package:akaunt/AppState/app_state.dart';
 import 'package:akaunt/Models/customer.dart';
 import 'package:akaunt/Screens/BusinessPage/customer_summary.dart';
 import 'package:akaunt/Widgets/customer_card.dart';
-import 'package:akaunt/Widgets/empty.dart';
 import 'package:akaunt/utilities/svg_files.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';

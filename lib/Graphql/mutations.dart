@@ -49,6 +49,36 @@ class Mutations {
     """;
   }
 
+  String updateUser(String id, String otp) {
+    return """
+      mutation{
+          update_user(
+          id:"$id",
+          otp: "$otp", 
+          ){
+          id
+          otp
+          }
+      }
+    """;
+  }
+
+  String updatePassword(String id, String password) {
+    return """
+      mutation{
+          update_user(
+          id:"$id",
+          password: "$password", 
+          ){
+          id
+          }
+      }
+    """;
+  }
+
+
+
+
   String createBusiness(String name, String email, String description,
       String address, String currency, String imageUrl, String userId) {
     return """
