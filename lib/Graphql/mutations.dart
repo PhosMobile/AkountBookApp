@@ -357,6 +357,22 @@ user_id
       }
     """;
   }
+  String deleteInvoiceDiscount(
+      String id,
+      ) {
+    return """
+      mutation{
+          delete_invoice_discount(
+          id:"$id"
+          ){
+          invoice_id
+          }
+      }
+    """;
+  }
+
+
+
 
   String deleteInvoice(
       String id,

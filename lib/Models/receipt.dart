@@ -57,5 +57,12 @@ class Receipt {
     return customerReceipts;
   }
 
+  static double calculateTotalAmount(List<Receipt> receipt){
+    double amount = 0;
+    receipt.forEach((re){
+      amount = amount + double.parse(re.amountPaid);
+    });
+    return amount;
+  }
 
 }

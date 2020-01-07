@@ -111,6 +111,22 @@ class Queries {
                     }
                   """;
 
+  String getDiscount = r"""
+                    query GetDiscount($invoice_id : ID!){
+                      get_discounts(invoice_id:$invoice_id){
+                        id
+                        description
+                        amount
+                        d_type
+                        invoice_id
+                        business_id
+                        user_id
+                      }
+                    }
+                  """;
+
+
+
   String getUserEmail = r"""
                     query GetUserEmail($email : String!){
                       get_user_email(email:$email){

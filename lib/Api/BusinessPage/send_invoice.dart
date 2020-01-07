@@ -1,3 +1,4 @@
+import 'package:akaunt/Api/BusinessPage/invoice_discount.dart';
 import 'package:akaunt/Api/BusinessPage/invoice_items.dart';
 import 'package:akaunt/Api/BusinessPage/create_receipt.dart';
 import 'package:akaunt/AppState/actions/invoice_actions.dart';
@@ -6,11 +7,11 @@ import 'package:akaunt/Graphql/graphql_config.dart';
 import 'package:akaunt/Graphql/mutations.dart';
 import 'package:akaunt/Models/invoice.dart';
 import 'package:akaunt/Models/receipt.dart';
-import 'package:akaunt/Screens/BusinessPage/invoice_sent.dart';
 import 'package:akaunt/Widgets/HeaderTitle.dart';
 import 'package:akaunt/Widgets/loader_widget.dart';
 import 'package:akaunt/Widgets/buttons.dart';
 import 'package:akaunt/utilities/currency_convert.dart';
+import 'package:akaunt/utilities/invoice_to_pdf.dart';
 import 'package:akaunt/utilities/svg_files.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -69,7 +70,7 @@ class _SendInvoiceState extends State<SendInvoice> {
                             child: Container(
                               width: MediaQuery.of(context).size.width,
                               child: Text(
-                                "Send via (select means of  sending invoice",
+                                "Send via (select means of  sending invoice)",
                                 textAlign: TextAlign.left,
                               ),
                             ),
@@ -258,11 +259,11 @@ class _SendInvoiceState extends State<SendInvoice> {
                                       },
                                     ),
                                     title: Text(
-                                      "${state.invoiceReceipt.paymentType} Payment of ${CurrencyConverter().formatPrice(int.parse(state.invoiceReceipt.amountPaid), state.currentBusiness.currency)}",
+                                      "${state.invoiceReceipt.paymentType} Payment of ${CurrencyConverter().formatPrice(double.parse(state.invoiceReceipt.amountPaid), state.currentBusiness.currency)}",
                                       textAlign: TextAlign.left,
                                     ),
                                     subtitle: Text(
-                                      "Balance ${CurrencyConverter().formatPrice(state.readyInvoice.totalAmount - int.parse(state.invoiceReceipt.amountPaid), state.currentBusiness.currency)}",
+                                      "Balance ${CurrencyConverter().formatPrice(state.readyInvoice.totalAmount - double.parse(state.invoiceReceipt.amountPaid), state.currentBusiness.currency)}",
                                       textAlign: TextAlign.left,
                                     ),
                                   ),
@@ -333,7 +334,7 @@ class _SendInvoiceState extends State<SendInvoice> {
                                   MaterialPageRoute(
                                       builder: (context) => AddReceipt(
                                             invoicePrice:
-                                                state.readyInvoice.totalAmount,
+                                                state.readyInvoice.totalAmount.toInt(),
                                           )),
                                 );
                               } else {
@@ -369,7 +370,6 @@ class _SendInvoiceState extends State<SendInvoice> {
           ),
         ));
   }
-
   void _saveInvoiceName(context) async {
     flushBarTitle = "Sending Invoice";
     Flushbar(
@@ -383,6 +383,8 @@ class _SendInvoiceState extends State<SendInvoice> {
     final invoiceData = StoreProvider.of<AppState>(context).state.readyInvoice;
     final receiptData =
         StoreProvider.of<AppState>(context).state.invoiceReceipt;
+
+    List<Receipt> receipts = [];
 
     GqlConfig graphQLConfiguration = GqlConfig();
     Mutations createInvoice = new Mutations();
@@ -405,78 +407,91 @@ class _SendInvoiceState extends State<SendInvoice> {
                 invoiceData.userId)));
 
     if (!result.hasErrors) {
-      String response = await InvoiceItems().saveInvoiceItems(
+      String invoiceItemResponse = await InvoiceItems().saveInvoiceItems(
           addInvoice.state.invoiceItems,
           result.data["create_invoice"]["id"],
           context);
-      dynamic invoiceQueryData = result.data["create_invoice"];
 
-      if (response == "Done") {
-        if (receiptData != null) {
-          Mutations createReceipt = new Mutations();
-          QueryResult receiptResult = await graphQLConfiguration
-              .getGraphql(context)
-              .mutate(MutationOptions(
-                  document: createReceipt.createReceipt(
-                      addInvoice.state.invoiceName.title + "001",
-                      int.parse(receiptData.amountPaid),
-                      receiptData.paymentDate,
-                      receiptData.paymentMethod,
-                      receiptData.paymentType,
-                      "done",
-                      invoiceQueryData["id"],
-                      invoiceData.businessId,
-                      invoiceData.customerId,
-                      invoiceData.userId)));
-          if (receiptResult.hasErrors) {
-            print(receiptResult.errors);
-          } else {
-            dynamic receiptData = receiptResult.data["create_receipt"];
-            Receipt _receipt = new Receipt(
-                receiptData["id"],
-                receiptData["name"],
-                receiptData["amount_paid"],
-                receiptData["payment_date"],
-                receiptData["payment_method"],
-                receiptData["payment_type"],
-                receiptData["status"],
-                receiptData["invoice_id"],
-                receiptData["business_id"],
-                receiptData["customer_id"],
-                receiptData["user_id"]);
-            addInvoice.dispatch(UpdateBusinessReceipt(payload: _receipt));
+      if(invoiceItemResponse == "Done"){
+        String response = await InvoiceDiscounts().saveInvoiceDiscounts(
+            addInvoice.state.invoiceDiscount,
+            result.data["create_invoice"]["id"],
+            context);
+        dynamic invoiceQueryData = result.data["create_invoice"];
+
+        if (response == "Done") {
+          if (receiptData != null) {
+            Mutations createReceipt = new Mutations();
+            QueryResult receiptResult = await graphQLConfiguration
+                .getGraphql(context)
+                .mutate(MutationOptions(
+                document: createReceipt.createReceipt(
+                    addInvoice.state.invoiceName.title + "001",
+                    int.parse(receiptData.amountPaid),
+                    receiptData.paymentDate,
+                    receiptData.paymentMethod,
+                    receiptData.paymentType,
+                    "done",
+                    invoiceQueryData["id"],
+                    invoiceData.businessId,
+                    invoiceData.customerId,
+                    invoiceData.userId)));
+            if (receiptResult.hasErrors) {
+              print(receiptResult.errors);
+            } else {
+              dynamic receiptData = receiptResult.data["create_receipt"];
+              Receipt _receipt = new Receipt(
+                  receiptData["id"],
+                  receiptData["name"],
+                  receiptData["amount_paid"],
+                  receiptData["payment_date"],
+                  receiptData["payment_method"],
+                  receiptData["payment_type"],
+                  receiptData["status"],
+                  receiptData["invoice_id"],
+                  receiptData["business_id"],
+                  receiptData["customer_id"],
+                  receiptData["user_id"]);
+              receipts.add(_receipt);
+              addInvoice.dispatch(UpdateBusinessReceipt(payload: _receipt));
+            }
           }
-        }
-        Invoice _invoice = new Invoice(
-            invoiceQueryData["id"],
-            invoiceQueryData["title"],
-            invoiceQueryData["invoice_number"],
-            invoiceQueryData["po_so_number"],
-            invoiceQueryData["summary"],
-            invoiceQueryData["issue_date"],
-            invoiceQueryData["due_date"],
-            invoiceQueryData["sub_total_amount"],
-            invoiceQueryData["total_amount"],
-            invoiceQueryData["notes"],
-            invoiceQueryData["status"],
-            invoiceQueryData["footer"],
-            invoiceData.customerId,
-            invoiceData.businessId,
-            invoiceData.userId);
+          Invoice _invoice = new Invoice(
+              invoiceQueryData["id"],
+              invoiceQueryData["title"],
+              invoiceQueryData["invoice_number"],
+              invoiceQueryData["po_so_number"],
+              invoiceQueryData["summary"],
+              invoiceQueryData["issue_date"],
+              invoiceQueryData["due_date"],
+              invoiceQueryData["sub_total_amount"].toDouble(),
+              invoiceQueryData["total_amount"].toDouble(),
+              invoiceQueryData["notes"],
+              invoiceQueryData["status"],
+              invoiceQueryData["footer"],
+              invoiceData.customerId,
+              invoiceData.businessId,
+              invoiceData.userId);
 
-        addInvoice.dispatch(AddBusinessInvoice(payload: _invoice));
+          addInvoice.dispatch(AddBusinessInvoice(payload: _invoice));
 
-        Navigator.of(context).pop();
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => InvoiceSent(customer:addInvoice.state.invoiceCustomer)),
-        );
-      } else {
-        setState(() {
-          flushBarTitle = response;
-        });
-        Navigator.of(context).pop();
-      }
+          Navigator.of(context).pop();
+
+          await DownloadPdf(
+              invoice: _invoice,
+              currentBusiness: addInvoice.state.currentBusiness,
+              customer:addInvoice.state.invoiceCustomer,
+              invoiceItem: addInvoice.state.invoiceItems,
+              receipts:receipts
+          ).downloadPdf(context);
+
+        } else {
+          setState(() {
+            flushBarTitle = response;
+          });
+          Navigator.of(context).pop();
+        }      }
+
     } else {
       print(result.errors);
       Navigator.of(context).pop();

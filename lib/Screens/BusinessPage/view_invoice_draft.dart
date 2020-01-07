@@ -2,9 +2,11 @@ import 'package:akaunt/Api/BusinessPage/update_draft.dart';
 import 'package:akaunt/AppState/actions/invoice_actions.dart';
 import 'package:akaunt/AppState/app_state.dart';
 import 'package:akaunt/Models/customer.dart';
+import 'package:akaunt/Models/discount.dart';
 import 'package:akaunt/Models/edit_invoice.dart';
 import 'package:akaunt/Models/invoice.dart';
 import 'package:akaunt/Models/item.dart';
+import 'package:akaunt/Models/receipt.dart';
 import 'package:akaunt/Widgets/buttons.dart';
 import 'package:akaunt/Widgets/invoice_header.dart';
 import 'package:akaunt/Widgets/view_invoice_field_card.dart';
@@ -19,15 +21,22 @@ class ViewInvoiceDraft extends StatelessWidget {
   final Customer customer;
   final List<Item> invoiceItem;
   final String currency;
+  final List<Discount> discounts;
+  final List<Receipt> receipts;
 
   ViewInvoiceDraft(
       {@required this.invoice,
       @required this.customer,
       @required this.invoiceItem,
-      @required this.currency});
+      @required this.currency,
+      @required this.discounts,
+      @required this.receipts});
 
   @override
   Widget build(BuildContext context) {
+    double _amountPaid = Receipt.calculateTotalAmount(receipts);
+    double _invoiceBalance = Invoice.calculateInvoiceBalance(
+        receipts, invoice.totalAmount);
     return Scaffold(
         appBar: AppBar(
           elevation: 0,
@@ -56,44 +65,57 @@ class ViewInvoiceDraft extends StatelessWidget {
                     child: Padding(
                       padding: const EdgeInsets.all(10.0),
                       child: Container(
-                        decoration: BoxDecoration(
-                            boxShadow: [
-                              BoxShadow(
-                                blurRadius: 10,
-                                color: Color.fromRGBO(0, 0, 0, 0.2), // has the effect of softening the shadow
-                                spreadRadius: 1.0, // has the effect of extending the shadow
-                                offset: Offset(
-                                  0.0, // horizontal, move right 10
-                                  0.0, // vertical, move down 10
-                                ),
-                              )
-                            ],
-                            color: Colors.white
-                        ),
+                        decoration: BoxDecoration(boxShadow: [
+                          BoxShadow(
+                            blurRadius: 10,
+                            color: Color.fromRGBO(0, 0, 0, 0.2),
+                            // has the effect of softening the shadow
+                            spreadRadius: 1.0,
+                            // has the effect of extending the shadow
+                            offset: Offset(
+                              0.0, // horizontal, move right 10
+                              0.0, // vertical, move down 10
+                            ),
+                          )
+                        ], color: Colors.white),
                         padding: EdgeInsets.all(10),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: <Widget>[
                             InvoiceHeader(status: invoice.status),
-                            Divider(thickness: 2,color: Theme.of(context).accentColor,height: 30,),
+                            Divider(
+                              thickness: 2,
+                              color: Theme.of(context).accentColor,
+                              height: 30,
+                            ),
                             ViewInvoiceFieldCard(
                                 title: "Invoice Name:", value: invoice.title),
                             ViewInvoiceFieldCard(
-                                title: "Invoice Date:", value: invoice.issueDate),
+                                title: "Invoice Date:",
+                                value: invoice.issueDate),
                             ViewInvoiceFieldCard(
                                 title: "Due Date:", value: invoice.dueDate),
                             SizedBox(
                               height: 30,
                             ),
                             Container(
-                              padding:
-                              EdgeInsets.only(top: 10, bottom: 10,left: 5, right: 5),
+                              padding: EdgeInsets.only(
+                                  top: 10, bottom: 10, left: 5, right: 5),
                               color: Theme.of(context).accentColor,
                               child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: <Widget>[
-                                  Container(child: Text("ITEMS"),width: MediaQuery.of(context).size.width/3-30),
-                                  Container(child: Text("QTY "),width: MediaQuery.of(context).size.width/3-30),
+                                  Container(
+                                      child: Text("ITEMS"),
+                                      width: MediaQuery.of(context).size.width /
+                                              3 -
+                                          30),
+                                  Container(
+                                      child: Text("QTY "),
+                                      width: MediaQuery.of(context).size.width /
+                                              3 -
+                                          30),
                                   Text("AMOUNT"),
                                 ],
                               ),
@@ -101,78 +123,215 @@ class ViewInvoiceDraft extends StatelessWidget {
                             for (var item in invoiceItem)
                               Container(
                                 width: MediaQuery.of(context).size.width,
-                                padding: EdgeInsets.only(top: 5, bottom: 5,),
+                                padding: EdgeInsets.only(
+                                  top: 5,
+                                  bottom: 5,
+                                ),
                                 child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: <Widget>[
-                                    Container(child: Text("${item.name}"),width: MediaQuery.of(context).size.width/3-30,),
-                                    Container(child: Text("${item.quantity}"),width: MediaQuery.of(context).size.width/3-30),
+                                    Container(
+                                      child: Text("${item.name}"),
+                                      width: MediaQuery.of(context).size.width /
+                                              3 -
+                                          30,
+                                    ),
+                                    Container(
+                                        child: Text("${item.quantity}"),
+                                        width:
+                                            MediaQuery.of(context).size.width /
+                                                    3 -
+                                                30),
                                     Text(CurrencyConverter().formatPrice(
-                                        int.parse(item.price), state.currentBusiness.currency)),
+                                        int.parse(item.price),
+                                        state.currentBusiness.currency)),
                                   ],
                                 ),
                               ),
-                            Container(
-                                decoration: BoxDecoration(
-                                    border: Border(bottom: BorderSide(width: 2, color: Theme.of(context).accentColor))
+                            SizedBox(
+                              height: 30,
+                            ),
+                            discounts.length > 0
+                                ? Column(
+                              children: <Widget>[
+                                Divider(
+                                  thickness: 1,
+                                  color: Theme.of(context).accentColor,
+                                  height: 30,
                                 ),
-                                padding: EdgeInsets.only(top: 10, bottom: 20),
-                                child:  Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: <Widget>[
-                                    Text("Tax"),
-                                    Text("N 3,000"),
-
-                                  ],
-                                )
-                            ),
-                            Container(
-                              decoration: BoxDecoration(
-                                  border: Border(bottom: BorderSide(width: 2, color: Theme.of(context).accentColor))
-                              ),
-                              padding: EdgeInsets.only(top: 10, bottom: 20),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: <Widget>[
-                                  Text("Total"),
-                                  Text(CurrencyConverter().formatPrice(
-                                      invoice.totalAmount, state.currentBusiness.currency)),
-
-                                ],
-                              ),
-                            ),
+                                Container(
+                                  padding: EdgeInsets.only(bottom: 10),
+                                  width:
+                                  MediaQuery.of(context).size.width,
+                                  child: Text(
+                                    "Discounts/Tax",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                                for (var discount in discounts)
+                                  Container(
+                                      width: MediaQuery.of(context)
+                                          .size
+                                          .width,
+                                      padding: EdgeInsets.only(
+                                        top: 5,
+                                        bottom: 5,
+                                      ),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                        MainAxisAlignment
+                                            .spaceBetween,
+                                        children: <Widget>[
+                                          Text(discount.dType == 1
+                                              ? "Taxed"
+                                              : "Discount of"),
+                                          Container(
+                                            width: MediaQuery.of(context)
+                                                .size
+                                                .width /
+                                                4 +
+                                                50,
+                                            child: Container(
+                                              width:
+                                              MediaQuery.of(context)
+                                                  .size
+                                                  .width,
+                                              child: Text(
+                                                discount.description,
+                                                style: TextStyle(
+                                                    color: Theme.of(
+                                                        context)
+                                                        .primaryColor),
+                                                overflow:
+                                                TextOverflow.ellipsis,
+                                              ),
+                                            ),
+                                          ),
+                                          Text(CurrencyConverter()
+                                              .formatPrice(
+                                              double.parse(
+                                                  discount.amount),
+                                              state.currentBusiness
+                                                  .currency)),
+                                        ],
+                                      )),
+                                Divider(
+                                  thickness: 1,
+                                  color: Theme.of(context).accentColor,
+                                  height: 30,
+                                ),
+                              ],
+                            )
+                                : SizedBox(),
+                            discounts.length > 0
+                                ? Column(
+                              children: <Widget>[
+                                Container(
+                                  padding: EdgeInsets.only(bottom: 10),
+                                  width:
+                                  MediaQuery.of(context).size.width,
+                                  child: Text(
+                                    "Receipts",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                                for (var receipt in receipts)
+                                  Container(
+                                      width: MediaQuery.of(context)
+                                          .size
+                                          .width,
+                                      padding: EdgeInsets.only(
+                                        top: 5,
+                                        bottom: 5,
+                                      ),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                        MainAxisAlignment
+                                            .spaceBetween,
+                                        children: <Widget>[
+                                          Text(receipt.paymentDate),
+                                          Container(
+                                            width: MediaQuery.of(context)
+                                                .size
+                                                .width /
+                                                4 +
+                                                50,
+                                            child: Container(
+                                              width:
+                                              MediaQuery.of(context)
+                                                  .size
+                                                  .width,
+                                              child: Text(
+                                                receipt.name,
+                                                style: TextStyle(
+                                                    color: Theme.of(
+                                                        context)
+                                                        .primaryColor),
+                                                overflow:
+                                                TextOverflow.ellipsis,
+                                              ),
+                                            ),
+                                          ),
+                                          Text(CurrencyConverter()
+                                              .formatPrice(
+                                              double.parse(
+                                                  receipt.amountPaid),
+                                              state.currentBusiness
+                                                  .currency)),
+                                        ],
+                                      )),
+                                Divider(
+                                  thickness: 1,
+                                  color: Theme.of(context).accentColor,
+                                  height: 30,
+                                ),
+                              ],
+                            )
+                                : SizedBox(),
+                            ViewInvoiceFieldCardBold(
+                                title: "Total:",
+                                value: CurrencyConverter().formatPrice(
+                                    invoice.totalAmount,
+                                    state.currentBusiness.currency)),
+                            ViewInvoiceFieldCardBold(
+                                title: "Amount Paid:",
+                                value: CurrencyConverter().formatPrice(
+                                    _amountPaid,
+                                    state.currentBusiness.currency)),
+                            ViewInvoiceFieldCardBold(
+                                title: "Balance:",
+                                value: CurrencyConverter().formatPrice(
+                                    _invoiceBalance,
+                                    state.currentBusiness.currency)),
                             SizedBox(
                               height: 30,
                             ),
                             Container(
                               decoration: BoxDecoration(
-                                  border: Border(bottom: BorderSide(width: 2, color: Theme.of(context).accentColor))
-                              ),
-
+                                  border: Border(
+                                      top: BorderSide(
+                                          width: 2,
+                                          color:
+                                          Theme.of(context).accentColor))),
                               padding: EdgeInsets.only(top: 10, bottom: 20),
                               width: MediaQuery.of(context).size.width,
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: <Widget>[
                                   Text("NOTES"),
+                                  SizedBox(
+                                    height: 3,
+                                  ),
                                   Text("${invoice.notes}"),
-
-                                ],
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                              ),
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Container(
-                              width: MediaQuery.of(context).size.width,
-                              padding: EdgeInsets.only(top: 10, bottom: 20),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
+                                  SizedBox(
+                                    height: 15,
+                                  ),
                                   Text("${invoice.footer}"),
-
                                 ],
+                                crossAxisAlignment: CrossAxisAlignment.start,
                               ),
                             ),
                             SizedBox(
@@ -203,7 +362,7 @@ class ViewInvoiceDraft extends StatelessWidget {
             }));
   }
 
-  editAndSendDraft(context){
+  editAndSendDraft(context) {
     EditInvoice _invoice = EditInvoice(
         invoice.id,
         invoice.title,

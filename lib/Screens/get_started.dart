@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'package:akaunt/Widgets/logo_avatar.dart';
 import 'package:akaunt/Widgets/slide_dots.dart';
 import 'package:akaunt/Widgets/slide_item.dart';

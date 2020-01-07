@@ -1,8 +1,11 @@
+import 'package:akaunt/Api/BusinessPage/get_invoice_dicounts.dart';
 import 'package:akaunt/Api/BusinessPage/get_invoice_items.dart';
 import 'package:akaunt/AppState/app_state.dart';
 import 'package:akaunt/Models/customer.dart';
+import 'package:akaunt/Models/discount.dart';
 import 'package:akaunt/Models/invoice.dart';
 import 'package:akaunt/Models/item.dart';
+import 'package:akaunt/Models/receipt.dart';
 import 'package:akaunt/Screens/BusinessPage/view_invoice.dart';
 import 'package:akaunt/Screens/BusinessPage/view_invoice_draft.dart';
 import 'package:akaunt/Widgets/invoice_status.dart';
@@ -58,8 +61,7 @@ class InvoiceListBuilder extends StatelessWidget {
                                         status: invoice.status,
                                         avatarBgColor:
                                             Color.fromRGBO(251, 224, 192, 1),
-                                        textColor:
-                                            Color.fromRGBO(88, 52, 4, 1),
+                                        textColor: Color.fromRGBO(88, 52, 4, 1),
                                       )
                                     : SizedBox(),
                                 invoice.status.toLowerCase() == "draft"
@@ -75,24 +77,24 @@ class InvoiceListBuilder extends StatelessWidget {
                                         status: invoice.status,
                                         avatarBgColor:
                                             Color.fromRGBO(192, 251, 221, 1),
-                                        textColor:
-                                            Color.fromRGBO(4, 88, 38, 1))
+                                        textColor: Color.fromRGBO(4, 88, 38, 1))
                                     : SizedBox(),
                                 invoice.status.toLowerCase() == "sent"
                                     ? InvoiceStatus(
-                                    status: invoice.status,
-                                    avatarBgColor:
-                                    Color.fromRGBO(224, 237, 253, 1),
-                                    textColor:
-                                    Color.fromRGBO(68, 130, 193, 1))
+                                        status: invoice.status,
+                                        avatarBgColor:
+                                            Color.fromRGBO(224, 237, 253, 1),
+                                        textColor:
+                                            Color.fromRGBO(68, 130, 193, 1))
                                     : SizedBox(),
                                 SizedBox(
                                   width: 20,
                                 ),
                                 Container(
-                                  width: MediaQuery.of(context).size.width/2,
+                                  width: MediaQuery.of(context).size.width / 2,
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: <Widget>[
@@ -110,8 +112,8 @@ class InvoiceListBuilder extends StatelessWidget {
                                         "$invoiceTitle",
                                         style: TextStyle(
                                             fontSize: 12,
-                                            color:
-                                                Color.fromRGBO(106, 117, 139, 1)),
+                                            color: Color.fromRGBO(
+                                                106, 117, 139, 1)),
                                       )
                                     ],
                                   ),
@@ -142,10 +144,16 @@ class InvoiceListBuilder extends StatelessWidget {
                         )),
                     onTap: () async {
                       List<Item> allInvoiceItems = [];
+                      List<Discount> allInvoiceDiscounts = [];
+                      List<Receipt> allInvoiceReceipts = [];
                       _scaffoldKey.currentState.showSnackBar(LoadingSnackBar()
                           .loaderHigh("  Getting Invoice Data...", context));
                       List<dynamic> invoiceItems = await GetInvoiceItems()
                           .fetchInvoiceItems(invoice.id, context);
+
+                      List<dynamic> invoiceDiscounts =
+                          await GetInvoiceDiscounts()
+                              .fetchInvoiceDiscounts(invoice.id, context);
                       if (invoiceItems == null) {
                       } else {
                         for (var item in invoiceItems) {
@@ -156,6 +164,26 @@ class InvoiceListBuilder extends StatelessWidget {
                           });
                         }
                       }
+
+                      if (invoiceDiscounts == null) {
+                      } else {
+                        for (var discount in invoiceDiscounts) {
+                          Discount _discount = new Discount(
+                              discount["id"],
+                              discount["description"],
+                              discount["amount"],
+                              discount["dType"],
+                              discount["invoiceId"],
+                              discount["businessId"],
+                              discount["userId"]);
+                          allInvoiceDiscounts.add(_discount);
+                        }
+                      }
+                      state.businessReceipts.forEach((receipt) {
+                        if (receipt.invoiceId == invoice.id) {
+                          allInvoiceReceipts.add(receipt);
+                        }
+                      });
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -164,12 +192,18 @@ class InvoiceListBuilder extends StatelessWidget {
                                     invoice: invoice,
                                     customer: invoiceCustomer,
                                     invoiceItem: allInvoiceItems,
-                                    currency: currency)
+                                    currency: currency,
+                                    discounts: allInvoiceDiscounts,
+                                    receipts: allInvoiceReceipts,
+                                  )
                                 : ViewInvoice(
                                     invoice: invoice,
                                     customer: invoiceCustomer,
                                     invoiceItem: allInvoiceItems,
-                                    currency: currency)),
+                                    currency: currency,
+                                    discounts: allInvoiceDiscounts,
+                                    receipts: allInvoiceReceipts,
+                                  )),
                       );
                     },
                   );

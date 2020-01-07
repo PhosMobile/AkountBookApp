@@ -657,11 +657,12 @@ class _UpdateDraftState extends State<UpdateDraft> {
     addInvoice.dispatch(CreateInvoice(payload: _invoice));
     addInvoice.dispatch(AddInvoiceCustomer(payload: invoiceCustomer));
     addInvoice.dispatch(AddNameInvoice(payload: invoiceName));
-
+      List<Discount> _discount = [];
       for(var discount in _children){
         Discount _invoiceDiscount = new Discount("0", discount["description"], discount["amount"], discount["type"], addInvoice.state.currentBusiness.id,"0",addInvoice.state.loggedInUser.userId);
-        addInvoice.dispatch(CreateDiscount(payload: _invoiceDiscount));
+        _discount.add(_invoiceDiscount);
       }
+      addInvoice.dispatch(CreateDiscount(payload: _discount));
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => SendInvoice()),

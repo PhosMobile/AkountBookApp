@@ -15,7 +15,6 @@ class CustomerCard extends StatelessWidget{
   CustomerCard({@required this.customer});
   @override
   Widget build(BuildContext context) {
-    print(customer.imageUrl);
     return Container(
       decoration: BoxDecoration(
           color:  Color.fromRGBO(248, 248, 248, 1)

@@ -53,7 +53,7 @@ class ItemCard extends StatelessWidget {
             ),
             ),
             Container(
-              width: MediaQuery.of(context).size.width / 4+50,
+              width: MediaQuery.of(context).size.width / 4,
               child: Container(
                 width: MediaQuery.of(context).size.width,
                 child: Text(
@@ -64,7 +64,7 @@ class ItemCard extends StatelessWidget {
               ),
             ),
             Container(
-              width: MediaQuery.of(context).size.width / 4-50,
+              width: MediaQuery.of(context).size.width / 4,
               child: Text(
                 CurrencyConverter()
                     .formatPrice(int.parse(item.price)*int.parse(item.quantity), businessCurrency),

@@ -381,7 +381,7 @@ class _AddInvoiceState extends State<AddInvoice> {
                                               child: Text(item["description"])),
                                           SizedBox(width: 10),
                                           Text(
-                                              "${item["type"] == 1 ? "-" : "+"} ${TotalAndSubTotal().getSubTotal(context, isNewInvoice).round() - calculateTotal().round()}"),
+                                              "${item["type"] == 1 ? "-" : "+"} ${calculateTotal().round() - TotalAndSubTotal().getSubTotal(context, isNewInvoice).round()}"),
                                           SizedBox(width: 10),
                                           SizedBox(width: 10),
                                           InkWell(
@@ -678,6 +678,7 @@ class _AddInvoiceState extends State<AddInvoice> {
         addInvoice.dispatch(AddBusinessInvoice(payload: _invoice));
 
         if (_children.length > 0) {
+          List<Discount> _discount = [];
           for (var discount in _children) {
             QueryResult discountResult = await graphQLConfiguration
                 .getGraphql(context)
@@ -690,20 +691,29 @@ class _AddInvoiceState extends State<AddInvoice> {
                         businessId,
                         userId)));
             if (!discountResult.hasErrors) {
-              print("done");
+              double discountAmount;
+              if (discount["discountMethod"] == "In Percent") {
+                discountAmount = double.parse(discount["amount"]) /
+                    100 *
+                    TotalAndSubTotal().getSubTotal(context, isNewInvoice);
+              } else {
+                discountAmount = double.parse(discount["amount"]);
+              }
               Discount _invoiceDiscount = new Discount(
                   "0",
                   discount["description"],
-                  discount["amount"],
+                  discountAmount.toString(),
                   discount["type"],
                   addInvoice.state.currentBusiness.id,
                   "0",
                   addInvoice.state.loggedInUser.userId);
-              addInvoice.dispatch(CreateDiscount(payload: _invoiceDiscount));
+
+              _discount.add(_invoiceDiscount);
             } else {
               print(discountResult.errors);
             }
           }
+          addInvoice.dispatch(CreateDiscount(payload: _discount));
         } else {
           Navigator.pushReplacement(
             context,
@@ -758,18 +768,27 @@ class _AddInvoiceState extends State<AddInvoice> {
           addInvoice.state.currentBusiness.id,
           userId);
       addInvoice.dispatch(CreateInvoice(payload: _invoice));
-
+      List<Discount> _discount = [];
       for (var discount in _children) {
+        double discountAmount;
+        if (discount["discountMethod"] == "In Percent") {
+          discountAmount = double.parse(discount["amount"]) /
+              100 *
+              TotalAndSubTotal().getSubTotal(context, isNewInvoice);
+        } else {
+          discountAmount = double.parse(discount["amount"]);
+        }
         Discount _invoiceDiscount = new Discount(
             "0",
             discount["description"],
-            discount["amount"],
+            discountAmount.toString(),
             discount["type"],
             addInvoice.state.currentBusiness.id,
             "0",
             addInvoice.state.loggedInUser.userId);
-        addInvoice.dispatch(CreateDiscount(payload: _invoiceDiscount));
+        _discount.add(_invoiceDiscount);
       }
+      addInvoice.dispatch(CreateDiscount(payload: _discount));
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => SendInvoice()),
@@ -868,18 +887,26 @@ class _AddInvoiceState extends State<AddInvoice> {
                             ),
                             controller: _discountDescription,
                           ),
-                          TextFormField(
-                            keyboardType: TextInputType.number,
-                            decoration: const InputDecoration(
-                              labelText: 'Amount',
-                            ),
-                            controller: _discountAmount,
-                          ),
+                          dropdownValue == "In Percent"
+                              ? TextFormField(
+                                  keyboardType: TextInputType.number,
+                                  decoration: const InputDecoration(
+                                    labelText: 'Percentage e.g 10',
+                                  ),
+                                  controller: _discountAmount,
+                                )
+                              : TextFormField(
+                                  keyboardType: TextInputType.number,
+                                  decoration: const InputDecoration(
+                                    labelText: 'Amount',
+                                  ),
+                                  controller: _discountAmount,
+                                ),
                           _discountFormfilled
                               ? Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: Text(
-                                    "Form not filled properly",
+                                    "Filleds cannot be empty",
                                     style: TextStyle(color: Colors.redAccent),
                                   ),
                                 )
@@ -917,11 +944,13 @@ class _AddInvoiceState extends State<AddInvoice> {
     Map<String, dynamic> discountDetail = {
       "description": _discountDescription.text,
       "amount": _discountAmount.text,
-      "type": discountTax
+      "type": discountTax,
+      "discountMethod": dropdownValue
     };
     setState(() {
       _children.add(discountDetail);
     });
+    print(_children);
   }
 
   double calculateTotal() {

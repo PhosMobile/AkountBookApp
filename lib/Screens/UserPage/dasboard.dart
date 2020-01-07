@@ -1,4 +1,3 @@
-import 'package:akaunt/Api/UserAcount/logged_in_user.dart';
 import 'package:akaunt/AppState/app_state.dart';
 import 'package:akaunt/Models/menu_item.dart';
 import 'package:akaunt/Screens/BusinessPage/expenses.dart';
@@ -11,9 +10,7 @@ import 'package:akaunt/utilities/svg_files.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:localstorage/localstorage.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class Dashboard extends StatefulWidget {
   final int currentTab;
@@ -69,14 +66,6 @@ class _DashboardState extends State<Dashboard> {
         body: StoreConnector<AppState, AppState>(
           converter: (store)=>store.state,
           onInitialBuild: (state) async {
-//            if(state.loggedInUser == null){
-//              final prefs = await SharedPreferences.getInstance();
-//              final LocalStorage storage = new LocalStorage('some_key');
-//              String accessToken = prefs.getString("access_token");
-//              storage.setItem("access_token", accessToken);
-//              LoggedInUser().fetchLoggedInUser(context, "");
-//
-//            }
           },
           builder: (context, state){
             return Container(
@@ -177,7 +166,6 @@ class _DashboardState extends State<Dashboard> {
     return StoreConnector<AppState, AppState>(
       converter: (store)=>store.state,
       builder: (context, state){
-        print(state.currentBusiness.imageUrl);
         return Container(
           child: Column(
             children: <Widget>[

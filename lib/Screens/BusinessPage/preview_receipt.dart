@@ -148,6 +148,7 @@ class ReceiptPreview extends StatelessWidget {
           _receiptDataBody["customer_id"],
           _receiptDataBody["user_id"]
       );
+      addReceipt.dispatch(UpdateBusinessReceipts(payload: _receiptQueryData));
       addReceipt.dispatch(UpdateInvoiceReceipts(payload: _receiptQueryData));
       Navigator.pushReplacement(
         context,

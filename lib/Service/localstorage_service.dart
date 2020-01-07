@@ -56,7 +56,6 @@ class LocalStorageService {
   List<String> get languages => _getFromDisk(AppLanguagesKey) ?? List<String>();
   set languages(List<String> appLanguages) => _saveToDisk(AppLanguagesKey, appLanguages);
 
-// updated _saveToDisk function that handles all types
   void _saveToDisk<T>(String key, T content){
     print('(TRACE) LocalStorageService:_saveToDisk. key: $key value: $content');
 

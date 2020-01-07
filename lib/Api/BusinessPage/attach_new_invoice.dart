@@ -643,18 +643,23 @@ class _AttachNewInvoiceState extends State<AttachNewInvoice> {
             userId);
         addInvoice.dispatch(AddBusinessInvoice(payload: _invoice));
         addInvoice.dispatch(CreateInvoice(payload: _invoice));
+        List<Discount> _discount = [];
         for(var discount in _children){
           QueryResult discountResult = await graphQLConfiguration
               .getGraphql(context)
               .mutate(MutationOptions(
               document: cInvoice.createDiscount(discount["description"], discount["amount"], discount["type"], result.data["create_invoice"]["id"], businessId, userId)));
+
           if(!discountResult.hasErrors){
             Discount _invoiceDiscount = new Discount("0", discount["description"], discount["amount"], discount["type"], addInvoice.state.currentBusiness.id,"0",addInvoice.state.loggedInUser.userId);
-            addInvoice.dispatch(CreateDiscount(payload: _invoiceDiscount));
-            Navigator.pop(context);
+
+            _discount.add(_invoiceDiscount);
           }else{
             print(discountResult.errors);
           }
+          addInvoice.dispatch(CreateDiscount(payload: _discount));
+          Navigator.pop(context);
+
         }
       } else {
         print(result.source);
