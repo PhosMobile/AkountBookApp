@@ -605,7 +605,6 @@ class _AddInvoiceState extends State<AddInvoice> {
       _dDate = dueDate;
     }
     final addInvoice = StoreProvider.of<AppState>(context);
-
     List<Item> invoiceItems = addInvoice.state.invoiceItems;
     Customer invoiceCustomer = addInvoice.state.invoiceCustomer;
     InvoiceName invoiceName = addInvoice.state.invoiceName;

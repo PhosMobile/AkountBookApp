@@ -4,7 +4,7 @@ import 'package:akaunt/Models/customer.dart';
 import 'package:akaunt/Models/invoice.dart';
 import 'package:akaunt/Models/item.dart';
 import 'package:akaunt/Models/receipt.dart';
-import 'package:akaunt/utilities/view_pdf.dart';
+import 'package:akaunt/utilities/invoice_pdf.dart';
 import 'package:flutter/material.dart' as material;
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
@@ -12,13 +12,14 @@ import 'package:pdf/widgets.dart';
 import 'package:printing/printing.dart';
 import 'package:intl/intl.dart';
 
-class DownloadPdf {
+class InvoiceToPdf {
   final Document pdf = Document();
   final Invoice invoice;
   final Business currentBusiness;
   final Customer customer;
   final List<Item> invoiceItem;
   final List<Receipt> receipts;
+  final String sendVia;
   final formatter = new NumberFormat("#,###");
 
   List<List<String>> items = [
@@ -29,12 +30,13 @@ class DownloadPdf {
     <String>['Receipt Name', 'Date', 'Amount Paid'],
   ];
 
-  DownloadPdf(
+  InvoiceToPdf(
       {@material.required this.invoice,
       @material.required this.currentBusiness,
       @material.required this.customer,
       @material.required this.invoiceItem,
-      @material.required this.receipts});
+      @material.required this.receipts,
+      @material.required this.sendVia});
 
   downloadPdf(cont) async {
     double balance = 0;
@@ -42,7 +44,7 @@ class DownloadPdf {
       items.add(<String>[
         '${item.name}',
         '${item.quantity}',
-        '${formatter.format(double.parse(item.price))}'
+        '${formatter.format(double.parse(item.price) * double.parse(item.quantity))}'
       ]);
     });
     receipts.forEach((receipt) {
@@ -243,7 +245,12 @@ class DownloadPdf {
     final File file = File(path);
     file.writeAsBytesSync(pdf.save());
     material.Navigator.pop(cont);
-    material.Navigator.of(cont)
-        .push(material.MaterialPageRoute(builder: (_) => ViewPdf(path: path,customer: customer,)));
+    material.Navigator.of(cont).push(material.MaterialPageRoute(
+        builder: (_) => InvoicePDF(
+              path: path,
+              customer: customer,
+              invoice: invoice,
+              sendVia: sendVia,
+            )));
   }
 }

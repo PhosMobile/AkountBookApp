@@ -39,7 +39,11 @@ dependencies:
   otp: 1.0.1
   image_crop_widget: ^0.0.6
   image_picker: ^0.6.1+11
+  email_validator: ^1.0.0
   redux: ^3.0.0
+  mailer: ^3.0.4
+  flutter_mailer: ^0.4.2
+  flutter_email_sender: ^2.2.2
   flutter_redux: ^0.5.4
   flutter_datetime_picker: ^1.2.8
   date_format: ^1.0.8

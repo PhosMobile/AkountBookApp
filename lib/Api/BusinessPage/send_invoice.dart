@@ -7,6 +7,7 @@ import 'package:akaunt/Graphql/graphql_config.dart';
 import 'package:akaunt/Graphql/mutations.dart';
 import 'package:akaunt/Models/invoice.dart';
 import 'package:akaunt/Models/receipt.dart';
+import 'package:akaunt/Widgets/AlertSnackBar.dart';
 import 'package:akaunt/Widgets/HeaderTitle.dart';
 import 'package:akaunt/Widgets/loader_widget.dart';
 import 'package:akaunt/Widgets/buttons.dart';
@@ -20,6 +21,7 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:flushbar/flushbar.dart';
+import 'package:email_validator/email_validator.dart';
 
 import '../../AppState/app_state.dart';
 
@@ -30,6 +32,7 @@ class SendInvoice extends StatefulWidget {
 
 class _SendInvoiceState extends State<SendInvoice> {
   InputStyles inputStyles = new InputStyles();
+  GlobalKey<ScaffoldState> _scaffoldState = new GlobalKey<ScaffoldState>();
   bool sendViaEmail = true;
   bool sendViaWhatsApp = false;
   bool sendViaSMS = false;
@@ -39,10 +42,12 @@ class _SendInvoiceState extends State<SendInvoice> {
   bool _isLoading = false;
   String flushBarTitle = "";
   int receivedPayment = 0;
+  AlertSnackBar alert = AlertSnackBar();
 
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
+        key: _scaffoldState,
         appBar: AppBar(
             backgroundColor: Colors.white,
             iconTheme: IconThemeData(color: Theme.of(context).primaryColor),
@@ -333,8 +338,9 @@ class _SendInvoiceState extends State<SendInvoice> {
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) => AddReceipt(
-                                            invoicePrice:
-                                                state.readyInvoice.totalAmount.toInt(),
+                                            invoicePrice: state
+                                                .readyInvoice.totalAmount
+                                                .toInt(),
                                           )),
                                 );
                               } else {
@@ -371,16 +377,34 @@ class _SendInvoiceState extends State<SendInvoice> {
         ));
   }
   void _saveInvoiceName(context) async {
-    flushBarTitle = "Sending Invoice";
+    final addInvoice = StoreProvider.of<AppState>(context);
+    final invoiceData = StoreProvider.of<AppState>(context).state.readyInvoice;
+    String sendVia;
+    if (sendViaWhatsApp) {
+      sendVia = "WhatsApp";
+    } else if (sendViaEmail) {
+      if (!EmailValidator.validate(addInvoice.state.invoiceCustomer.email) ||
+          addInvoice.state.invoiceCustomer.email == null ||
+          addInvoice.state.invoiceCustomer.email == "null") {
+        _scaffoldState.currentState.showSnackBar(alert.showSnackBar(
+            "Customer email is invalid or does not exist please sellect another means of send invoice or update customer info"));
+        return;
+      } else {
+        sendVia = "Email";
+      }
+    } else {
+      sendVia = "SMS";
+    }
+
+    flushBarTitle = "Creating Invoice";
     Flushbar(
       title: flushBarTitle,
-      message: "Your invoice is sending",
+      message: "invoice is getting ready to send",
       duration: Duration(minutes: 3),
       showProgressIndicator: true,
       backgroundColor: Theme.of(context).primaryColor,
     )..show(context);
-    final addInvoice = StoreProvider.of<AppState>(context);
-    final invoiceData = StoreProvider.of<AppState>(context).state.readyInvoice;
+
     final receiptData =
         StoreProvider.of<AppState>(context).state.invoiceReceipt;
 
@@ -412,7 +436,7 @@ class _SendInvoiceState extends State<SendInvoice> {
           result.data["create_invoice"]["id"],
           context);
 
-      if(invoiceItemResponse == "Done"){
+      if (invoiceItemResponse == "Done") {
         String response = await InvoiceDiscounts().saveInvoiceDiscounts(
             addInvoice.state.invoiceDiscount,
             result.data["create_invoice"]["id"],
@@ -425,17 +449,17 @@ class _SendInvoiceState extends State<SendInvoice> {
             QueryResult receiptResult = await graphQLConfiguration
                 .getGraphql(context)
                 .mutate(MutationOptions(
-                document: createReceipt.createReceipt(
-                    addInvoice.state.invoiceName.title + "001",
-                    int.parse(receiptData.amountPaid),
-                    receiptData.paymentDate,
-                    receiptData.paymentMethod,
-                    receiptData.paymentType,
-                    "done",
-                    invoiceQueryData["id"],
-                    invoiceData.businessId,
-                    invoiceData.customerId,
-                    invoiceData.userId)));
+                    document: createReceipt.createReceipt(
+                        addInvoice.state.invoiceName.title + "001",
+                        int.parse(receiptData.amountPaid),
+                        receiptData.paymentDate,
+                        receiptData.paymentMethod,
+                        receiptData.paymentType,
+                        "done",
+                        invoiceQueryData["id"],
+                        invoiceData.businessId,
+                        invoiceData.customerId,
+                        invoiceData.userId)));
             if (receiptResult.hasErrors) {
               print(receiptResult.errors);
             } else {
@@ -477,21 +501,21 @@ class _SendInvoiceState extends State<SendInvoice> {
 
           Navigator.of(context).pop();
 
-          await DownloadPdf(
-              invoice: _invoice,
-              currentBusiness: addInvoice.state.currentBusiness,
-              customer:addInvoice.state.invoiceCustomer,
-              invoiceItem: addInvoice.state.invoiceItems,
-              receipts:receipts
-          ).downloadPdf(context);
-
+          await InvoiceToPdf(
+                  invoice: _invoice,
+                  currentBusiness: addInvoice.state.currentBusiness,
+                  customer: addInvoice.state.invoiceCustomer,
+                  invoiceItem: addInvoice.state.invoiceItems,
+                  receipts: receipts,
+                  sendVia: sendVia)
+              .downloadPdf(context);
         } else {
           setState(() {
             flushBarTitle = response;
           });
           Navigator.of(context).pop();
-        }      }
-
+        }
+      }
     } else {
       print(result.errors);
       Navigator.of(context).pop();

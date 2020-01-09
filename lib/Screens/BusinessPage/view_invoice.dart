@@ -474,7 +474,7 @@ class _ViewInvoiceState extends State<ViewInvoice> {
       }
     });
 
-    await DownloadPdf(
+    await InvoiceToPdf(
             invoice: widget.invoice,
             currentBusiness: widget.currentBusiness,
             customer: widget.customer,
