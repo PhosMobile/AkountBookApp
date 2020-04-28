@@ -20,7 +20,7 @@ Future<void> main() async{
   );
 
   try {
-    await  setupLocator();
+     setupLocator();
     return runApp(configuredApp);
   } catch(error) {
     print('Locator setup has failed');

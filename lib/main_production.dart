@@ -16,11 +16,11 @@ void main() async{
   var configuredApp = AppConfig(
     appTitle: "Akaunt Book",
     buildFlavor: "Production",
-    apiEndpoint: 'https://akaunt-book.herokuapp.com',
+    apiEndpoint: 'https://akauntbook-api.herokuapp.com',
     child: MyApp(store: store),
   );
   try {
-    await  setupLocator();
+    setupLocator();
     return runApp(configuredApp);
   } catch(error) {
     print('Locator setup has failed');

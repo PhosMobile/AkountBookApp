@@ -1,5 +1,4 @@
 import 'dart:convert';
-import '../service_locator.dart';
 import 'package:akaunt/Models/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -46,8 +45,6 @@ class LocalStorageService {
   void saveStringToDisk(String key, String content){
     print('(TRACE) LocalStorageService:_saveStringToDisk. key: $key value: $content');
     _preferences.setString(UserKey, content);
-    var storageService = locator<LocalStorageService>();
-    var mySavedUser = storageService.user;
   }
 
   bool get darkMode => _getFromDisk(DarkModeKey) ?? false;

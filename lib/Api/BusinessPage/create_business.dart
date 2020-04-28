@@ -321,7 +321,7 @@ class _AddBusinessState extends State<AddBusiness> {
         business.dispatch(UserCurrentBusiness(payload: currentBusiness));
         business.dispatch(UpdateUserBusiness(payload: currentBusiness));
         _scaffoldKey.currentState.showSnackBar(
-            LoadingSnackBar().loader("  Getting Business Data...", context));
+            LoadingSnackBar().loader("Getting Business Data...", context));
         CurrentBusinessData().getBusinessData(context, currentBusiness.id);
       } else {
         GqlConfig graphQLConfiguration = GqlConfig();

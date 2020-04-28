@@ -44,33 +44,33 @@ class InvoiceItemCard extends StatelessWidget{
                         Text(
                           item.name,
                           textAlign: TextAlign.left,
-                          style: TextStyle(color: Theme.of(context).primaryColor),
+                          style: TextStyle(fontSize:12, color: Theme.of(context).primaryColor),
                         ),
                         Text(
                           "${CurrencyConverter().formatPrice(int.parse(item.price), state.currentBusiness.currency)} each",
                           textAlign: TextAlign.left,
-                          style: TextStyle(color: Colors.grey),
+                          style: TextStyle(fontSize:12,color: Colors.grey),
                         ),
                       ],
                     ),
                   ),
                   Container(
-                    width: MediaQuery.of(context).size.width / 4+50,
+                    width: MediaQuery.of(context).size.width / 4+30,
                     child: Container(
                       width: MediaQuery.of(context).size.width,
                       child: Text(
                         item.description,
-                        style: TextStyle(color: Theme.of(context).primaryColor),
+                        style: TextStyle(fontSize:12,color: Theme.of(context).primaryColor),
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
                   ),
                   Container(
-                    width: MediaQuery.of(context).size.width / 4-50,
+                    width: MediaQuery.of(context).size.width / 4-20,
                     child: Text(
                       CurrencyConverter()
                           .formatPrice(amount, businessCurrency),
-                      style: TextStyle(color: Theme.of(context).primaryColor),
+                      style: TextStyle(fontSize:12,color: Theme.of(context).primaryColor),
                     ),
                   ),
                 ],

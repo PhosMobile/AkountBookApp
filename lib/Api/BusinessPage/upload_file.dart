@@ -9,7 +9,7 @@ class UploadFile {
     if (image == null) {
       return null;
     } else {
-      String fileName = p.basename(image.path);
+      String fileName = p.basename(image.pdfPath);
       var dateNow = DateTime.now().millisecondsSinceEpoch;
       final StorageReference firebaseStorageRef =
           FirebaseStorage.instance.ref().child(dateNow.toString() + fileName);

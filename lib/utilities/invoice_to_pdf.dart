@@ -4,7 +4,6 @@ import 'package:akaunt/Models/customer.dart';
 import 'package:akaunt/Models/invoice.dart';
 import 'package:akaunt/Models/item.dart';
 import 'package:akaunt/Models/receipt.dart';
-import 'package:akaunt/utilities/invoice_pdf.dart';
 import 'package:flutter/material.dart' as material;
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
@@ -19,7 +18,6 @@ class InvoiceToPdf {
   final Customer customer;
   final List<Item> invoiceItem;
   final List<Receipt> receipts;
-  final String sendVia;
   final formatter = new NumberFormat("#,###");
 
   List<List<String>> items = [
@@ -35,10 +33,9 @@ class InvoiceToPdf {
       @material.required this.currentBusiness,
       @material.required this.customer,
       @material.required this.invoiceItem,
-      @material.required this.receipts,
-      @material.required this.sendVia});
+      @material.required this.receipts,});
 
-  downloadPdf(cont) async {
+  Future<String> downloadPdf(cont) async {
     double balance = 0;
     invoiceItem.forEach((item) {
       items.add(<String>[
@@ -244,13 +241,6 @@ class InvoiceToPdf {
 
     final File file = File(path);
     file.writeAsBytesSync(pdf.save());
-    material.Navigator.pop(cont);
-    material.Navigator.of(cont).push(material.MaterialPageRoute(
-        builder: (_) => InvoicePDF(
-              path: path,
-              customer: customer,
-              invoice: invoice,
-              sendVia: sendVia,
-            )));
+    return path;
   }
 }
