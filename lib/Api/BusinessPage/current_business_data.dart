@@ -16,6 +16,7 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:akaunt/Graphql/graphql_config.dart';
 
+
 class CurrentBusinessData extends StatelessWidget {
   @override
   Widget build(BuildContext context) {

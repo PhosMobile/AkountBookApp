@@ -1,4 +1,5 @@
 import 'package:akaunt/Models/customer.dart';
+import 'package:akaunt/Widgets/DisplayAttachedImage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -26,7 +27,8 @@ class CustomerCard extends StatelessWidget{
             Padding(
                 padding: const EdgeInsets.only(
                     right: 15.0),
-                child: addCustomer),
+                child: customer.imageUrl == null || customer.imageUrl == "null" ? addCustomer:
+                DisplayImage().displayProfileImage(customer.imageUrl)),
             Expanded(
                 child: Text(
                   customer.name,

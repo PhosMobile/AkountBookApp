@@ -38,7 +38,6 @@ class LoadingSnackBar{
             new Text(text, style: TextStyle(color: Theme.of(context).primaryColor),)
           ],
         ),
-        padding: EdgeInsets.only(bottom: 15),
       ),
       elevation: 0,
     );

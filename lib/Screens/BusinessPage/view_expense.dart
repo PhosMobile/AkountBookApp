@@ -8,6 +8,7 @@ import 'package:akaunt/Screens/UserPage/dasboard.dart';
 import 'package:akaunt/Widgets/buttons.dart';
 import 'package:akaunt/Widgets/loader_widget.dart';
 import 'package:akaunt/Widgets/view_invoice_field_card.dart';
+import 'package:akaunt/utilities/currency_convert.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -36,6 +37,7 @@ class _ViewExpenseState extends State<ViewExpense> {
         body: StoreConnector<AppState, AppState>(
             converter: (store)=>store.state,
             builder: (context, state){
+             var amount =  int.parse(widget.expense.price)*widget.expense.quantity;
               return Container(
                 decoration: BoxDecoration(
                     border: Border(
@@ -47,14 +49,22 @@ class _ViewExpenseState extends State<ViewExpense> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: <Widget>[
-                        ViewInvoiceFieldCard(
-                            title: "Expense Name:", value: widget.expense.name),
-                        ViewInvoiceFieldCard(
-                            title: "Description:", value: widget.expense.description),
-                        ViewInvoiceFieldCard(title: "Date:", value: widget.expense.date),
-                        ViewInvoiceFieldCard(
-                            title: "Quantity:", value: widget.expense.quantity.toString()),
-                        ViewInvoiceFieldCard(title: "Amount", value: widget.expense.price),
+                        Expanded(
+                          child: Container(
+                            child: Column(
+                              children: <Widget>[
+                                ViewInvoiceFieldCard(
+                                    title: "Expense Name:", value: widget.expense.name),
+                                ViewInvoiceFieldCard(
+                                    title: "Description:", value: widget.expense.description),
+                                ViewInvoiceFieldCard(title: "Date:", value: widget.expense.date,),
+                                ViewInvoiceFieldCard(
+                                    title: "Quantity:", value: widget.expense.quantity.toString()),
+                                ViewInvoiceFieldCard(title: "Amount", value: CurrencyConverter().formatPrice(amount, state.currentBusiness.currency)),
+                              ],
+                            ),
+                          ),
+                        ),
                         SizedBox(
                           height: 30,
                         ),

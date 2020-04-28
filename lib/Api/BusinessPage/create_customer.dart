@@ -238,7 +238,6 @@ class _AddCustomerState extends State<AddCustomer> {
               },
             )));
   }
-
   void _addCustomer(businessId, userId) async {
     setState(() {
       _isLoading = true;
@@ -254,8 +253,6 @@ class _AddCustomerState extends State<AddCustomer> {
       });
     }
   }
-
-
   void _registerCustomer(imageUrl, businessId, userId) async {
     setState(() {
       _isLoading = true;

@@ -41,7 +41,7 @@ class _AccessContactsState extends State<AccessContacts> {
     PermissionStatus permission = await PermissionHandler()
         .checkPermissionStatus(PermissionGroup.contacts);
     if (permission != PermissionStatus.granted &&
-        permission != PermissionStatus.disabled) {
+        permission != PermissionStatus.denied) {
       Map<PermissionGroup, PermissionStatus> permissionStatus =
       await PermissionHandler()
           .requestPermissions([PermissionGroup.contacts]);

@@ -1,3 +1,5 @@
+import 'package:akaunt/Models/receipt.dart';
+
 import 'customer.dart';
 import 'item.dart';
 
@@ -95,6 +97,16 @@ class Invoice {
     });
     return iCustomer;
   }
+
+
+  static double calculateInvoiceBalance(List<Receipt> receipts, double invoiceAmount){
+    double amount = 0;
+    receipts.forEach((re){
+      amount = amount + double.parse(re.amountPaid);
+    });
+    return invoiceAmount - amount;
+  }
+
 
 
 }

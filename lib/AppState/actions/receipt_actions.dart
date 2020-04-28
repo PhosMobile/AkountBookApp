@@ -13,6 +13,11 @@ class UpdateInvoiceReceipts {
   final Receipt payload;
   UpdateInvoiceReceipts({@required this.payload});
 }
+
+class UpdateBusinessReceipts {
+  final Receipt payload;
+  UpdateBusinessReceipts({@required this.payload});
+}
 class DeleteInvoiceReceipt {
 final Receipt payload;
 DeleteInvoiceReceipt({@required this.payload});

@@ -49,26 +49,26 @@ class ItemCard extends StatelessWidget {
               child: Text(
               item.name,
               textAlign: TextAlign.left,
-              style: TextStyle(color: Colors.blueGrey[20]),
+              style: TextStyle(fontSize:12,color: Colors.blueGrey[20]),
             ),
             ),
             Container(
-              width: MediaQuery.of(context).size.width / 4+50,
+              width: MediaQuery.of(context).size.width / 4,
               child: Container(
                 width: MediaQuery.of(context).size.width,
                 child: Text(
                   item.description,
-                  style: TextStyle(color: Colors.blueGrey[20]),
+                  style: TextStyle(fontSize:12,color: Colors.blueGrey[20]),
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
             ),
             Container(
-              width: MediaQuery.of(context).size.width / 4-50,
+              width: MediaQuery.of(context).size.width / 4,
               child: Text(
                 CurrencyConverter()
                     .formatPrice(int.parse(item.price)*int.parse(item.quantity), businessCurrency),
-                style: TextStyle(color: Colors.blueGrey[20]),
+                style: TextStyle(fontSize:12,color: Colors.blueGrey[20]),
               ),
             ),
             Container(width:20, height: 20, child: selected ? selectedIcon : selectIcon)

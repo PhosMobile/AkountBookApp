@@ -28,6 +28,8 @@ AppState appReducer(AppState prevState, dynamic action) {
   newAppState.businessReceipts.add(action.payload);
   }else if (action is UpdateInvoiceReceipts) {
     newAppState.invoiceReceipt = action.payload;
+  }else if (action is UpdateBusinessReceipts) {
+    newAppState.businessReceipts.add(action.payload);
   }else if (action is DeleteInvoiceReceipt){
     newAppState.invoiceReceipt = null;
   }else if (action is FetchUserInvoice) {
@@ -69,7 +71,7 @@ AppState appReducer(AppState prevState, dynamic action) {
   }else if (action is RemoveDeletedBusiness) {
     BusinessReducers().removeEditedBusiness(action.payload, newAppState);
   }else if (action is CreateDiscount) {
-    newAppState.invoiceDiscount.add(action.payload);
+    newAppState.invoiceDiscount = action.payload;
   }else if (action is AddUserContacts) {
     action.payload.forEach((contact){
       newAppState.userContacts.add(contact);

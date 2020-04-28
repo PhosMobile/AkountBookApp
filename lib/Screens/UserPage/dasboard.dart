@@ -1,6 +1,6 @@
 import 'package:akaunt/AppState/app_state.dart';
 import 'package:akaunt/Models/menu_item.dart';
-import 'package:akaunt/Screens/BusinessPage/Expenses.dart';
+import 'package:akaunt/Screens/BusinessPage/expenses.dart';
 import 'package:akaunt/Screens/BusinessPage/Invoices.dart';
 import 'package:akaunt/Screens/BusinessPage/Reports.dart';
 import 'package:akaunt/Screens/BusinessPage/customers.dart';
@@ -51,6 +51,7 @@ class _DashboardState extends State<Dashboard> {
   Widget build(BuildContext context) {
     MenuList menu = new MenuList();
     Size size = MediaQuery.of(context).size;
+
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.white,
@@ -62,11 +63,18 @@ class _DashboardState extends State<Dashboard> {
                   .primaryColor
           ),
         ),
-        body: Container(
-          decoration: BoxDecoration(
-            border: Border(top: BorderSide(width: 2, color: Theme.of(context).accentColor))
-          ),
-          child: _children[_selectedIndex],
+        body: StoreConnector<AppState, AppState>(
+          converter: (store)=>store.state,
+          onInitialBuild: (state) async {
+          },
+          builder: (context, state){
+            return Container(
+              decoration: BoxDecoration(
+                  border: Border(top: BorderSide(width: 2, color: Theme.of(context).accentColor))
+              ),
+              child: _children[_selectedIndex],
+            );
+          }
         ),
         drawer: SizedBox(
           width: size.width,
@@ -158,7 +166,6 @@ class _DashboardState extends State<Dashboard> {
     return StoreConnector<AppState, AppState>(
       converter: (store)=>store.state,
       builder: (context, state){
-        print(state.currentBusiness.imageUrl);
         return Container(
           child: Column(
             children: <Widget>[

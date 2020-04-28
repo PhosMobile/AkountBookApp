@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:akaunt/Api/BusinessPage/current_business_data.dart';
 import 'package:akaunt/Api/BusinessPage/upload_file.dart';
 import 'package:akaunt/Api/UserAcount/logged_in_user.dart';
@@ -7,12 +6,14 @@ import 'package:akaunt/AppState/app_state.dart';
 import 'package:akaunt/Graphql/graphql_config.dart';
 import 'package:akaunt/Graphql/mutations.dart';
 import 'package:akaunt/Models/business.dart';
+import 'package:akaunt/Service/localstorage_service.dart';
 import 'package:akaunt/Widgets/HeaderTitle.dart';
 import 'package:akaunt/Widgets/error.dart';
 import 'package:akaunt/Widgets/loader_widget.dart';
 import 'package:akaunt/Widgets/loading_snack_bar.dart';
 import 'package:akaunt/Widgets/logo_avatar.dart';
 import 'package:akaunt/Widgets/buttons.dart';
+import 'package:akaunt/service_locator.dart';
 import 'package:akaunt/utilities/attach_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -31,6 +32,7 @@ class AddBusiness extends StatefulWidget {
 class _AddBusinessState extends State<AddBusiness> {
   final GlobalKey<FormBuilderState> _fbKey = GlobalKey<FormBuilderState>();
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+
 //  final key = GlobalKey<ImageCropState>();
   InputStyles inputStyles = new InputStyles();
   ImageAvatars logo = new ImageAvatars();
@@ -44,7 +46,7 @@ class _AddBusinessState extends State<AddBusiness> {
   TextEditingController _businessDescription = new TextEditingController();
   TextEditingController _businessAddress = new TextEditingController();
   String currency = "NGN";
-  var  image;
+  var image;
   AttachImage attachImage = AttachImage();
 
   validate(value, errorText) {
@@ -97,12 +99,16 @@ class _AddBusinessState extends State<AddBusiness> {
                                       ? RequestError(errorText: requestErrors)
                                       : Container(),
                                   InkWell(
-                                    child: image == null ? ImageAvatars().attachImage(): DisplayImage().displayAttachedProfileImage(image),
+                                    child: image == null
+                                        ? ImageAvatars().attachImage()
+                                        : DisplayImage()
+                                            .displayAttachedProfileImage(image),
                                     onTap: () async {
-                                     var profileImage = await attachImage.getProfileImage();
-                                     setState(() {
-                                       image = profileImage;
-                                     });
+                                      var profileImage =
+                                          await attachImage.getProfileImage();
+                                      setState(() {
+                                        image = profileImage;
+                                      });
                                     },
                                   ),
                                   SizedBox(
@@ -189,11 +195,14 @@ class _AddBusinessState extends State<AddBusiness> {
                                   Padding(
                                     padding: const EdgeInsets.only(bottom: 50),
                                     child: Container(
-                                      decoration: BoxDecoration(boxShadow: [
-                                        inputStyles.dropDownMenu(context)
-                                      ],
-                                      border: Border.all(color: Theme.of(context).accentColor, width: 3) ),
-
+                                      decoration: BoxDecoration(
+                                          boxShadow: [
+                                            inputStyles.dropDownMenu(context)
+                                          ],
+                                          border: Border.all(
+                                              color:
+                                                  Theme.of(context).accentColor,
+                                              width: 3)),
                                       child: FormBuilderDropdown(
                                         onChanged: (value) {
                                           setState(() {
@@ -247,19 +256,14 @@ class _AddBusinessState extends State<AddBusiness> {
         ));
   }
 
-
   void _addUserBusiness() async {
-    setState(() {
-      _isLoading = true;
-    });
+    var firebaseRef =
+        await UploadFile().uploadProfileImage(_scaffoldKey, context, image);
 
-
-    var firebaseRef = await UploadFile().uploadProfileImage(_scaffoldKey, context, image);
-
-    if(firebaseRef == null){
+    if (firebaseRef == null) {
       _registerBusiness("null");
-    }else{
-      firebaseRef.getDownloadURL().then((fileURL) async{
+    } else {
+      firebaseRef.getDownloadURL().then((fileURL) async {
         _registerBusiness(fileURL);
       });
     }
@@ -280,76 +284,78 @@ class _AddBusinessState extends State<AddBusiness> {
     GqlConfig graphQLConfiguration = GqlConfig();
     Mutations createBusiness = new Mutations();
 
+    if (user.length == 0) {
+      userId = loggedInUser.state.loggedInUser.userId;
+    } else {
+      userEmail = user[0];
+      userPassword = user[1];
+      userId = user[2];
+    }
+    QueryResult result = await graphQLConfiguration.getGraphql(context).mutate(
+        MutationOptions(
+            document: createBusiness.createBusiness(
+                _businessName.text,
+                _businessEmail.text,
+                _businessDescription.text,
+                _businessAddress.text,
+                currency,
+                imageUrl,
+                userId)));
+    if (!result.hasErrors) {
       if (user.length == 0) {
-        userId = loggedInUser.state.loggedInUser.userId;
+        setState(() {
+          _isLoading = false;
+          _hasErrors = false;
+        });
+        dynamic newBusiness = result.data["create_business"];
+        Business currentBusiness = Business(
+            newBusiness["id"],
+            newBusiness["name"],
+            newBusiness["email"],
+            newBusiness["description"],
+            newBusiness["address"],
+            newBusiness["currency"],
+            newBusiness["image_url"],
+            newBusiness["user_id"]);
+        final business = StoreProvider.of<AppState>(context);
+        business.dispatch(UserCurrentBusiness(payload: currentBusiness));
+        business.dispatch(UpdateUserBusiness(payload: currentBusiness));
+        _scaffoldKey.currentState.showSnackBar(
+            LoadingSnackBar().loader("Getting Business Data...", context));
+        CurrentBusinessData().getBusinessData(context, currentBusiness.id);
       } else {
-        userEmail = user[0];
-        userPassword = user[1];
-        userId = user[2];
-      }
-      QueryResult result = await graphQLConfiguration.getGraphql(context).mutate(
-          MutationOptions(
-              document: createBusiness.createBusiness(
-                  _businessName.text,
-                  _businessEmail.text,
-                  _businessDescription.text,
-                  _businessAddress.text,
-                  currency,
-                  imageUrl,
-                  userId)));
-      if (!result.hasErrors) {
-        if (user.length == 0) {
+        GqlConfig graphQLConfiguration = GqlConfig();
+        Mutations login = new Mutations();
+        QueryResult result = await graphQLConfiguration
+            .getGraphql(context)
+            .mutate(
+              MutationOptions(document: login.login(userEmail, userPassword)),
+            );
+        if (!result.hasErrors) {
           setState(() {
             _isLoading = false;
             _hasErrors = false;
           });
-          dynamic newBusiness = result.data["create_business"];
-          Business currentBusiness = Business(
-              newBusiness["id"],
-              newBusiness["name"],
-              newBusiness["email"],
-              newBusiness["description"],
-              newBusiness["address"],
-              newBusiness["currency"],
-              newBusiness["image_url"],
-              newBusiness["user_id"]);
-          final business = StoreProvider.of<AppState>(context);
-          business.dispatch(UserCurrentBusiness(payload: currentBusiness));
-          business.dispatch(UpdateUserBusiness(payload: currentBusiness));
-          _scaffoldKey.currentState.showSnackBar(
-              LoadingSnackBar().loader("  Getting Business Data...", context));
-          CurrentBusinessData().getBusinessData(context, currentBusiness.id);
+          var accessToken = result.data["login"];
+          prefs.setString('access_token', accessToken["access_token"]);
+          storage.setItem("access_token", accessToken["access_token"]);
+          locator<LocalStorageService>().hasLoggedIn = true;
+          await LoggedInUser().fetchLoggedInUser(context, "registeration");
         } else {
-          GqlConfig graphQLConfiguration = GqlConfig();
-          Mutations login = new Mutations();
-          QueryResult result = await graphQLConfiguration.getGraphql(context).mutate(
-            MutationOptions(document: login.login(userEmail, userPassword)),
-          );
-          if (!result.hasErrors) {
-            setState(() {
-              _isLoading = false;
-              _hasErrors = false;
-            });
-            var accessToken = result.data["login"];
-            storage.setItem("access_token", accessToken);
-            await LoggedInUser().fetchLoggedInUser(context, "registeration");
-
-          } else {
-            setState(() {
-              requestErrors = result.errors.toString().substring(10, 36);
-              _isLoading = false;
-              _hasErrors = true;
-            });
-          }
+          setState(() {
+            requestErrors = result.errors.toString().substring(10, 36);
+            _isLoading = false;
+            _hasErrors = true;
+          });
         }
-      } else {
-        print(result.errors);
-        setState(() {
-          requestErrors = "Error ...pls try again";
-          _isLoading = false;
-          _hasErrors = true;
-        });
       }
-
+    } else {
+      print(result.errors);
+      setState(() {
+        requestErrors = "Error ...pls try again";
+        _isLoading = false;
+        _hasErrors = true;
+      });
+    }
   }
 }

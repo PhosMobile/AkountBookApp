@@ -8,6 +8,7 @@ import 'package:akaunt/Widgets/AlertSnackBar.dart';
 import 'package:akaunt/Widgets/HeaderTitle.dart';
 import 'package:akaunt/Widgets/loader_widget.dart';
 import 'package:akaunt/Widgets/buttons.dart';
+import 'package:akaunt/utilities/currency_convert.dart';
 import 'package:akaunt/utilities/svg_files.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
@@ -36,6 +37,15 @@ class _RecordPaymentState extends State<RecordPayment> {
 
   @override
   Widget build(BuildContext context) {
+    List<Receipt> allInvoiceReceipts = [];
+    final store = StoreProvider.of<AppState>(context);
+    store.state.businessReceipts.forEach((receipt) {
+      if (receipt.invoiceId == store.state.readyInvoice.id) {
+        allInvoiceReceipts.add(receipt);
+      }
+    });
+    double _invoiceBalance = Invoice.calculateInvoiceBalance(
+        allInvoiceReceipts, store.state.readyInvoice.totalAmount);
     return new Scaffold(
         key: _scaffoldState,
         appBar: AppBar(
@@ -47,8 +57,6 @@ class _RecordPaymentState extends State<RecordPayment> {
                 converter: (store) => store.state,
                 onInitialBuild: (state) {
                   setState(() {
-                    _amountPaid.text =
-                        state.readyInvoice.totalAmount.toString();
                     paymentType = "Full";
                   });
                 },
@@ -133,25 +141,28 @@ class _RecordPaymentState extends State<RecordPayment> {
                                           inputStyles.boxShadowMain(context)
                                         ]),
                                         child: FormBuilderTextField(
+                                          initialValue: "0",
                                           onChanged: (value) {
-                                            if (int.parse(value) >=
-                                                state
-                                                    .readyInvoice.totalAmount) {
-                                              setState(() {
-                                                receivedPayment = 2;
-                                                paymentType = "Full";
-                                              });
-                                            } else {
-                                              setState(() {
-                                                receivedPayment = 1;
-                                                paymentType = "Part";
-                                              });
+                                            if(_amountPaid.text.isNotEmpty){
+                                              if (double.parse(value) >=
+                                                  state
+                                                      .readyInvoice.totalAmount) {
+                                                setState(() {
+                                                  receivedPayment = 2;
+                                                  paymentType = "Full";
+                                                });
+                                              } else {
+                                                setState(() {
+                                                  receivedPayment = 1;
+                                                  paymentType = "Part";
+                                                });
+                                              }
                                             }
                                           },
                                           keyboardType: TextInputType.number,
                                           attribute: "amount_paid",
-                                          decoration: inputStyles
-                                              .inputMain("Amount Paid"),
+                                          decoration: inputStyles.inputMain(
+                                              "Amount Paid (Balance: ${CurrencyConverter().formatPrice(_invoiceBalance, state.currentBusiness.currency)})"),
                                           validators: [
                                             FormBuilderValidators.required()
                                           ],
@@ -259,12 +270,18 @@ class _RecordPaymentState extends State<RecordPayment> {
                                         style: TextStyle(
                                             fontSize: 16, color: Colors.white)),
                                 onPressed: () {
+                                  AlertSnackBar alert = AlertSnackBar();
                                   if (_fbKey.currentState.saveAndValidate()) {
-                                    _previewReceipt(
-                                        businessId,
-                                        userId,
-                                        state.readyInvoice,
-                                        state.businessCustomers);
+                                    if(double.parse(_amountPaid.text) > _invoiceBalance || double.parse(_amountPaid.text) <= 0){
+                                      _scaffoldState.currentState
+                                          .showSnackBar(alert.showSnackBar("Invalid Amount"));
+                                    }else{
+                                      _previewReceipt(
+                                          businessId,
+                                          userId,
+                                          state.readyInvoice,
+                                          state.businessCustomers);
+                                    }
                                   }
                                 },
                               ),

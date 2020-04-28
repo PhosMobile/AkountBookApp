@@ -1,4 +1,6 @@
+import 'package:akaunt/Service/localstorage_service.dart';
 import 'package:akaunt/Widgets/buttons.dart';
+import 'package:akaunt/service_locator.dart';
 import 'package:akaunt/utilities/svg_files.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -54,6 +56,7 @@ class _LogoutState extends State<Logout> {
                   buttonText: Text("BACK TO LOGIN PAGE",
                       style: TextStyle(fontSize: 16, color: Colors.white)),
                   onPressed: () {
+                    locator<LocalStorageService>().hasLoggedIn = false;
                     Navigator.pushNamed(context, "/login");
                   })
             ],

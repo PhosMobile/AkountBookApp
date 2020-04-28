@@ -29,7 +29,6 @@ class AppState {
   Invoice readyInvoice;
   Receipt invoiceReceipt;
   EditInvoice editInvoice;
-
   UserPhoneContact customerFromContact;
 
 }

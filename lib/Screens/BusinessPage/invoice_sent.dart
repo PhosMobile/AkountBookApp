@@ -15,8 +15,9 @@ final Widget svg = new SvgPicture.asset(
 
 class InvoiceSent extends StatelessWidget {
   final Customer customer;
+  final String via;
 
-  const InvoiceSent({this.customer});
+  const InvoiceSent({@required this.customer, @required this.via});
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +60,7 @@ class InvoiceSent extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.all(18.0),
                         child: Text(
-                          "You have successfully sent an  \ninvoice to ${customer.name} \n via Email",
+                          "You have successfully sent an  \ninvoice to ${customer.name} \n via $via",
                           textAlign: TextAlign.center,
                         ),
                       ),

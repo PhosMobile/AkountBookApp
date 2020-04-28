@@ -30,4 +30,22 @@ class DisplayImage {
         )
     );
   }
+
+  Widget editProfileImage(image) {
+    return Container(
+        width: 130.0,
+        height: 130.0,
+        decoration: BoxDecoration(
+          image: DecorationImage(
+              fit: BoxFit.cover,
+              image: NetworkImage(image)
+          ),
+          borderRadius: BorderRadius.all(Radius.circular(500.0)),
+          color: Colors.redAccent,
+        )
+    );
+  }
+
+
+
 }
