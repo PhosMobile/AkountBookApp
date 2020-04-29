@@ -22,7 +22,7 @@ dependencies:
   graphql_flutter: ^2.1.0
   material_design_icons_flutter: ^3.4.4595
   contacts_service: ^0.3.10
-  permission_handler: ^4.0.0
+  permission_handler: 4.0.0
   pdf: ^1.3.25
   cloud_firestore: ^0.13.0+1
   firebase_storage: ^3.1.0
@@ -50,7 +50,7 @@ dependencies:
   date_format: ^1.0.8
   flushbar: 1.9.1
   uni_links: ^0.2.0
-  get_it: ^1.0.3
+  get_it: ^3.0.3
 dev_dependencies:
   flutter_test:
     sdk: flutter

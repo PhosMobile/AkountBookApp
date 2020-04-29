@@ -12,38 +12,46 @@ class FetchUserData {
     final business = StoreProvider.of<AppState>(context);
     PermissionStatus permissionStatus = await _getPermission();
     List<UserPhoneContact> userContacts = [];
-    if (permissionStatus == PermissionStatus.granted) {
-      var contacts = await ContactsService.getContacts();
-      contacts.forEach((contact){
-        String phone = "";
-        String email = "";
-        String address = "";
-        if(contact.phones.isNotEmpty) {
-          phone = contact.phones.first.value;
-        }else{
-          phone = "";
-        }
-        if(contact.emails.isNotEmpty) {
-          email = contact.emails.first.value;
-        }else{
-          email = "";
-        }
-        if(contact.postalAddresses.isNotEmpty) {
-          address = " ${contact.postalAddresses.first.street } ${contact.postalAddresses.first.city} ${contact.postalAddresses.first.country }";
-        }else{
-          address = "";
-        }
+    try {
+      if (permissionStatus == PermissionStatus.granted) {
+        var contacts = await ContactsService.getContacts();
+        contacts.forEach((contact) {
+          String phone = "";
+          String email = "";
+          String address = "";
+          if (contact.phones.isNotEmpty) {
+            phone = contact.phones.first.value;
+          } else {
+            phone = "";
+          }
+          if (contact.emails.isNotEmpty) {
+            email = contact.emails.first.value;
+          } else {
+            email = "";
+          }
+          if (contact.postalAddresses.isNotEmpty) {
+            address =
+            " ${contact.postalAddresses.first.street } ${contact.postalAddresses
+                .first.city} ${contact.postalAddresses.first.country }";
+          } else {
+            address = "";
+          }
 
-        UserPhoneContact userContact= new UserPhoneContact(contact.displayName, contact.familyName, email, phone, address, contact.avatar);
-        userContacts.add(userContact);
-      });
-      business.dispatch(AddUserContacts(payload: userContacts));
-    } else {
-      throw PlatformException(
-        code: 'PERMISSION_DENIED',
-        message: 'Access to location data denied',
-        details: null,
-      );
+          UserPhoneContact userContact = new UserPhoneContact(
+              contact.displayName, contact.familyName, email, phone, address,
+              contact.avatar);
+          userContacts.add(userContact);
+        });
+        business.dispatch(AddUserContacts(payload: userContacts));
+      } else {
+        throw PlatformException(
+          code: 'PERMISSION_DENIED',
+          message: 'Access to location data denied',
+          details: null,
+        );
+      }
+    } on PlatformException catch (e) {
+        print(e);
     }
   }
   Future<PermissionStatus> _getPermission() async {

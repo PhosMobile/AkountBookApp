@@ -224,6 +224,7 @@ class _LoginState extends State<Login> {
       await LoggedInUser().fetchLoggedInUser(context, "login");
       locator<LocalStorageService>().hasLoggedIn = true;
     } else {
+      print(result.errors);
       setState(() {
         requestErrors = result.errors.toString().split(".")[0].substring(1);
         _isLoading = false;
