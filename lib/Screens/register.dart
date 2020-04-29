@@ -263,7 +263,7 @@ class _RegisterState extends State<Register> {
           locator<LocalStorageService>().hasSignedUp = true;
         } else {
 
-          print(response.statusCode);
+          print(response.body);
           setState(() {
             requestErrors =
             "Error registering your Account, please try again later";

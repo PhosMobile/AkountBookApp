@@ -20,7 +20,7 @@ void main() async{
     child: MyApp(store: store),
   );
   try {
-    setupLocator();
+   await setupLocator();
     return runApp(configuredApp);
   } catch(error) {
     print('Locator setup has failed');
